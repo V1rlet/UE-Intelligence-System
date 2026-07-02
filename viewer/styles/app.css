@@ -73,3 +73,82 @@ body {
 .detail-panel .field-name { color: #6b9fce; white-space: nowrap; }
 
 .hint { font-size: 13px; color: #6b7c8c; }
+
+/* —— 标注面板 —— */
+.ann-panel { margin-top: 20px; border-top: 1px solid #2a3844; padding-top: 12px; }
+
+.ann-panel h3 { font-size: 13px; color: #e8f0f7; margin-bottom: 10px; }
+
+.ann-error { font-size: 12px; color: #e88; margin-bottom: 8px; }
+
+.ann-list { list-style: none; }
+
+.ann-item {
+	background: #10161d;
+	border: 1px solid #222e3a;
+	border-radius: 4px;
+	padding: 8px;
+	margin-bottom: 8px;
+}
+
+.ann-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+
+.ann-badge {
+	font-size: 11px;
+	padding: 1px 6px;
+	border-radius: 3px;
+	background: #34495e;
+	color: #dfe8f0;
+}
+
+.ann-badge-gotcha { background: #7a3b3b; }
+.ann-badge-best_practice { background: #2e6b45; }
+.ann-badge-design_decision { background: #5b4a8a; }
+.ann-badge-performance { background: #8a6d2e; }
+.ann-badge-reference { background: #2e6580; }
+
+.ann-stale { font-size: 11px; color: #e6b450; }
+
+.ann-date { font-size: 11px; color: #6b7c8c; margin-left: auto; }
+
+.ann-content { font-size: 12px; line-height: 1.6; white-space: pre-wrap; word-break: break-all; }
+
+.ann-actions { display: flex; gap: 6px; margin-top: 6px; }
+
+.ann-panel button {
+	background: #22303e;
+	color: #c9d4de;
+	border: 1px solid #2a3844;
+	border-radius: 3px;
+	padding: 3px 10px;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.ann-panel button:hover:not(:disabled) { background: #2c3e50; }
+.ann-panel button:disabled { opacity: 0.5; cursor: default; }
+
+.ann-panel textarea {
+	width: 100%;
+	background: #0c1117;
+	color: #c9d4de;
+	border: 1px solid #2a3844;
+	border-radius: 3px;
+	padding: 6px;
+	font-size: 12px;
+	font-family: inherit;
+	resize: vertical;
+}
+
+.ann-add { margin-top: 4px; display: flex; flex-direction: column; gap: 6px; }
+
+.ann-add select {
+	background: #0c1117;
+	color: #c9d4de;
+	border: 1px solid #2a3844;
+	border-radius: 3px;
+	padding: 3px 6px;
+	font-size: 12px;
+}
+
+.ann-add button { align-self: flex-start; }

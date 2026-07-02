@@ -1,5 +1,6 @@
 // Graph Brain / viewer - 应用骨架：图谱文件选择 + Graph Explorer View + 节点详情侧边栏
 import { useEffect, useState } from "react";
+import AnnotationPanel from "../components/annotation-panel/AnnotationPanel";
 import GraphView, { type GraphElements } from "../components/graph-view/GraphView";
 
 interface GraphFile {
@@ -74,6 +75,11 @@ export default function App() {
 										))}
 								</tbody>
 							</table>
+							<AnnotationPanel
+								nodeId={String(selected.id)}
+								domain={String(graph?.meta?.domain ?? "ue5_code")}
+								subsystem={String(graph?.meta?.subsystem ?? "modules")}
+							/>
 						</>
 					) : (
 						<p className="hint">点击节点查看详情；拖拽平移，滚轮缩放。</p>

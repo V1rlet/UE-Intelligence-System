@@ -1,0 +1,14 @@
+[
+  {
+    "node_id": "Sabotage",
+    "domain": "ue5_code",
+    "annotations": [
+      {
+        "id": "ann_mr33fcnd_6ozs",
+        "type": "design_decision",
+        "content": "项目主模块。Variant_Platforming / Variant_Combat / Variant_SideScrolling 三套模板变体共存于同一模块，后续拆分或删除未用变体时注意 PublicIncludePaths 同步清理。",
+        "created_at": "2026-07-02T05:58:06.793Z"
+      }
+    ]
+  }
+]

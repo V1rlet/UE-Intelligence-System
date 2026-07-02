@@ -9,8 +9,8 @@
 ## 当前状态
 
 - **Phase**: 1
-- **最新完成**: P1U3 — Cytoscape.js 查看器骨架
-- **下一步**: P1U4 — 标注存储原型
+- **最新完成**: P1U4 — 标注存储原型
+- **下一步**: P1U5 — Phase 1 端到端验证 + 毕业
 - **上次会话**: 2026-07-02
 
 ---
@@ -103,7 +103,7 @@
 
 ---
 
-### P1U4 — 标注存储原型
+### P1U4 — 标注存储原型 ✅（2026-07-02 完成）
 
 **输入**: P1U3 的查看器
 **产出**:
@@ -114,6 +114,19 @@
 - 保存时自动记录 created_at 时间戳
 
 **验收**: 能在查看器中给某个模块节点添加标注，刷新后标注仍在
+
+**完成记录**：
+- `core/annotation/store.ts`：load/add/update/delete 四个接口，文件按
+  `{domain}_{subsystem}_annotations.json` 分片（与图谱同粒度）；**写入前用
+  annotation.schema.json 校验，坏数据拒写**，保证 data/annotations/ 永远合规
+- API 挂在 Vite 中间件（与 /data 同进程）：GET/POST `/api/annotations/:domain/:subsystem`，
+  POST body 用 action 字段区分 add/update/delete，统一返回最新条目数组
+- 前端 `viewer/components/annotation-panel/AnnotationPanel.tsx`：嵌在节点详情侧边栏下方，
+  5 种类型（踩坑/最佳实践/设计决策/性能/参考）带色徽章 + 新增/编辑/删除 + stale 标记预留
+- 验证：add/update/delete 全走通；产物文件通过 schema 验证；已给 Sabotage 节点留一条
+  design_decision 示例标注（`data/annotations/ue5_code_modules_annotations.json`）
+- 踩坑记录：PS 5.1 `Invoke-WebRequest -Body` 按 ASCII 发中文会变 `?`，测 API 需
+  UTF8.GetBytes；浏览器 fetch 无此问题
 
 ---
 
