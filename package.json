@@ -5,16 +5,26 @@
   "type": "module",
   "description": "自托管的领域无关知识图谱平台 — 首个场景：UE5 项目代码架构分析",
   "scripts": {
+    "viewer": "vite",
     "extract:ue5-modules": "tsx adapters/ue5-code/extract-modules.ts",
     "validate": "tsx core/schema/validate.ts",
     "validate:examples": "tsx core/schema/validate.ts core/schema/examples/ue5_code_example.cyto.json core/schema/examples/ue5_code_example_annotations.json"
   },
   "dependencies": {
     "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1"
+    "ajv-formats": "^3.0.1",
+    "cytoscape": "^3.34.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
+    "@types/cytoscape": "^3.21.9",
+    "@types/node": "^26.1.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
     "tsx": "^4.19.0",
-    "typescript": "^5.5.0"
+    "typescript": "^5.5.0",
+    "vite": "^8.1.3"
   }
 }

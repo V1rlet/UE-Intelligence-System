@@ -9,8 +9,8 @@
 ## 当前状态
 
 - **Phase**: 1
-- **最新完成**: P1U2 — UE5 Code Adapter 最小版本
-- **下一步**: P1U3 — Cytoscape.js 查看器骨架
+- **最新完成**: P1U3 — Cytoscape.js 查看器骨架
+- **下一步**: P1U4 — 标注存储原型
 - **上次会话**: 2026-07-02
 
 ---
@@ -73,7 +73,7 @@
 
 ---
 
-### P1U3 — Cytoscape.js 查看器骨架
+### P1U3 — Cytoscape.js 查看器骨架 ✅（2026-07-02 完成）
 
 **输入**: P1U2 产出的 `.cyto.json`
 **产出**:
@@ -85,6 +85,21 @@
 - 本地 http 服务可访问
 
 **验收**: 在浏览器中打开能看到模块依赖图，可拖拽缩放，点击节点看到详情
+
+**完成记录**：
+- 技术栈：Vite + React 19 + TS + Cytoscape.js（按 CLAUDE.md 编码规范）；`npm run viewer`
+  启动，端口固定 **3030**（3010/3021/3022 已被本机其他服务占用，strictPort）
+- Vite dev server 兼作数据服务（vite.config.ts 中间件）：`/api/graphs` 列出图谱文件
+  （新→旧），`/data/*` 直读 data/ 目录（含路径穿越防护）——P1U4 的标注保存 POST
+  接口计划挂在同一中间件
+- 结构：`viewer/src/`（入口+App）、`viewer/components/graph-view/GraphView.tsx`、
+  `viewer/styles/ue5-code.cyto-style.json`（纯 JSON stylesheet，按规范）+ `app.css`
+- 已实现：cose 力导向布局、拖拽/缩放、点击节点右侧详情表、layer 配色
+  （project 橙/engine 蓝/plugin 紫）、度数→节点大小（加载时预计算 data.size）、
+  visibility 视觉区分（silhouette 虚线边框、fog 点线半透明，为 P2U3 三态铺垫）
+- 验证：/、/api/graphs、/data/graphs/*.cyto.json、样式 JSON 全部 HTTP 200；
+  viewer 与 root 两个 tsconfig 类型检查通过（补装 @types/node）
+- 浏览器人工验收入口：http://localhost:3030
 
 ---
 
