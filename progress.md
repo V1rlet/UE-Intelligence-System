@@ -9,8 +9,8 @@
 ## 当前状态
 
 - **Phase**: 2
-- **最新完成**: Phase 1 全部（P1U1–P1U5，已毕业）
-- **下一步**: P2U1 — .h 头文件解析器
+- **最新完成**: P2U1 — .h 头文件解析器
+- **下一步**: P2U2 — Actor 生命周期序列节点
 - **上次会话**: 2026-07-02
 
 ---
@@ -25,7 +25,7 @@
 > 本 Phase 结束时，查看器里应能看到 Sabotage 的类级图谱（含函数节点）挂接在
 > 引擎种子类之下，并支持 Fog / Silhouette / Explored 折叠交互。
 
-### P2U1 — .h 头文件解析器
+### P2U1 — .h 头文件解析器 ✅（2026-07-02 完成）
 
 **输入**: `G:\UnrealProject\Sabotage\Source` 下全部 `.h`
 **产出**:
@@ -41,6 +41,26 @@
 
 **验收**: 对 Sabotage 全部 .h 运行，产物通过 schema 验证；抽查 3 个类
 （含至少 1 个带 UFUNCTION 的）与源码逐字段一致
+
+**完成记录**：
+- `adapters/ue5-code/extract-classes.ts`（npm script `extract:ue5-classes`）：
+  注释"等长空格替换"剥离（索引对齐，/** */ 文档块按位置回挂 description）；
+  访问标签 public:/protected:/private: 等长替换为 ';'（防函数声明正则跨标签
+  吞并——抽查实测抓到并修复的 bug）；UPROPERTY 持有语义映射
+  TObjectPtr/T*→composes、TArray<指针>/TWeakObjectPtr→aggregates、
+  TSubclassOf→depends_on；UFUNCTION 与无宏普通函数都生成 ufunction 节点
+  （cpp_only 区分）；UCLASS(abstract)→tags、Category→#场景标签、override→tag
+- 引擎侧引用类型用命名启发式判定（A*→uactor、*Component→ucomponent 等），
+  engine/silhouette，P2U4 种子层引入真实数据后可覆盖修正
+- 产物 `ue5_code_classes_2026-07-02.cyto.json`：23 节点（3 项目类 + 12 ufunction +
+  8 引擎引用）、9 边，通过 schema 验证；3 个类逐字段抽查全对（DoMove 的 api
+  签名/参数/blueprint_exposable=true、Move 的 cpp_only=true、FORCEINLINE getter
+  返回类型干净）
+- 样式表补 type 形状（ucomponent 圆角矩形/uinterface 菱形/ustruct·uenum 六边形/
+  ufunction 小号）+ compound 容器样式（类节点含函数子节点）
+- 顺带清理（用户要求）：Sabotage.Build.cs 中已删除变种目录的 PublicIncludePaths
+  残留已清（Variant_* 与 Test/Interfaces，仅存 "Sabotage"）；Saved/ 下的 Variant
+  引用是编辑器缓存，会自动重建，不处理
 
 ---
 

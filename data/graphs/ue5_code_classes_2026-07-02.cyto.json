@@ -1,0 +1,628 @@
+{
+  "meta": {
+    "domain": "ue5_code",
+    "subsystem": "classes",
+    "generated_at": "2026-07-02T06:20:12.559Z",
+    "generator": "ue5-code-adapter/extract-classes@0.1.0",
+    "source_root": "G:/UnrealProject/Sabotage/Source"
+  },
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "ASabotageCharacter",
+          "label": "ASabotageCharacter",
+          "type": "uactor",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "description": "A simple player-controllable third person character Implements a controllable orbiting camera",
+          "source_path": "Sabotage/SabotageCharacter.h",
+          "tags": [
+            "abstract"
+          ],
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 4
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageGameMode",
+          "label": "ASabotageGameMode",
+          "type": "uactor",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "description": "Simple GameMode for a third person game",
+          "source_path": "Sabotage/SabotageGameMode.h",
+          "tags": [
+            "abstract"
+          ],
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotagePlayerController",
+          "label": "ASabotagePlayerController",
+          "type": "uactor",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "description": "Basic PlayerController class for a third person game Manages input mappings",
+          "source_path": "Sabotage/SabotagePlayerController.h",
+          "tags": [
+            "abstract"
+          ],
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 4
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ACharacter",
+          "label": "ACharacter",
+          "type": "uactor",
+          "layer": "engine",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "USpringArmComponent",
+          "label": "USpringArmComponent",
+          "type": "ucomponent",
+          "layer": "engine",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "UCameraComponent",
+          "label": "UCameraComponent",
+          "type": "ucomponent",
+          "layer": "engine",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "UInputAction",
+          "label": "UInputAction",
+          "type": "uclass",
+          "layer": "engine",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter::DoMove",
+          "label": "DoMove",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotageCharacter",
+          "description": "Handles move inputs from either controls or UI interfaces",
+          "source_path": "Sabotage/SabotageCharacter.h",
+          "tags": [
+            "#input"
+          ],
+          "visibility": "explored",
+          "api": {
+            "signature": "void DoMove(float Right, float Forward)",
+            "return_type": "void",
+            "params": [
+              {
+                "name": "Right",
+                "type": "float"
+              },
+              {
+                "name": "Forward",
+                "type": "float"
+              }
+            ],
+            "cpp_only": false,
+            "blueprint_exposable": true
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter::DoLook",
+          "label": "DoLook",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotageCharacter",
+          "description": "Handles look inputs from either controls or UI interfaces",
+          "source_path": "Sabotage/SabotageCharacter.h",
+          "tags": [
+            "#input"
+          ],
+          "visibility": "explored",
+          "api": {
+            "signature": "void DoLook(float Yaw, float Pitch)",
+            "return_type": "void",
+            "params": [
+              {
+                "name": "Yaw",
+                "type": "float"
+              },
+              {
+                "name": "Pitch",
+                "type": "float"
+              }
+            ],
+            "cpp_only": false,
+            "blueprint_exposable": true
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter::DoJumpStart",
+          "label": "DoJumpStart",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotageCharacter",
+          "description": "Handles jump pressed inputs from either controls or UI interfaces",
+          "source_path": "Sabotage/SabotageCharacter.h",
+          "tags": [
+            "#input"
+          ],
+          "visibility": "explored",
+          "api": {
+            "signature": "void DoJumpStart()",
+            "return_type": "void",
+            "params": [],
+            "cpp_only": false,
+            "blueprint_exposable": true
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter::DoJumpEnd",
+          "label": "DoJumpEnd",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotageCharacter",
+          "description": "Handles jump pressed inputs from either controls or UI interfaces",
+          "source_path": "Sabotage/SabotageCharacter.h",
+          "tags": [
+            "#input"
+          ],
+          "visibility": "explored",
+          "api": {
+            "signature": "void DoJumpEnd()",
+            "return_type": "void",
+            "params": [],
+            "cpp_only": false,
+            "blueprint_exposable": true
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter::SetupPlayerInputComponent",
+          "label": "SetupPlayerInputComponent",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotageCharacter",
+          "description": "Initialize input action bindings",
+          "source_path": "Sabotage/SabotageCharacter.h",
+          "tags": [
+            "override"
+          ],
+          "visibility": "explored",
+          "api": {
+            "signature": "void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)",
+            "return_type": "void",
+            "params": [
+              {
+                "name": "PlayerInputComponent",
+                "type": "UInputComponent*"
+              }
+            ],
+            "cpp_only": true,
+            "blueprint_exposable": false
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter::Move",
+          "label": "Move",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotageCharacter",
+          "description": "Called for movement input",
+          "source_path": "Sabotage/SabotageCharacter.h",
+          "visibility": "explored",
+          "api": {
+            "signature": "void Move(const FInputActionValue& Value)",
+            "return_type": "void",
+            "params": [
+              {
+                "name": "Value",
+                "type": "const FInputActionValue&"
+              }
+            ],
+            "cpp_only": true,
+            "blueprint_exposable": false
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter::Look",
+          "label": "Look",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotageCharacter",
+          "description": "Called for looking input",
+          "source_path": "Sabotage/SabotageCharacter.h",
+          "visibility": "explored",
+          "api": {
+            "signature": "void Look(const FInputActionValue& Value)",
+            "return_type": "void",
+            "params": [
+              {
+                "name": "Value",
+                "type": "const FInputActionValue&"
+              }
+            ],
+            "cpp_only": true,
+            "blueprint_exposable": false
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter::GetCameraBoom",
+          "label": "GetCameraBoom",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotageCharacter",
+          "description": "Returns CameraBoom subobject",
+          "source_path": "Sabotage/SabotageCharacter.h",
+          "visibility": "explored",
+          "api": {
+            "signature": "USpringArmComponent* GetCameraBoom() const",
+            "return_type": "USpringArmComponent*",
+            "params": [],
+            "cpp_only": true,
+            "blueprint_exposable": false
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter::GetFollowCamera",
+          "label": "GetFollowCamera",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotageCharacter",
+          "description": "Returns FollowCamera subobject",
+          "source_path": "Sabotage/SabotageCharacter.h",
+          "visibility": "explored",
+          "api": {
+            "signature": "UCameraComponent* GetFollowCamera() const",
+            "return_type": "UCameraComponent*",
+            "params": [],
+            "cpp_only": true,
+            "blueprint_exposable": false
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "AGameModeBase",
+          "label": "AGameModeBase",
+          "type": "uactor",
+          "layer": "engine",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "APlayerController",
+          "label": "APlayerController",
+          "type": "uactor",
+          "layer": "engine",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "UInputMappingContext",
+          "label": "UInputMappingContext",
+          "type": "uclass",
+          "layer": "engine",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "UUserWidget",
+          "label": "UUserWidget",
+          "type": "uclass",
+          "layer": "engine",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotagePlayerController::BeginPlay",
+          "label": "BeginPlay",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotagePlayerController",
+          "description": "Gameplay initialization",
+          "source_path": "Sabotage/SabotagePlayerController.h",
+          "tags": [
+            "override"
+          ],
+          "visibility": "explored",
+          "api": {
+            "signature": "void BeginPlay()",
+            "return_type": "void",
+            "params": [],
+            "cpp_only": true,
+            "blueprint_exposable": false
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotagePlayerController::SetupInputComponent",
+          "label": "SetupInputComponent",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotagePlayerController",
+          "description": "Input mapping context setup",
+          "source_path": "Sabotage/SabotagePlayerController.h",
+          "tags": [
+            "override"
+          ],
+          "visibility": "explored",
+          "api": {
+            "signature": "void SetupInputComponent()",
+            "return_type": "void",
+            "params": [],
+            "cpp_only": true,
+            "blueprint_exposable": false
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotagePlayerController::ShouldUseTouchControls",
+          "label": "ShouldUseTouchControls",
+          "type": "ufunction",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "parent": "ASabotagePlayerController",
+          "description": "Returns true if the player should use UMG touch controls",
+          "source_path": "Sabotage/SabotagePlayerController.h",
+          "visibility": "explored",
+          "api": {
+            "signature": "bool ShouldUseTouchControls() const",
+            "return_type": "bool",
+            "params": [],
+            "cpp_only": true,
+            "blueprint_exposable": false
+          },
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "ASabotageCharacter--inherits-->ACharacter",
+          "source": "ASabotageCharacter",
+          "target": "ACharacter",
+          "relation": "inherits",
+          "domain": "ue5_code"
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter--composes-->USpringArmComponent",
+          "source": "ASabotageCharacter",
+          "target": "USpringArmComponent",
+          "relation": "composes",
+          "domain": "ue5_code",
+          "description": "CameraBoom"
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter--composes-->UCameraComponent",
+          "source": "ASabotageCharacter",
+          "target": "UCameraComponent",
+          "relation": "composes",
+          "domain": "ue5_code",
+          "description": "FollowCamera"
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageCharacter--composes-->UInputAction",
+          "source": "ASabotageCharacter",
+          "target": "UInputAction",
+          "relation": "composes",
+          "domain": "ue5_code",
+          "description": "JumpAction, MoveAction, LookAction, MouseLookAction"
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotageGameMode--inherits-->AGameModeBase",
+          "source": "ASabotageGameMode",
+          "target": "AGameModeBase",
+          "relation": "inherits",
+          "domain": "ue5_code"
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotagePlayerController--inherits-->APlayerController",
+          "source": "ASabotagePlayerController",
+          "target": "APlayerController",
+          "relation": "inherits",
+          "domain": "ue5_code"
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotagePlayerController--aggregates-->UInputMappingContext",
+          "source": "ASabotagePlayerController",
+          "target": "UInputMappingContext",
+          "relation": "aggregates",
+          "domain": "ue5_code",
+          "description": "DefaultMappingContexts, MobileExcludedMappingContexts"
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotagePlayerController--depends_on-->UUserWidget",
+          "source": "ASabotagePlayerController",
+          "target": "UUserWidget",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "MobileControlsWidgetClass"
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotagePlayerController--composes-->UUserWidget",
+          "source": "ASabotagePlayerController",
+          "target": "UUserWidget",
+          "relation": "composes",
+          "domain": "ue5_code",
+          "description": "MobileControlsWidget"
+        }
+      }
+    ]
+  }
+}

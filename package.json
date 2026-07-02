@@ -7,6 +7,7 @@
   "scripts": {
     "viewer": "vite",
     "extract:ue5-modules": "tsx adapters/ue5-code/extract-modules.ts",
+    "extract:ue5-classes": "tsx adapters/ue5-code/extract-classes.ts",
     "validate": "tsx core/schema/validate.ts",
     "validate:examples": "tsx core/schema/validate.ts core/schema/examples/ue5_code_example.cyto.json core/schema/examples/ue5_code_example_annotations.json"
   },

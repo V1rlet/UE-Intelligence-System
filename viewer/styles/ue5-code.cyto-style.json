@@ -14,6 +14,26 @@
 			"border-color": "#1f2d3a"
 		}
 	},
+	{ "selector": "node[type = 'ucomponent']", "style": { "shape": "round-rectangle" } },
+	{ "selector": "node[type = 'uinterface']", "style": { "shape": "diamond" } },
+	{ "selector": "node[type = 'ustruct']", "style": { "shape": "hexagon" } },
+	{ "selector": "node[type = 'uenum']", "style": { "shape": "hexagon" } },
+	{
+		"selector": "node[type = 'ufunction']",
+		"style": { "shape": "round-rectangle", "font-size": 9, "text-valign": "center", "text-margin-y": 0 }
+	},
+	{
+		"selector": "node:parent",
+		"style": {
+			"shape": "round-rectangle",
+			"background-opacity": 0.12,
+			"border-width": 1.5,
+			"text-valign": "top",
+			"text-margin-y": -6,
+			"font-size": 12,
+			"padding": "14px"
+		}
+	},
 	{ "selector": "node[layer = 'project']", "style": { "background-color": "#e8834a" } },
 	{ "selector": "node[layer = 'engine']", "style": { "background-color": "#4a90d9" } },
 	{ "selector": "node[layer = 'plugin']", "style": { "background-color": "#8e63c5" } },
