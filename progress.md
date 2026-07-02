@@ -8,154 +8,101 @@
 
 ## 当前状态
 
-- **Phase**: 1
-- **最新完成**: P1U4 — 标注存储原型
-- **下一步**: P1U5 — Phase 1 端到端验证 + 毕业
+- **Phase**: 2
+- **最新完成**: Phase 1 全部（P1U1–P1U5，已毕业）
+- **下一步**: P2U1 — .h 头文件解析器
 - **上次会话**: 2026-07-02
 
 ---
 
-## Phase 1: Graph Core + 最小管线
-
-> 目标：跑通「源码 → JSON → Web 查看」的完整通路。
-> 本 Phase 结束时，你应该能在浏览器中看到项目的模块依赖图，并能点击节点查看/编辑标注。
-
-### P1U1 — 项目初始化 + Schema 落地 ✅（2026-07-02 完成）
-
-**输入**: CLAUDE.md
-**产出**:
-- 按 CLAUDE.md 中的项目结构创建全部目录
-- 将 CLAUDE.md 中的 JSON Schema 规范转化为实际的 JSON Schema 验证文件 (`core/schema/`)
-- 创建 `docs/architecture.md` 空骨架
-- 创建 `docs/schema.md`（从 CLAUDE.md 中提取 schema 部分，作为独立参考文档）
-- 初始化 package.json / pyproject.toml（取决于技术栈选择）
-- 初始化 git 仓库 + 首次提交
-
-**验收**: `core/schema/` 下有可运行的 schema 验证脚本，能对一份手写的示例 JSON 进行验证
-
-**完成记录**：
-- 技术栈定为 TypeScript 统一栈（ajv 验证；Adapter 后续也用 TS/Node），只维护 package.json
-- 4 个 schema 文件：`node` / `edge` / `graph` / `annotation`.schema.json（draft-07，
-  ue5_code 领域枚举通过 if/then 条件子模式收紧，核心层保持领域无关）
-- 图谱文件顶层采用 `{ meta, elements }` 包装（elements 直接兼容 Cytoscape.js）
-- `validate.ts`：结构校验 + 图内引用一致性检查（重复 id / 悬空 source/target/parent）+ BOM 容错
-- 正反验收均通过：`npm run validate:examples` ✓；非法 type 的坏文件被拒绝（exit 1）✓
-- 根目录 architecture.md 移至 `docs/architecture.md`；新建 `docs/schema.md` 独立参考
+## Phase 1: ✅ 已完成 — 详见 docs/architecture.md
 
 ---
 
-### P1U2 — UE5 Code Adapter 最小版本 ✅（2026-07-02 完成）
+## Phase 2: 引擎种子层 + 类解析
 
-**输入**: 你的 UE5 项目 Source/ 目录路径
+> 目标：解析 .h 头文件 → 类关系图谱 + Actor 生命周期 + 三态节点 + 项目代码映射。
+> 本 Phase 结束时，查看器里应能看到 Sabotage 的类级图谱（含函数节点）挂接在
+> 引擎种子类之下，并支持 Fog / Silhouette / Explored 折叠交互。
+
+### P2U1 — .h 头文件解析器
+
+**输入**: `G:\UnrealProject\Sabotage\Source` 下全部 `.h`
 **产出**:
-- `adapters/ue5-code/` 下的解析脚本
-- 能解析所有 `.Build.cs` 文件，提取：
-  - 模块名
-  - `PublicDependencyModuleNames`
-  - `PrivateDependencyModuleNames`
-- 输出符合 schema 的 Cytoscape JSON（nodes = 模块，edges = depends_on）
-- Public 依赖 weight=5，Private 依赖 weight=2
-- 引擎模块 layer="engine"，项目模块 layer="project"
+- `adapters/ue5-code/extract-classes.ts`（解析器可拆分为独立模块复用注释剥离等逻辑）
+- 解析 UCLASS / USTRUCT / UENUM / UINTERFACE 宏与继承链 →
+  `uclass` / `uactor` / `ucomponent` / `ustruct` / `uenum` / `uinterface` 节点
+  （uactor/ucomponent 依据基类链判定）+ `inherits` / `implements` 边
+- UPROPERTY 组件成员（TObjectPtr/TSubobjectPtr 等）→ `composes` 边
+- UFUNCTION 签名提取 → `ufunction` 节点（`parent` = 所属类，compound 关系）+
+  `api` 自动字段：signature / return_type / params.name / params.type /
+  cpp_only / blueprint_exposable
+- 输出 `ue5_code_classes_{date}.cyto.json`，与模块图并存
 
-**验收**: 运行脚本后 `data/graphs/` 下生成有效的 `.cyto.json`，通过 schema 验证
-
-**用户需提供**: 你的项目 Source/ 目录路径（在会话中告知 Claude Code）
-
-**完成记录**：
-- 目标项目：`G:\UnrealProject\Sabotage\Source`（本机唯一含 Source 的 UE 项目）
-- `adapters/ue5-code/extract-modules.ts`：递归扫 *.Build.cs，先剥离 C# 注释再提取
-  （避免模板工程注释里的 SlateCore/OnlineSubsystem 被误提取——已实测排除），
-  支持 AddRange 与 Add 两种写法；npm script `extract:ue5-modules`
-- 层级/可见性规则：扫描到 Build.cs 的模块 project/explored；仅作为依赖出现的模块
-  engine/silhouette（对应三态规则的"依赖即入轮廓态"）
-- 产物 `data/graphs/ue5_code_modules_2026-07-02.cyto.json`：11 节点（Sabotage + 10 引擎模块）、
-  10 条 depends_on 边（weight=5），in/out degree 已填充，通过 schema 验证 ✓
+**验收**: 对 Sabotage 全部 .h 运行，产物通过 schema 验证；抽查 3 个类
+（含至少 1 个带 UFUNCTION 的）与源码逐字段一致
 
 ---
 
-### P1U3 — Cytoscape.js 查看器骨架 ✅（2026-07-02 完成）
+### P2U2 — Actor 生命周期序列节点
 
-**输入**: P1U2 产出的 `.cyto.json`
+**输入**: P2U1 的类图谱
 **产出**:
-- `viewer/index.html` + 必要的 JS/CSS
-- 能加载 P1U2 产出的 JSON 并渲染为力导向图
-- 基础交互：拖拽、缩放、点击节点显示 data 字段
-- 引擎模块和项目模块用不同颜色区分
-- 节点大小按 degree 编码
-- 本地 http 服务可访问
+- Actor 生命周期 `lifecycle_step` 节点链（PostInitProperties → OnConstruction →
+  PreInitializeComponents → PostInitializeComponents → BeginPlay → Tick → EndPlay）
+  + `lifecycle_sequence` 边（带 order 序号）
+- 项目类覆写的生命周期函数 → `overrides` 边挂到对应 step 节点
+- 生命周期链作为独立子图或叠加层并入类图谱
 
-**验收**: 在浏览器中打开能看到模块依赖图，可拖拽缩放，点击节点看到详情
-
-**完成记录**：
-- 技术栈：Vite + React 19 + TS + Cytoscape.js（按 CLAUDE.md 编码规范）；`npm run viewer`
-  启动，端口固定 **3030**（3010/3021/3022 已被本机其他服务占用，strictPort）
-- Vite dev server 兼作数据服务（vite.config.ts 中间件）：`/api/graphs` 列出图谱文件
-  （新→旧），`/data/*` 直读 data/ 目录（含路径穿越防护）——P1U4 的标注保存 POST
-  接口计划挂在同一中间件
-- 结构：`viewer/src/`（入口+App）、`viewer/components/graph-view/GraphView.tsx`、
-  `viewer/styles/ue5-code.cyto-style.json`（纯 JSON stylesheet，按规范）+ `app.css`
-- 已实现：cose 力导向布局、拖拽/缩放、点击节点右侧详情表、layer 配色
-  （project 橙/engine 蓝/plugin 紫）、度数→节点大小（加载时预计算 data.size）、
-  visibility 视觉区分（silhouette 虚线边框、fog 点线半透明，为 P2U3 三态铺垫）
-- 验证：/、/api/graphs、/data/graphs/*.cyto.json、样式 JSON 全部 HTTP 200；
-  viewer 与 root 两个 tsconfig 类型检查通过（补装 @types/node）
-- 浏览器人工验收入口：http://localhost:3030
+**验收**: 查看器中能看到顺序正确的生命周期链，Sabotage 覆写的函数正确连线
 
 ---
 
-### P1U4 — 标注存储原型 ✅（2026-07-02 完成）
+### P2U3 — 三态节点交互
 
-**输入**: P1U3 的查看器
+**输入**: P2U1/U2 的图谱
 **产出**:
-- `core/annotation/` 下的标注读写模块
-- 标注数据与 graph JSON 分离存储在 `data/annotations/`
-- 查看器中添加侧边栏：点击节点 → 右侧显示标注 → 可编辑 → 保存到 annotation JSON
-- 支持标注类型选择（gotcha / best_practice / design_decision / performance / reference）
-- 保存时自动记录 created_at 时间戳
+- 按 module 折叠的 `meta_group` 生成逻辑（children_count 正确）
+- 查看器交互：点击 fog 节点 → 提示展开；explored 节点右键 → 折叠回 silhouette；
+  silhouette 容器内点击节点 → 展开直接依赖
+- 折叠/展开状态持久化（刷新不丢）
 
-**验收**: 能在查看器中给某个模块节点添加标注，刷新后标注仍在
-
-**完成记录**：
-- `core/annotation/store.ts`：load/add/update/delete 四个接口，文件按
-  `{domain}_{subsystem}_annotations.json` 分片（与图谱同粒度）；**写入前用
-  annotation.schema.json 校验，坏数据拒写**，保证 data/annotations/ 永远合规
-- API 挂在 Vite 中间件（与 /data 同进程）：GET/POST `/api/annotations/:domain/:subsystem`，
-  POST body 用 action 字段区分 add/update/delete，统一返回最新条目数组
-- 前端 `viewer/components/annotation-panel/AnnotationPanel.tsx`：嵌在节点详情侧边栏下方，
-  5 种类型（踩坑/最佳实践/设计决策/性能/参考）带色徽章 + 新增/编辑/删除 + stale 标记预留
-- 验证：add/update/delete 全走通；产物文件通过 schema 验证；已给 Sabotage 节点留一条
-  design_decision 示例标注（`data/annotations/ue5_code_modules_annotations.json`）
-- 踩坑记录：PS 5.1 `Invoke-WebRequest -Body` 按 ASCII 发中文会变 `?`，测 API 需
-  UTF8.GetBytes；浏览器 fetch 无此问题
+**验收**: 折叠 → 展开 → 再折叠循环操作无数据丢失、无孤立边
 
 ---
 
-### P1U5 — Phase 1 端到端验证 + 毕业
+### P2U4 — 种子层填充
 
-**输入**: P1U1-U4 的全部产出
+**输入**: 引擎参考资料 + Sabotage 实际用到的引擎子系统
 **产出**:
-- 端到端流程验证：修改一个 .Build.cs → 重新运行 Adapter → 查看器刷新看到变化
-- 修复集成中发现的问题
-- 执行「阶段毕业协议」：
-  - 将 Phase 1 的关键决策写入 `docs/architecture.md`
-  - 精简本文件的 Phase 1 部分
+- GAS / Enhanced Input / Animation（+ StateTree，Sabotage 实际依赖）入口类种子数据
+  （手工整理，layer="engine"），入口类 silhouette、其余 fog
+- 种子图与 P2U1 项目类图合并加载
 
-**验收**: 完整通路无报错运行，`docs/architecture.md` 有内容
+**验收**: 查看器能看到种子子系统，入口类带 description
 
 ---
 
-## Phase 2: 引擎种子层 + 类解析（待展开）
+### P2U5 — 项目类挂载引擎节点
 
-> 目标：解析 .h 头文件 → 类关系图谱 + Actor 生命周期 + 三态节点 + 项目代码映射
-> 到达此 Phase 时，由 Claude Code 根据 Phase 1 的实际产出展开详细 work units。
+**输入**: P2U1 产物 + P2U4 种子层
+**产出**:
+- 项目类 → 引擎基类的 `inherits` 边自动跨层连接（触发引擎节点
+  fog→silhouette→explored 自动转换规则落地）
+- 覆写引擎虚函数 → `overrides` 边
 
-预估 work units：
-1. P2U1 — `.h` 头文件解析器（UCLASS / 继承链 / UPROPERTY 元数据 / UFUNCTION 签名提取，生成 `ufunction` 节点并填充 `api` 子对象的自动提取字段：signature, return_type, params.name, params.type, cpp_only, blueprint_exposable）
-2. P2U2 — Actor 生命周期序列节点生成
-3. P2U3 — 三态节点实现（Fog / Silhouette / Explored 交互逻辑）
-4. P2U4 — 种子层填充（GAS / Enhanced Input / Animation 入口类）
-5. P2U5 — 项目自定义类自动挂载到引擎节点
-6. P2U6 — Phase 2 集成验证 + 毕业
+**验收**: Sabotage 全部自定义类挂在对应引擎基类下，无悬空引用
+
+---
+
+### P2U6 — Phase 2 集成验证 + 毕业
+
+**输入**: P2U1–U5 全部产出
+**产出**:
+- 端到端验证：改一个 .h（加函数/改继承）→ 重跑 Adapter → 查看器正确反映
+- 执行「阶段毕业协议」：决策写入 docs/architecture.md，精简本节，展开 Phase 3
+
+**验收**: 完整通路无报错，docs/architecture.md 追加 Phase 2 章节
 
 ---
 
