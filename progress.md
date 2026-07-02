@@ -9,8 +9,8 @@
 ## 当前状态
 
 - **Phase**: 1
-- **最新完成**: P1U1 — 项目初始化 + Schema 落地
-- **下一步**: P1U2 — UE5 Code Adapter 最小版本（需用户提供 UE5 项目 Source/ 目录路径）
+- **最新完成**: P1U2 — UE5 Code Adapter 最小版本
+- **下一步**: P1U3 — Cytoscape.js 查看器骨架
 - **上次会话**: 2026-07-02
 
 ---
@@ -44,7 +44,7 @@
 
 ---
 
-### P1U2 — UE5 Code Adapter 最小版本
+### P1U2 — UE5 Code Adapter 最小版本 ✅（2026-07-02 完成）
 
 **输入**: 你的 UE5 项目 Source/ 目录路径
 **产出**:
@@ -60,6 +60,16 @@
 **验收**: 运行脚本后 `data/graphs/` 下生成有效的 `.cyto.json`，通过 schema 验证
 
 **用户需提供**: 你的项目 Source/ 目录路径（在会话中告知 Claude Code）
+
+**完成记录**：
+- 目标项目：`G:\UnrealProject\Sabotage\Source`（本机唯一含 Source 的 UE 项目）
+- `adapters/ue5-code/extract-modules.ts`：递归扫 *.Build.cs，先剥离 C# 注释再提取
+  （避免模板工程注释里的 SlateCore/OnlineSubsystem 被误提取——已实测排除），
+  支持 AddRange 与 Add 两种写法；npm script `extract:ue5-modules`
+- 层级/可见性规则：扫描到 Build.cs 的模块 project/explored；仅作为依赖出现的模块
+  engine/silhouette（对应三态规则的"依赖即入轮廓态"）
+- 产物 `data/graphs/ue5_code_modules_2026-07-02.cyto.json`：11 节点（Sabotage + 10 引擎模块）、
+  10 条 depends_on 边（weight=5），in/out degree 已填充，通过 schema 验证 ✓
 
 ---
 

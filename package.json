@@ -5,6 +5,7 @@
   "type": "module",
   "description": "自托管的领域无关知识图谱平台 — 首个场景：UE5 项目代码架构分析",
   "scripts": {
+    "extract:ue5-modules": "tsx adapters/ue5-code/extract-modules.ts",
     "validate": "tsx core/schema/validate.ts",
     "validate:examples": "tsx core/schema/validate.ts core/schema/examples/ue5_code_example.cyto.json core/schema/examples/ue5_code_example_annotations.json"
   },

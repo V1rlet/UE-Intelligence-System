@@ -1,0 +1,291 @@
+{
+  "meta": {
+    "domain": "ue5_code",
+    "subsystem": "modules",
+    "generated_at": "2026-07-02T05:44:24.679Z",
+    "generator": "ue5-code-adapter/extract-modules@0.1.0",
+    "source_root": "G:/UnrealProject/Sabotage/Source"
+  },
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "Sabotage",
+          "label": "Sabotage",
+          "type": "module",
+          "layer": "project",
+          "module": "Sabotage",
+          "domain": "ue5_code",
+          "source_path": "../Sabotage/Source/Sabotage/Sabotage.Build.cs",
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 10
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "Core",
+          "label": "Core",
+          "type": "module",
+          "layer": "engine",
+          "module": "Core",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "CoreUObject",
+          "label": "CoreUObject",
+          "type": "module",
+          "layer": "engine",
+          "module": "CoreUObject",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "Engine",
+          "label": "Engine",
+          "type": "module",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "InputCore",
+          "label": "InputCore",
+          "type": "module",
+          "layer": "engine",
+          "module": "InputCore",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "EnhancedInput",
+          "label": "EnhancedInput",
+          "type": "module",
+          "layer": "engine",
+          "module": "EnhancedInput",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "AIModule",
+          "label": "AIModule",
+          "type": "module",
+          "layer": "engine",
+          "module": "AIModule",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "StateTreeModule",
+          "label": "StateTreeModule",
+          "type": "module",
+          "layer": "engine",
+          "module": "StateTreeModule",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "GameplayStateTreeModule",
+          "label": "GameplayStateTreeModule",
+          "type": "module",
+          "layer": "engine",
+          "module": "GameplayStateTreeModule",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "UMG",
+          "label": "UMG",
+          "type": "module",
+          "layer": "engine",
+          "module": "UMG",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "Slate",
+          "label": "Slate",
+          "type": "module",
+          "layer": "engine",
+          "module": "Slate",
+          "domain": "ue5_code",
+          "visibility": "silhouette",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "Sabotage--depends_on-->Core",
+          "source": "Sabotage",
+          "target": "Core",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      },
+      {
+        "data": {
+          "id": "Sabotage--depends_on-->CoreUObject",
+          "source": "Sabotage",
+          "target": "CoreUObject",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      },
+      {
+        "data": {
+          "id": "Sabotage--depends_on-->Engine",
+          "source": "Sabotage",
+          "target": "Engine",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      },
+      {
+        "data": {
+          "id": "Sabotage--depends_on-->InputCore",
+          "source": "Sabotage",
+          "target": "InputCore",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      },
+      {
+        "data": {
+          "id": "Sabotage--depends_on-->EnhancedInput",
+          "source": "Sabotage",
+          "target": "EnhancedInput",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      },
+      {
+        "data": {
+          "id": "Sabotage--depends_on-->AIModule",
+          "source": "Sabotage",
+          "target": "AIModule",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      },
+      {
+        "data": {
+          "id": "Sabotage--depends_on-->StateTreeModule",
+          "source": "Sabotage",
+          "target": "StateTreeModule",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      },
+      {
+        "data": {
+          "id": "Sabotage--depends_on-->GameplayStateTreeModule",
+          "source": "Sabotage",
+          "target": "GameplayStateTreeModule",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      },
+      {
+        "data": {
+          "id": "Sabotage--depends_on-->UMG",
+          "source": "Sabotage",
+          "target": "UMG",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      },
+      {
+        "data": {
+          "id": "Sabotage--depends_on-->Slate",
+          "source": "Sabotage",
+          "target": "Slate",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      }
+    ]
+  }
+}
