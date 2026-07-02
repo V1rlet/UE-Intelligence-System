@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-brain.local/schema/edge.schema.json",
+  "title": "Graph Brain Edge",
+  "description": "图谱边（Cytoscape.js 兼容）。relation 在核心层为自由字符串，ue5_code 领域通过条件子模式收紧为枚举。",
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": ["id", "source", "target", "relation", "domain"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "relation": { "type": "string", "minLength": 1 },
+        "domain": { "type": "string", "minLength": 1 },
+        "weight": { "type": "number", "minimum": 1, "maximum": 5 },
+        "description": { "type": "string" },
+        "order": { "type": "integer", "minimum": 0 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "domain": { "const": "ue5_code" } },
+            "required": ["domain"]
+          },
+          "then": {
+            "properties": {
+              "relation": {
+                "enum": [
+                  "inherits", "implements", "composes", "aggregates",
+                  "depends_on", "delegates", "calls", "overrides",
+                  "binds_event", "lifecycle_sequence", "cross_domain"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "relation": { "const": "lifecycle_sequence" } },
+            "required": ["relation"]
+          },
+          "then": { "required": ["order"] }
+        }
+      ]
+    },
+    "classes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "node_id": "UAbilitySystemComponent::TryActivateAbility",
+    "domain": "ue5_code",
+    "annotations": [
+      {
+        "id": "ann_001",
+        "type": "gotcha",
+        "content": "客户端调用时若 Ability 的 NetExecutionPolicy 为 ServerOnly，本地会直接返回 false 而不产生任何日志。排查激活失败先看网络策略。",
+        "created_at": "2026-07-02T05:30:00Z",
+        "source_hash": "a3f2c1d0000000000000000000000000",
+        "stale": false
+      },
+      {
+        "id": "ann_002",
+        "type": "best_practice",
+        "content": "优先用 GiveAbility 返回的 FGameplayAbilitySpecHandle 激活，而非按 Class 查找，避免同类多实例时激活到错误的 Spec。",
+        "created_at": "2026-07-02T05:31:00Z"
+      }
+    ]
+  }
+]

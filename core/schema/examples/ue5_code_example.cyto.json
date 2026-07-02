@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "domain": "ue5_code",
+    "subsystem": "example",
+    "generated_at": "2026-07-02T05:30:00Z",
+    "generator": "handwritten-example"
+  },
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "module:Engine",
+          "label": "Engine",
+          "type": "module",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "UE 核心引擎模块",
+          "visibility": "explored",
+          "metrics": { "in_degree": 2, "out_degree": 0, "betweenness": 0.5 }
+        }
+      },
+      {
+        "data": {
+          "id": "module:GameplayAbilities",
+          "label": "GameplayAbilities",
+          "type": "module",
+          "layer": "plugin",
+          "module": "GameplayAbilities",
+          "domain": "ue5_code",
+          "description": "GAS 插件模块",
+          "visibility": "explored"
+        }
+      },
+      {
+        "data": {
+          "id": "APawn",
+          "label": "APawn",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "可被 Controller 附身的 Actor 基类",
+          "source_path": "Engine/Source/Runtime/Engine/Classes/GameFramework/Pawn.h",
+          "visibility": "silhouette"
+        }
+      },
+      {
+        "data": {
+          "id": "ACharacter",
+          "label": "ACharacter",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "带移动组件与胶囊体的角色基类",
+          "source_path": "Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h",
+          "tags": ["blueprintable", "override_point"],
+          "visibility": "explored",
+          "metrics": { "in_degree": 12, "out_degree": 5, "betweenness": 0.34 }
+        }
+      },
+      {
+        "data": {
+          "id": "UAbilitySystemComponent",
+          "label": "UAbilitySystemComponent",
+          "type": "ucomponent",
+          "layer": "plugin",
+          "module": "GameplayAbilities",
+          "domain": "ue5_code",
+          "description": "GAS 核心组件：持有并激活 Ability",
+          "source_path": "Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Public/AbilitySystemComponent.h",
+          "visibility": "explored"
+        }
+      },
+      {
+        "data": {
+          "id": "UAbilitySystemComponent::TryActivateAbility",
+          "label": "TryActivateAbility",
+          "type": "ufunction",
+          "layer": "plugin",
+          "module": "GameplayAbilities",
+          "domain": "ue5_code",
+          "parent": "UAbilitySystemComponent",
+          "description": "尝试通过 Handle 激活一个 Gameplay Ability",
+          "source_path": "Plugins/Runtime/GameplayAbilities/Source/GameplayAbilities/Public/AbilitySystemComponent.h",
+          "tags": ["#combat", "#gas", "#activation"],
+          "visibility": "explored",
+          "api": {
+            "signature": "bool TryActivateAbility(FGameplayAbilitySpecHandle AbilityToActivate, bool bAllowRemoteActivation = true)",
+            "return_type": "bool",
+            "params": [
+              { "name": "AbilityToActivate", "type": "FGameplayAbilitySpecHandle", "note": "由 GiveAbility 返回" },
+              { "name": "bAllowRemoteActivation", "type": "bool", "note": "多人环境下是否允许远程激活" }
+            ],
+            "companions": ["GiveAbility", "CancelAbility", "GetActivatableAbilities"],
+            "cpp_only": false,
+            "blueprint_exposable": true
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "meta:AnimationCore",
+          "label": "AnimationCore (42 classes)",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "AnimationCore",
+          "domain": "ue5_code",
+          "description": "未探索的动画子系统（迷雾态折叠节点）",
+          "visibility": "fog",
+          "children_count": 42
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "module:GameplayAbilities--depends_on-->module:Engine",
+          "source": "module:GameplayAbilities",
+          "target": "module:Engine",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 5,
+          "description": "PublicDependencyModuleNames"
+        }
+      },
+      {
+        "data": {
+          "id": "ACharacter--inherits-->APawn",
+          "source": "ACharacter",
+          "target": "APawn",
+          "relation": "inherits",
+          "domain": "ue5_code"
+        }
+      },
+      {
+        "data": {
+          "id": "ACharacter--composes-->UAbilitySystemComponent",
+          "source": "ACharacter",
+          "target": "UAbilitySystemComponent",
+          "relation": "composes",
+          "domain": "ue5_code",
+          "weight": 3,
+          "description": "示例：项目角色持有 ASC"
+        }
+      },
+      {
+        "data": {
+          "id": "meta:AnimationCore--depends_on-->module:Engine",
+          "source": "meta:AnimationCore",
+          "target": "module:Engine",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "weight": 2,
+          "description": "迷雾区与已探索区之间的虚线边"
+        }
+      }
+    ]
+  }
+}

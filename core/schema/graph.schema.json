@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-brain.local/schema/graph.schema.json",
+  "title": "Graph Brain Graph File (*.cyto.json)",
+  "description": "完整图谱文件：meta（生成信息）+ elements（Cytoscape.js 标准的 nodes/edges 结构，可直接喂给 cytoscape({ elements })）。",
+  "type": "object",
+  "required": ["elements"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "domain": { "type": "string", "minLength": 1 },
+        "subsystem": { "type": "string" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "generator": { "type": "string" },
+        "source_root": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "elements": {
+      "type": "object",
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": { "$ref": "https://graph-brain.local/schema/node.schema.json" }
+        },
+        "edges": {
+          "type": "array",
+          "items": { "$ref": "https://graph-brain.local/schema/edge.schema.json" }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

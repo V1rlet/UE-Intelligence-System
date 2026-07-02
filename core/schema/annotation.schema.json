@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-brain.local/schema/annotation.schema.json",
+  "title": "Graph Brain Annotation File (*_annotations.json)",
+  "description": "标注文件：条目数组，每条通过 node_id 关联图谱节点。与 graph JSON 分离存储，避免 Adapter 重新生成图谱时覆盖手动标注。",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["node_id", "domain", "annotations"],
+    "properties": {
+      "node_id": { "type": "string", "minLength": 1 },
+      "domain": { "type": "string", "minLength": 1 },
+      "annotations": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["id", "type", "content", "created_at"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "type": {
+              "enum": ["gotcha", "best_practice", "design_decision", "performance", "reference"]
+            },
+            "content": { "type": "string", "minLength": 1 },
+            "created_at": { "type": "string", "format": "date-time" },
+            "source_hash": { "type": "string" },
+            "stale": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "graph-brain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "自托管的领域无关知识图谱平台 — 首个场景：UE5 项目代码架构分析",
+  "scripts": {
+    "validate": "tsx core/schema/validate.ts",
+    "validate:examples": "tsx core/schema/validate.ts core/schema/examples/ue5_code_example.cyto.json core/schema/examples/ue5_code_example_annotations.json"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}

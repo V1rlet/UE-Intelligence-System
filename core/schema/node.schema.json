@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-brain.local/schema/node.schema.json",
+  "title": "Graph Brain Node",
+  "description": "图谱节点（Cytoscape.js 兼容）。核心字段领域无关；ue5_code 领域的 type 枚举与 ufunction/api 约束通过条件子模式收紧。",
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": ["id", "label", "type", "domain"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "layer": { "enum": ["engine", "plugin", "project"] },
+        "module": { "type": "string" },
+        "domain": { "type": "string", "minLength": 1 },
+        "parent": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "source_path": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "visibility": { "enum": ["fog", "silhouette", "explored"] },
+        "children_count": { "type": "integer", "minimum": 0 },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "in_degree": { "type": "integer", "minimum": 0 },
+            "out_degree": { "type": "integer", "minimum": 0 },
+            "betweenness": { "type": "number", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "api": { "$ref": "#/definitions/api" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "domain": { "const": "ue5_code" } },
+            "required": ["domain"]
+          },
+          "then": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "module", "uclass", "uactor", "ucomponent", "ustruct",
+                  "uenum", "uinterface", "ufunction", "blueprint",
+                  "lifecycle_step", "meta_group"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "ufunction" } },
+            "required": ["type"]
+          },
+          "then": { "required": ["api", "parent"] }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "meta_group" } },
+            "required": ["type"]
+          },
+          "then": { "required": ["children_count"] }
+        }
+      ]
+    },
+    "position": {
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "classes": { "type": "string" }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "api": {
+      "type": "object",
+      "description": "ufunction 节点的 API 扩展字段，驱动 API Reference View",
+      "required": ["signature", "return_type"],
+      "properties": {
+        "signature": { "type": "string", "minLength": 1 },
+        "return_type": { "type": "string", "minLength": 1 },
+        "params": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "type": { "type": "string", "minLength": 1 },
+              "note": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "companions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "cpp_only": { "type": "boolean" },
+        "blueprint_exposable": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
