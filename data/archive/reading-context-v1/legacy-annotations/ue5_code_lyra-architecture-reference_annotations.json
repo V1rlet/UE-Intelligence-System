@@ -1,0 +1,38 @@
+[
+  {
+    "node_id": "ULyraPawnExtensionComponent",
+    "domain": "ue5_code",
+    "annotations": [
+      {
+        "id": "ann_lyra_extension",
+        "type": "gotcha",
+        "content": "不要用 BeginPlay + Delay 猜依赖就绪；Lyra 使用 InitState 协调 PawnData、Controller、PlayerState 与 ASC。",
+        "created_at": "2026-07-12T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "node_id": "ALyraPlayerState",
+    "domain": "ue5_code",
+    "annotations": [
+      {
+        "id": "ann_lyra_ps",
+        "type": "best_practice",
+        "content": "玩家 ASC 由 PlayerState 持有，OwnerActor=PlayerState，AvatarActor=当前 Pawn，因此可跨 Pawn 重生保留能力状态。",
+        "created_at": "2026-07-12T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "node_id": "ULyraExperienceManagerComponent",
+    "domain": "ue5_code",
+    "annotations": [
+      {
+        "id": "ann_lyra_exp",
+        "type": "best_practice",
+        "content": "Experience 加载是异步装配过程；依赖插件、PawnData 或输入的系统应等待 ExperienceLoaded。",
+        "created_at": "2026-07-12T00:00:00.000Z"
+      }
+    ]
+  }
+]

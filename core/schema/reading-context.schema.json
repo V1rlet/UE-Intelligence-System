@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-brain.local/schema/reading-context.schema.json",
+  "title": "GraphBrain Reading Context",
+  "description": "Versioned user-owned reading state for ue5_code facts: annotations and favorites.",
+  "type": "object",
+  "required": ["format_version", "domain", "revision", "updated_at", "annotations", "favorites"],
+  "properties": {
+    "format_version": { "const": 1 },
+    "domain": { "const": "ue5_code" },
+    "revision": { "type": "integer", "minimum": 0 },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "annotations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["subsystem", "node_id", "annotations"],
+        "properties": {
+          "subsystem": { "type": "string", "minLength": 1 },
+          "node_id": { "type": "string", "minLength": 1 },
+          "annotations": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "type", "content", "created_at"],
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "type": { "enum": ["gotcha", "best_practice", "design_decision", "performance", "reference"] },
+                "content": { "type": "string", "minLength": 1 },
+                "created_at": { "type": "string", "format": "date-time" },
+                "updated_at": { "type": "string", "format": "date-time" },
+                "source_hash": { "type": "string" },
+                "stale": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "favorites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "source", "node_id", "added_at"],
+        "properties": {
+          "kind": { "enum": ["class", "function"] },
+          "source": { "enum": ["project", "engine", "unknown"] },
+          "node_id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string" },
+          "parent_id": { "type": "string" },
+          "module": { "type": "string" },
+          "source_path": { "type": "string" },
+          "added_at": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,351 @@
+/* HelpCenter 局部样式（CSS Modules 阶段 2 试点）。
+   规则迁移自全局 help-center.css；help-center.css 已删除。
+   全局依赖：gb-enter-fade keyframes（motion.css）、design-tokens 变量、spacing 令牌。 */
+
+.centerMask {
+	position: fixed;
+	inset: 0;
+	z-index: 135;
+	display: flex;
+	justify-content: flex-end;
+	background: color-mix(in srgb, var(--gb-neutral-15) 56%, transparent);
+	backdrop-filter: blur(3px);
+	-webkit-backdrop-filter: blur(3px);
+	animation: gb-enter-fade var(--motion-fast) var(--ease-out) both;
+}
+
+.center {
+	display: grid;
+	grid-template-rows: auto auto minmax(0, 1fr) auto;
+	width: min(540px, calc(100vw - var(--rail-size)));
+	height: 100%;
+	border-left: 1px solid color-mix(in srgb, var(--gb-violet-70) 28%, transparent);
+	background:
+		linear-gradient(150deg, color-mix(in srgb, var(--gb-violet-25) 99%, transparent), color-mix(in srgb, var(--gb-neutral-15) 99.5%, transparent));
+	box-shadow: -24px 0 64px color-mix(in srgb, var(--gb-black) 34%, transparent);
+	animation: enter 280ms var(--ease-enter) both;
+}
+
+.head {
+	display: grid;
+	grid-template-columns: 40px minmax(0, 1fr) 34px;
+	align-items: center;
+	gap: var(--sp-4);
+	padding: 18px 18px 15px;
+	border-bottom: 1px solid var(--border-subtle);
+}
+
+.mark {
+	display: grid;
+	width: 40px;
+	height: 40px;
+	place-items: center;
+	border: 1px solid color-mix(in srgb, var(--gb-cyan-75) 28%, transparent);
+	border-radius: 11px;
+	background: color-mix(in srgb, var(--gb-cyan-75) 7%, transparent);
+	color: var(--gb-cyan-80);
+}
+
+.head small,
+.contextLabel {
+	color: var(--text-muted);
+	font: 9px var(--font-mono);
+	letter-spacing: .08em;
+}
+
+.head h2 {
+	margin: 2px 0 0;
+	color: var(--text-primary);
+	font: 650 17px var(--font-display);
+}
+
+.close {
+	display: grid;
+	width: 32px;
+	height: 32px;
+	place-items: center;
+	border: 1px solid var(--border-default);
+	border-radius: 9px;
+	background: transparent;
+	color: var(--text-tertiary);
+}
+
+.close:hover {
+	border-color: color-mix(in srgb, var(--gb-cyan-75) 40%, transparent);
+	color: var(--text-primary);
+}
+
+.tabs {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--sp-1);
+	padding: var(--sp-3) var(--sp-5);
+	border-bottom: 1px solid var(--border-subtle);
+	background: color-mix(in srgb, var(--gb-neutral-15) 22%, transparent);
+}
+.search {
+	display: flex;
+	align-items: center;
+	gap: var(--sp-3);
+	margin: 12px 18px 0;
+	padding: 0 10px;
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-md);
+	background: var(--bg-input);
+}
+.search:focus-within { border-color: var(--gb-violet-60); box-shadow: 0 0 0 2px color-mix(in srgb, var(--gb-violet-60) 18%, transparent); }
+.search input { flex: 1; min-height: 36px; border: 0; outline: 0; background: transparent; color: var(--text-primary); }
+.search button { border: 0; background: transparent; color: var(--text-tertiary); font-size: 18px; }
+.searchResults { display: grid; gap: 8px; }
+.searchResults > p { margin: 0 0 4px; color: var(--text-tertiary); font-size: 11px; }
+.searchResults > button {
+	display: grid;
+	gap: 3px;
+	padding: var(--sp-4) var(--sp-5);
+	border: 1px solid var(--border-subtle);
+	border-radius: var(--radius-md);
+	background: var(--bg-panel);
+	color: var(--text-secondary);
+	text-align: left;
+}
+.searchResults > button:hover { border-color: var(--gb-violet-60); background: color-mix(in srgb, var(--gb-violet-40) 12%, var(--bg-panel)); }
+.searchResults small { color: var(--gb-violet-70); }
+.searchResults strong { color: var(--text-primary); }
+
+.tabs button {
+	min-height: 36px;
+	border: 1px solid transparent;
+	border-radius: 8px;
+	background: transparent;
+	color: var(--text-tertiary);
+	font-size: 11px;
+}
+
+.tabs button:hover {
+	background: color-mix(in srgb, var(--gb-cyan-75) 5%, transparent);
+	color: var(--text-secondary);
+}
+
+.tabs button.active {
+	border-color: color-mix(in srgb, var(--gb-cyan-75) 24%, transparent);
+	background: color-mix(in srgb, var(--gb-cyan-75) 8%, transparent);
+	color: var(--gb-cyan-85);
+}
+
+.body {
+	overflow-y: auto;
+	padding: 24px 22px 30px;
+}
+
+.current h3 {
+	margin: 8px 0 7px;
+	color: var(--text-primary);
+	font: 650 22px/1.25 var(--font-display);
+}
+
+.contextSummary,
+.sectionIntro {
+	margin: 0;
+	color: var(--text-secondary);
+	font-size: 12.5px;
+	line-height: 1.7;
+}
+
+.nextSteps {
+	display: grid;
+	gap: var(--sp-3);
+	margin: 22px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.nextSteps li {
+	display: grid;
+	grid-template-columns: 27px minmax(0, 1fr);
+	align-items: center;
+	gap: var(--sp-4);
+	padding: 11px 12px;
+	border: 1px solid var(--border-subtle);
+	border-radius: 10px;
+	background: color-mix(in srgb, var(--gb-violet-30) 34%, transparent);
+}
+
+.nextSteps li > span,
+.workflowCard li > span {
+	display: grid;
+	width: 24px;
+	height: 24px;
+	place-items: center;
+	border: 1px solid color-mix(in srgb, var(--gb-cyan-75) 26%, transparent);
+	border-radius: 50%;
+	color: var(--gb-cyan-80);
+	font: 9px var(--font-mono);
+}
+
+.nextSteps p {
+	margin: 0;
+	color: var(--text-secondary);
+	font-size: 12px;
+	line-height: 1.45;
+}
+
+.principle {
+	display: grid;
+	grid-template-columns: 30px minmax(0, 1fr);
+	gap: 9px;
+	margin-top: 18px;
+	padding: var(--sp-5);
+	border: 1px solid color-mix(in srgb, var(--gb-green-75) 22%, transparent);
+	border-radius: 10px;
+	background: color-mix(in srgb, var(--gb-green-75) 6%, transparent);
+	color: var(--gb-green-80);
+}
+
+.principle p {
+	display: grid;
+	gap: 3px;
+	margin: 0;
+}
+
+.principle b { color: var(--text-primary); font-size: 11.5px; }
+.principle span { color: var(--text-tertiary); font-size: 10.5px; line-height: 1.5; }
+
+.workflows {
+	display: grid;
+	gap: 14px;
+}
+
+.workflowCard {
+	padding: 15px;
+	border: 1px solid var(--border-subtle);
+	border-radius: 12px;
+	background: color-mix(in srgb, var(--gb-violet-30) 28%, transparent);
+}
+
+.workflowCard header {
+	display: flex;
+	align-items: center;
+	gap: var(--sp-3);
+	color: var(--gb-cyan-80);
+}
+
+.workflowCard h3 {
+	margin: 0;
+	color: var(--text-primary);
+	font: 630 14px var(--font-display);
+}
+
+.workflowCard ol {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 7px;
+	margin: 13px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.workflowCard li {
+	display: grid;
+	grid-template-columns: 24px minmax(0, 1fr);
+	align-items: center;
+	gap: 7px;
+	min-height: 38px;
+	color: var(--text-secondary);
+	font-size: 10.5px;
+	line-height: 1.35;
+}
+
+.sharedNote {
+	margin: 0;
+	padding: var(--sp-5);
+	border-left: 2px solid color-mix(in srgb, var(--gb-violet-75) 45%, transparent);
+	color: var(--text-tertiary);
+	font-size: 11px;
+	line-height: 1.6;
+}
+
+.sharedNote b { color: var(--text-secondary); }
+
+.shortcuts {
+	display: grid;
+	gap: var(--sp-7);
+}
+
+.shortcuts section h3 {
+	margin: 0 0 8px;
+	color: var(--text-primary);
+	font: 620 12.5px var(--font-display);
+}
+
+.shortcuts ul {
+	display: grid;
+	margin: 0;
+	padding: 0;
+	border: 1px solid var(--border-subtle);
+	border-radius: 10px;
+	overflow: hidden;
+	list-style: none;
+}
+
+.shortcuts li {
+	display: grid;
+	grid-template-columns: minmax(120px, .7fr) minmax(0, 1fr);
+	align-items: center;
+	gap: var(--sp-5);
+	min-height: 42px;
+	padding: 8px 11px;
+	border-bottom: 1px solid var(--border-subtle);
+}
+
+.shortcuts li:last-child { border-bottom: 0; }
+.shortcuts li > span { display: flex; flex-wrap: wrap; gap: 4px; }
+.shortcuts p { margin: 0; color: var(--text-secondary); font-size: 11px; line-height: 1.4; }
+
+.center kbd {
+	display: inline-grid;
+	min-width: 25px;
+	min-height: 23px;
+	padding: 3px 6px;
+	place-items: center;
+	border: 1px solid var(--border-default);
+	border-bottom-width: 2px;
+	border-radius: 5px;
+	background: var(--bg-input);
+	color: var(--text-secondary);
+	font: 10px var(--font-mono);
+}
+
+.foot {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--sp-6);
+	padding: 10px 18px;
+	border-top: 1px solid var(--border-subtle);
+	color: var(--text-muted);
+	font-size: 9.5px;
+}
+
+@keyframes enter {
+	from { opacity: 0; transform: translateX(22px); }
+	to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 620px) {
+	.center { width: 100vw; }
+	.body { padding: 20px 16px 26px; }
+	.workflowCard ol { grid-template-columns: 1fr; }
+	.shortcuts li { grid-template-columns: 1fr; gap: 5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.centerMask,
+	.center { animation: none; }
+}
+
+@media (forced-colors: active) {
+	.center,
+	.tabs button.active,
+	.nextSteps li,
+	.workflowCard,
+	.shortcuts ul { border-color: CanvasText; }
+}

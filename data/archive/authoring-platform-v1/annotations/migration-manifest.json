@@ -1,0 +1,26 @@
+{
+  "schema": "graphbrain.retired-annotations-migration/1",
+  "migrated_at": "2026-08-08T09:57:04.041Z",
+  "active_domain": "ue5_code",
+  "policy": "Retired-domain annotations are preserved byte-for-byte but are not served by GraphBrain.",
+  "files": [
+    {
+      "from": "data/annotations/design_workspace_affine-comments_annotations.json",
+      "to": "data/archive/authoring-platform-v1/annotations/design_workspace_affine-comments_annotations.json",
+      "bytes": 464,
+      "sha256": "3ff089c460750aa4d1cd5a1ad3d42879617ec11df0310b860833c10a1a4ccbe3",
+      "domains": [
+        "design_workspace"
+      ]
+    },
+    {
+      "from": "data/annotations/ue5_planned_combat_annotations.json",
+      "to": "data/archive/authoring-platform-v1/annotations/ue5_planned_combat_annotations.json",
+      "bytes": 44129,
+      "sha256": "781485b0da397496d04cf9800ddf78224b087cfbfa78dc64b5fe477992f72534",
+      "domains": [
+        "ue5_planned"
+      ]
+    }
+  ]
+}

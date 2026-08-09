@@ -1,75 +1,65 @@
-# Graph Brain — Architecture Decisions
+# 架构与边界
 
-> 本文件记录项目中的关键技术决策和设计理由。
-> 内容由 Claude Code 在每个 Phase 完成时自动从 progress.md 毕业到此处。
-> 也可手动追加重要的设计决策。
+## 运行结构
 
----
+```text
+UE C++ source
+  -> adapters/ue5-code (parse, normalize, version)
+  -> immutable data/graphs/ue5_code_*__gbtx-*.cyto.json
+  -> core/query/change-report -> immutable data/changes/*__gbtx-*.change.json
+  -> data/publications/ue5_code.json (one atomic generation pointer)
+  -> server (catalog, graph, change reports, reading context, engine API)
+  -> viewer (overview, explore, changes)
+```
 
-## 项目定位
+每类代码事实只有一个所有者：项目事实归活动 `ue5_code` 图；按需解析的引擎事实归引擎 resolver/cache。统一代码上下文按来源选择事实集，架构总览、图画布、类 Spec、API 详情、搜索、hover 和标注不会维护第二份类结构。变化报告只持有稳定 ID、快照引用、计数和一跳推导，不复制当前节点事实；“定位”始终回到活动图 resolver。引擎事实不会动态写入项目图。
 
-自托管的领域无关知识图谱平台，以 UE5.8 项目代码分析为首个应用场景。
-支持战争迷雾式渐进探索、节点级知识标注、自动化代码同步更新，
-可扩展到关卡设计和叙事设计等其他游戏开发领域。
+一级导航固定为总览、探索、变化。探索内的查看方式固定为架构/关系/API；“来源”是下层语境，关系提供项目/引擎，API 提供项目/引擎/全部。关系 → 引擎承载原引擎源码索引的模块森林与声明关系。它和引擎 API 共用 `useEngineCatalog` 的目录位置及 `useEngineClassParser` 的解析事实；API 不拥有独立一级入口、来源 tab、目录副本或解析缓存。旧 `lens=source` 只在 `appRoute.ts` 的单一兼容边界迁移为 `source=engine&lens=relations`。
 
-## 初始架构决策（项目启动前确定）
+## 模块
 
-### 标注与图谱数据分离存储
-- **决策**: Annotation JSON 独立于 Graph JSON
-- **理由**: 图谱 JSON 由 Adapter 自动生成并频繁覆写，标注由人类手动维护。合并存储会导致 Adapter 更新时覆盖手动标注。分离后各自独立演化。
+- `adapters/ue5-code/`：C++/UE 反射提取、引擎类型解析、架构参考构建。
+- `adapters/registry.ts`：唯一活动 adapter 注册点，仅含 `ue5_code`。
+- `core/schema/`：活动图、reading-context、变化报告的 schema、引用和一致性检查。
+- `core/reading-context/`：用户标注与类/函数收藏的唯一持久化所有者，提供 revision 冲突保护；`core/annotation/`、`core/favorites/` 只是领域投影。
+- `core/query/`：代码图的纯分析算法、版本化变化/一跳影响模型与只读 CLI。
+- `core/store/data-publication.ts`：生成代码事实的唯一发布边界；持有 version 1 generation 清单、不可变产物哈希、revision 冲突保护、旧目录兼容读取和指针回滚。
+- `core/hooks/`：更新代码事实并扫描标注陈旧度。
+- `core/service/`：常驻服务 release/deployment 的 v1 状态协议、内容寻址与 revision 冲突保护；不拥有代码图或 reading-context。
+- `server/`：活动读取/标注/变化报告 API，以及集中 410 兼容边界。
+- `viewer/`：总览、探索、变化三个顶层目的地和共享只读详情组件。
 
-### 领域适配器可插拔架构
-- **决策**: 图谱核心 (core/) 领域无关，每个数据源通过 Adapter 接口接入
-- **理由**: 同一套渲染/查询/标注基础设施需复用于代码架构、关卡设计、叙事关系等多个领域。紧耦合会导致每个新领域重复造轮子。
+## 持久化边界
 
-### 三态节点（Fog / Silhouette / Explored）
-- **决策**: 未探索的引擎子系统显示为折叠的抽象节点，按需展开
-- **理由**: UE5.8 有数千个类，全量展开不可行也不必要。抽象层保持图谱聚焦于实际使用的部分，同时让未探索区域可见但不干扰。
+- 图格式：`meta.domain = "ue5_code"`、`meta.format_version = 2`；`provenance` 独占来源身份和内容指纹，`coverage` 独占提取范围与诊断。
+- reading-context：只允许 `domain = "ue5_code"`，标注引用必须命中同 subsystem 的活动节点；所有写入使用 revision/ETag。
+- 变化报告：`format_version = 1`，是图快照的可重建派生物；当前文件名、subsystem 和指纹必须命中活动图，基线可来自归档且证据不足时必须保留 `fingerprint: null`。
+- 数据发布：`data/publications/ue5_code.json` 使用 `format_version: 1` 和单调 revision。每个 generation 只引用一份内容寻址图及其可选变化报告；服务端目录、直接文件路由、投影和标注陈旧度解析共同消费这一状态。无清单的旧日期文件只在同一兼容边界可见，不会被自动写入新状态。
+- 迁移脚本只处理活动代码格式，不推断或复活退役领域；v1→v2 与 v2→v1 结构回滚均由同一版本边界处理。
+- `data/archive/` 永远不被 catalog 和服务端活动文件读取扫描；只有显式变化构建 CLI 可以把归档图作为基线输入。
+- `runtime/deployment-state.json`：本机常驻服务的唯一 release 选择，`format_version: 1` 且使用单调 revision；`runtime/releases/` 是不可变、SHA-256 内容寻址的完整运行包。当前 release manifest 为 v3 / runtime protocol 1，同时绑定前端、server runtime 与 bootstrap 哈希。二者是生成的运维状态并被 Git 忽略，不复制或拥有领域事实；代码图、变化报告和 reading-context 始终由项目 `data/` 持有。
 
-### API 查询器融入 Graph Brain 而非独立构建
-- **决策**: 将原计划独立构建的 UE API 查询工具作为 Graph Brain 的第二个视图（API Reference View），共享同一份数据源
-- **理由**: API 条目的字段（函数签名、所属类、参数、搭配函数、踩坑提示）与 Graph Brain 的 `ufunction` 节点 + 标注完全重叠。独立构建会导致两份数据需要同步维护。融合后 Adapter 解析 `.h` 文件时同时生成类节点和函数节点，一次解析驱动两个视图。
-- **实现**: `ufunction` 节点增加 `api` 子对象存储签名/参数/搭配函数等结构化字段；踩坑提示和使用场景通过标注系统附加，不在 `api` 子对象中重复。
+## 常驻服务发布边界
 
----
+`npm run service:prepare` 在隔离目录构建候选包，把静态前端、由同一源码打包的 API runtime 和 manifest bootstrap 合成 release v3，再以临时本机端口启动该 release，并验证首页、嵌入页、图目录、默认变化报告详情、引擎目录及五个真实工作区。只有全部通过才写入 `prepared_release`。首次执行会把旧 `viewer/dist` 与当时可验证的 server runtime 一起封存为 `legacy-*`；本轮形成的 frontend-only v1 和 runtime v2 通过同一个映射迁移边界升级为 v3，旧目录不再被 launcher 接受。
 
-<!-- 以下内容由 Claude Code 在 Phase 完成时自动追加 -->
+管理员运行 `npm run service:activate` 后，NSSM 才改用已验收 release 内的 `bootstrap.mjs`。bootstrap 只读取 `deployment-state.json.current_release`，并启动同一 release 的 `server.mjs`；它不扫描时间戳、猜最新目录或加载工作区中的 server 实现。服务启动或健康检查失败时，工具恢复旧状态和旧 NSSM 启动参数；`npm run service:rollback` 会同时切换 state 与 release bootstrap。旧 `install-service.cmd` 仅保留为 prepare + activate 薄入口，不再持有第二套安装逻辑。
 
-## Phase 1: Graph Core + 最小管线 — 完成于 2026-07-02
+## 兼容边界
 
-管线全通路：`extract-modules.ts`（Build.cs → .cyto.json）→ `validate.ts`（schema + 图内引用检查）
-→ Vite 查看器（React + Cytoscape.js 渲染 + 标注面板）→ `core/annotation/store.ts`（标注分离持久化）。
-E2E 双向验证通过：给 Sabotage.Build.cs 增/删依赖，重跑 Adapter 后查看器数据即时正确。
+- `viewer/src/appRoute.ts` 统一读取旧 URL，并只写 `overview / explore / changes` 新 URL。旧创作 URL 不加载旧文件，只返回总览诊断。
+- `server/retired-authoring-tools.ts` 统一返回 410 `GRAPHBRAIN_AUTHORING_RETIRED`。
+- `server/retired-world-tools.ts` 统一返回 World Atlas 410。
+- 业务组件不得包含散落的 legacy 判断。
 
-### 关键决策
+## 退役决策（2026-08-08）
 
-- **技术栈统一 TypeScript**：schema 验证用 ajv，Adapter 解析 .Build.cs/.h 用 TS/Node，查看器
-  Vite + React 19 + Cytoscape.js。只维护一套工具链与类型定义；UE 源文件解析靠正则与词法扫描
-  即可，无需 Python 生态。只有 package.json，无 pyproject.toml。
-- **图谱文件顶层格式 `{ meta, elements }`**：`elements` 直接兼容 `cytoscape({ elements })`；
-  `meta` 携带 domain / generated_at / generator / source_root 溯源信息，供增量更新（P4U2）
-  和陈旧检测（P4U3）使用，不污染节点数据。
-- **Schema 分层策略（draft-07）**：核心字段领域无关——`type`/`relation` 在核心层为自由字符串，
-  `layer`/`visibility` 枚举全局生效；`domain: "ue5_code"` 时用 if/then 条件子模式把
-  type/relation 收紧为 UE5 枚举，并强制 `ufunction`→`api`+`parent`、`meta_group`→
-  `children_count`、`lifecycle_sequence`→`order`。新领域无需改核心 schema。
-- **单进程数据服务**：Vite dev server 中间件承载 `/api/graphs`（文件列表）、`/data/*`（数据直读，
-  防路径穿越）、`/api/annotations/:domain/:subsystem`（标注增删改查）。P1 单人本地使用，
-  避免多服务编排。端口固定 3030（strictPort；3010/3021/3022 已被本机其他服务占用）。
-- **标注写前校验拒写**：store.ts 每次写入前用 annotation.schema.json 校验，坏数据抛错拒写，
-  保证 `data/annotations/` 永远通过 validate.ts。标注文件按 `{domain}_{subsystem}` 分片，
-  与图谱文件同粒度。
-- **模块可见性规则**：扫描到 Build.cs 的模块 project/explored；仅作为依赖出现的模块
-  engine/silhouette——对应三态规则"项目依赖即自动 Fog→Silhouette"。
-- **Cytoscape 样式为纯 JSON stylesheet**（编码规范要求）：无法内嵌计算逻辑的映射（度数→
-  节点大小）在加载时预计算为 `data.size` 字段，样式表用 `data(size)` 取值。
+用户确认完整迁移并破坏性删除 GraphBrain 创作平台：
 
-### 遇到的问题与解法
+- 删除 `design_workspace`、`level_design`、`narrative`、`quest`、`ue5_planned` 图和相关 adapter/schema/store/server/viewer/test。
+- 删除设计包、任务包、计划审计、时间线、文档/实体注册、工作台和报告数据。
+- 保留代码标注；退役领域标注与孤儿代码标注逐字节归档，不进入活动服务。
+- ClaudeGameStudios 拥有架构决策、关卡方案、Programmer 计划、评审和交付。
+- Unreal Engine 拥有空间、资产和运行时事实。
 
-- **Build.cs 注释里的依赖会被误提取**（UE 模板工程注释着 SlateCore/OnlineSubsystem 示例）
-  → 解析前用小型词法器剥离 C# `//` 与 `/* */` 注释，字符串字面量内容保留。
-- **Node 的 JSON.parse 不接受 UTF-8 BOM**（Windows 编辑器/PowerShell 写出的 JSON 常带）
-  → validate.ts / store.ts 读文件先剥 BOM。
-- **PS 5.1 `Invoke-WebRequest -Body` 按 ASCII 发送**，中文正文变 `?` 且无报错
-  → 命令行测 API 用 `[Text.Encoding]::UTF8.GetBytes($body)`；浏览器 fetch 无此问题。
-- **allow-scripts 拦截 esbuild postinstall** → tsx / vite 实际运行正常，暂不处理。
+持久化数据删除回执：`data/archive/authoring-platform-v1/deletion-manifest.json`；独立创作原型与设计卡删除回执：`data/archive/authoring-platform-v1/residual-deletion-manifest.json`。GraphBrain 无内容恢复路径；如需恢复，只能从仓库外备份或历史版本显式重建，并作为新的迁移项目审查。

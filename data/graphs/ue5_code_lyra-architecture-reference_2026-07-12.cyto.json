@@ -1,0 +1,1193 @@
+{
+  "meta": {
+    "domain": "ue5_code",
+    "subsystem": "lyra-architecture-reference",
+    "title": "Lyra · Experience、Game Features、Pawn 初始化与 GAS",
+    "kind": "reference",
+    "viewpoint": "lyra-architecture",
+    "generated_at": "2026-07-16T14:16:45.089Z",
+    "generator": "build-architecture-references.ts / UE5 Lyra Cytoscape brief",
+    "format_version": 2,
+    "provenance": {
+      "schema_version": 1,
+      "status": "unknown",
+      "source_kind": "unknown",
+      "source_roots": []
+    },
+    "coverage": {
+      "status": "unknown",
+      "discovered_files": null,
+      "consumed_files": null,
+      "skipped_files": null,
+      "failed_files": null,
+      "diagnostics": [
+        {
+          "code": "legacy-v1-no-provenance-or-coverage"
+        }
+      ]
+    }
+  },
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "group:ue-base",
+          "label": "UE Gameplay Framework",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "Lyra 构建其上的原生框架层",
+          "visibility": "explored",
+          "children_count": 7,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "group:experience",
+          "label": "Lyra Experience",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "体验定义、ActionSet 与 PawnData 装配层",
+          "visibility": "explored",
+          "children_count": 5,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "group:features",
+          "label": "Game Features",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "按 Experience 动态激活和注入的功能层",
+          "visibility": "explored",
+          "children_count": 7,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "group:pawn-init",
+          "label": "Pawn Initialization",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "PawnData、ASC 与组件 InitState 协调层",
+          "visibility": "explored",
+          "children_count": 5,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "group:gas",
+          "label": "Gameplay Ability System",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "能力、效果、属性、标签与 Cue",
+          "visibility": "explored",
+          "children_count": 9,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "AGameModeBase",
+          "label": "AGameModeBase",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "服务器规则基类。",
+          "visibility": "explored",
+          "parent": "group:ue-base",
+          "origin": "UE",
+          "network_scope": "server-only",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "AGameStateBase",
+          "label": "AGameStateBase",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "公共比赛状态基类。",
+          "visibility": "explored",
+          "parent": "group:ue-base",
+          "origin": "UE",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "APlayerController",
+          "label": "APlayerController",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "拥有端控制器基类。",
+          "visibility": "explored",
+          "parent": "group:ue-base",
+          "origin": "UE",
+          "network_scope": "server-owning-client",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "APlayerState",
+          "label": "APlayerState",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "可复制玩家身份基类。",
+          "visibility": "explored",
+          "parent": "group:ue-base",
+          "origin": "UE",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "APawn",
+          "label": "APawn",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "可占据身体基类。",
+          "visibility": "explored",
+          "parent": "group:ue-base",
+          "origin": "UE",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ALyraGameMode",
+          "label": "ALyraGameMode",
+          "type": "uactor",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "选择 Experience、PawnData 并驱动玩家重启。",
+          "visibility": "explored",
+          "parent": "group:ue-base",
+          "origin": "Lyra",
+          "network_scope": "server-only",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ALyraGameState",
+          "label": "ALyraGameState",
+          "type": "uactor",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "持有 ExperienceManagerComponent 并复制 Experience 状态。",
+          "visibility": "explored",
+          "parent": "group:ue-base",
+          "origin": "Lyra",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraExperienceDefinition",
+          "label": "ULyraExperienceDefinition",
+          "type": "uclass",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "定义本局 Experience、默认 PawnData、ActionSets 与 GameFeature 插件。",
+          "visibility": "explored",
+          "parent": "group:experience",
+          "origin": "Lyra",
+          "category": "data-asset",
+          "lifetime_scope": "asset",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraExperienceActionSet",
+          "label": "ULyraExperienceActionSet",
+          "type": "uclass",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "可复用的一组 GameFeatureActions 与插件依赖。",
+          "visibility": "explored",
+          "parent": "group:experience",
+          "origin": "Lyra",
+          "category": "data-asset",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraExperienceManagerComponent",
+          "label": "ULyraExperienceManagerComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "异步加载 Experience，并广播加载完成。",
+          "visibility": "explored",
+          "parent": "group:experience",
+          "origin": "Lyra",
+          "network_scope": "server-all-clients",
+          "responsibilities": [
+            "加载 ExperienceDefinition",
+            "激活 GameFeaturePlugin",
+            "通知 ExperienceLoaded"
+          ],
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnData",
+          "label": "ULyraPawnData",
+          "type": "uclass",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "配置 Pawn 类、InputConfig、CameraMode 与 AbilitySets。",
+          "visibility": "explored",
+          "parent": "group:experience",
+          "origin": "Lyra",
+          "category": "data-asset",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "UGameFeaturesSubsystem",
+          "label": "UGameFeaturesSubsystem",
+          "type": "uclass",
+          "layer": "plugin",
+          "module": "GameFeatures",
+          "domain": "ue5_code",
+          "description": "管理 GameFeaturePlugin 状态机与激活。",
+          "visibility": "explored",
+          "parent": "group:features",
+          "origin": "UE",
+          "category": "subsystem",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureData",
+          "label": "UGameFeatureData",
+          "type": "uclass",
+          "layer": "plugin",
+          "module": "GameFeatures",
+          "domain": "ue5_code",
+          "description": "插件的资产与 Actions 清单。",
+          "visibility": "explored",
+          "parent": "group:features",
+          "origin": "UE",
+          "category": "data-asset",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction",
+          "label": "UGameFeatureAction",
+          "type": "uclass",
+          "layer": "plugin",
+          "module": "GameFeatures",
+          "domain": "ue5_code",
+          "description": "Game Feature 激活时执行的注入动作基类。",
+          "visibility": "explored",
+          "parent": "group:features",
+          "origin": "UE",
+          "tags": [],
+          "metrics": {
+            "in_degree": 5,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddComponents",
+          "label": "UGameFeatureAction_AddComponents",
+          "type": "uclass",
+          "layer": "plugin",
+          "module": "GameFeatures",
+          "domain": "ue5_code",
+          "description": "向目标 Actor 动态添加组件。",
+          "visibility": "explored",
+          "parent": "group:features",
+          "origin": "UE",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddAbilities",
+          "label": "UGameFeatureAction_AddAbilities",
+          "type": "uclass",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "向目标 Actor 的 ASC 授予 AbilitySet。",
+          "visibility": "explored",
+          "parent": "group:features",
+          "origin": "Lyra",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddInputConfig",
+          "label": "UGameFeatureAction_AddInputConfig",
+          "type": "uclass",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "向本地英雄注入输入配置。",
+          "visibility": "explored",
+          "parent": "group:features",
+          "origin": "Lyra",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddWidgets",
+          "label": "UGameFeatureAction_AddWidgets",
+          "type": "uclass",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "向 UI Layer 注入布局与 Widget。",
+          "visibility": "explored",
+          "parent": "group:features",
+          "origin": "Lyra",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ALyraCharacter",
+          "label": "ALyraCharacter",
+          "type": "uactor",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "Lyra 的可复制玩家 Pawn。",
+          "visibility": "explored",
+          "parent": "group:pawn-init",
+          "origin": "Lyra",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 3,
+            "out_degree": 3
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ALyraPlayerState",
+          "label": "ALyraPlayerState",
+          "type": "uactor",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "持有长期存续的 Lyra ASC。",
+          "visibility": "explored",
+          "parent": "group:pawn-init",
+          "origin": "Lyra",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnExtensionComponent",
+          "label": "ULyraPawnExtensionComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "协调 PawnData、Controller、PlayerState、ASC 与 InitState。",
+          "visibility": "explored",
+          "parent": "group:pawn-init",
+          "origin": "Lyra",
+          "responsibilities": [
+            "设置 PawnData",
+            "绑定 ASC Owner/Avatar",
+            "推进 InitState"
+          ],
+          "common_mistakes": [
+            "用 Delay 代替 InitState",
+            "重生后未重新绑定 AvatarActor"
+          ],
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraHeroComponent",
+          "label": "ULyraHeroComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "本地英雄输入、相机和 GameplayReady 初始化。",
+          "visibility": "explored",
+          "parent": "group:pawn-init",
+          "origin": "Lyra",
+          "network_scope": "owning-client",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraHealthComponent",
+          "label": "ULyraHealthComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "桥接 Health Attribute、死亡状态和消息。",
+          "visibility": "explored",
+          "parent": "group:pawn-init",
+          "origin": "Lyra",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySystemComponent",
+          "label": "ULyraAbilitySystemComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "Lyra ASC：处理输入标签、激活组与能力关系。",
+          "visibility": "explored",
+          "parent": "group:gas",
+          "origin": "Lyra",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 3
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySet",
+          "label": "ULyraAbilitySet",
+          "type": "uclass",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "批量授予 Abilities、Effects 与 AttributeSets 的数据资产。",
+          "visibility": "explored",
+          "parent": "group:gas",
+          "origin": "Lyra",
+          "category": "data-asset",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 3
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "UGameplayAbility",
+          "label": "UGameplayAbility",
+          "type": "uclass",
+          "layer": "plugin",
+          "module": "GameplayAbilities",
+          "domain": "ue5_code",
+          "description": "可预测、可复制的 Gameplay Ability。",
+          "visibility": "explored",
+          "parent": "group:gas",
+          "origin": "UE",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameplayEffect",
+          "label": "UGameplayEffect",
+          "type": "uclass",
+          "layer": "plugin",
+          "module": "GameplayAbilities",
+          "domain": "ue5_code",
+          "description": "修改 Attribute 或施加持续状态的定义。",
+          "visibility": "explored",
+          "parent": "group:gas",
+          "origin": "UE",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UAttributeSet",
+          "label": "UAttributeSet",
+          "type": "uclass",
+          "layer": "plugin",
+          "module": "GameplayAbilities",
+          "domain": "ue5_code",
+          "description": "ASC 管理的属性集合。",
+          "visibility": "explored",
+          "parent": "group:gas",
+          "origin": "UE",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "FGameplayTag",
+          "label": "FGameplayTag",
+          "type": "ustruct",
+          "layer": "plugin",
+          "module": "GameplayTags",
+          "domain": "ue5_code",
+          "description": "分层语义标签。",
+          "visibility": "explored",
+          "parent": "group:gas",
+          "origin": "UE",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "FGameplayAbilitySpec",
+          "label": "FGameplayAbilitySpec",
+          "type": "ustruct",
+          "layer": "plugin",
+          "module": "GameplayAbilities",
+          "domain": "ue5_code",
+          "description": "已授予 Ability 的运行时规格。",
+          "visibility": "explored",
+          "parent": "group:gas",
+          "origin": "UE",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "FGameplayEffectSpec",
+          "label": "FGameplayEffectSpec",
+          "type": "ustruct",
+          "layer": "plugin",
+          "module": "GameplayAbilities",
+          "domain": "ue5_code",
+          "description": "GameplayEffect 的运行时实例参数。",
+          "visibility": "explored",
+          "parent": "group:gas",
+          "origin": "UE",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "concept:GameplayCue",
+          "label": "Gameplay Cue（概念）",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "由 GameplayTag 驱动的表现事件系统。",
+          "visibility": "explored",
+          "children_count": 0,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "ALyraGameMode--inherits-->AGameModeBase",
+          "source": "ALyraGameMode",
+          "target": "AGameModeBase",
+          "relation": "inherits",
+          "domain": "ue5_code",
+          "description": "Lyra 服务器规则实现。"
+        },
+        "classes": "edge-inherits"
+      },
+      {
+        "data": {
+          "id": "ALyraGameState--inherits-->AGameStateBase",
+          "source": "ALyraGameState",
+          "target": "AGameStateBase",
+          "relation": "inherits",
+          "domain": "ue5_code",
+          "description": "Lyra 公共状态实现。"
+        },
+        "classes": "edge-inherits"
+      },
+      {
+        "data": {
+          "id": "ALyraGameMode--configures-->ULyraExperienceDefinition",
+          "source": "ALyraGameMode",
+          "target": "ULyraExperienceDefinition",
+          "relation": "configures",
+          "domain": "ue5_code",
+          "description": "根据 URL/WorldSettings/默认值选择 Experience。"
+        },
+        "classes": "edge-configures"
+      },
+      {
+        "data": {
+          "id": "ALyraGameState--owns-->ULyraExperienceManagerComponent",
+          "source": "ALyraGameState",
+          "target": "ULyraExperienceManagerComponent",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "ExperienceManager 位于 GameState。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ULyraExperienceManagerComponent--loads-->ULyraExperienceDefinition",
+          "source": "ULyraExperienceManagerComponent",
+          "target": "ULyraExperienceDefinition",
+          "relation": "loads",
+          "domain": "ue5_code",
+          "description": "异步加载 Experience 主资产。"
+        },
+        "classes": "edge-loads"
+      },
+      {
+        "data": {
+          "id": "ULyraExperienceDefinition--configures-->ULyraExperienceActionSet",
+          "source": "ULyraExperienceDefinition",
+          "target": "ULyraExperienceActionSet",
+          "relation": "configures",
+          "domain": "ue5_code",
+          "description": "引用可复用 ActionSets。"
+        },
+        "classes": "edge-configures"
+      },
+      {
+        "data": {
+          "id": "ULyraExperienceDefinition--configures-->ULyraPawnData",
+          "source": "ULyraExperienceDefinition",
+          "target": "ULyraPawnData",
+          "relation": "configures",
+          "domain": "ue5_code",
+          "description": "指定默认 PawnData。"
+        },
+        "classes": "edge-configures"
+      },
+      {
+        "data": {
+          "id": "ULyraExperienceManagerComponent--activates-->UGameFeaturesSubsystem",
+          "source": "ULyraExperienceManagerComponent",
+          "target": "UGameFeaturesSubsystem",
+          "relation": "activates",
+          "domain": "ue5_code",
+          "description": "激活 Experience 所需 GameFeaturePlugin。"
+        },
+        "classes": "edge-activates"
+      },
+      {
+        "data": {
+          "id": "UGameFeaturesSubsystem--loads-->UGameFeatureData",
+          "source": "UGameFeaturesSubsystem",
+          "target": "UGameFeatureData",
+          "relation": "loads",
+          "domain": "ue5_code",
+          "description": "加载插件 GameFeatureData。"
+        },
+        "classes": "edge-loads"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureData--owns-->UGameFeatureAction",
+          "source": "UGameFeatureData",
+          "target": "UGameFeatureAction",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "持有激活时执行的 Actions。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddComponents--inherits-->UGameFeatureAction",
+          "source": "UGameFeatureAction_AddComponents",
+          "target": "UGameFeatureAction",
+          "relation": "inherits",
+          "domain": "ue5_code",
+          "description": "组件注入 Action。"
+        },
+        "classes": "edge-inherits"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddAbilities--inherits-->UGameFeatureAction",
+          "source": "UGameFeatureAction_AddAbilities",
+          "target": "UGameFeatureAction",
+          "relation": "inherits",
+          "domain": "ue5_code",
+          "description": "能力注入 Action。"
+        },
+        "classes": "edge-inherits"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddInputConfig--inherits-->UGameFeatureAction",
+          "source": "UGameFeatureAction_AddInputConfig",
+          "target": "UGameFeatureAction",
+          "relation": "inherits",
+          "domain": "ue5_code",
+          "description": "输入注入 Action。"
+        },
+        "classes": "edge-inherits"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddWidgets--inherits-->UGameFeatureAction",
+          "source": "UGameFeatureAction_AddWidgets",
+          "target": "UGameFeatureAction",
+          "relation": "inherits",
+          "domain": "ue5_code",
+          "description": "UI 注入 Action。"
+        },
+        "classes": "edge-inherits"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddComponents--injects-->ALyraCharacter",
+          "source": "UGameFeatureAction_AddComponents",
+          "target": "ALyraCharacter",
+          "relation": "injects",
+          "domain": "ue5_code",
+          "description": "向匹配 Actor 添加功能组件。"
+        },
+        "classes": "edge-injects"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddAbilities--grants-->ULyraAbilitySystemComponent",
+          "source": "UGameFeatureAction_AddAbilities",
+          "target": "ULyraAbilitySystemComponent",
+          "relation": "grants",
+          "domain": "ue5_code",
+          "description": "向 ASC 授予 AbilitySet。"
+        },
+        "classes": "edge-grants"
+      },
+      {
+        "data": {
+          "id": "UGameFeatureAction_AddInputConfig--injects-->ULyraHeroComponent",
+          "source": "UGameFeatureAction_AddInputConfig",
+          "target": "ULyraHeroComponent",
+          "relation": "injects",
+          "domain": "ue5_code",
+          "description": "为本地英雄增加 InputConfig。"
+        },
+        "classes": "edge-injects"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnData--configures-->ALyraCharacter",
+          "source": "ULyraPawnData",
+          "target": "ALyraCharacter",
+          "relation": "configures",
+          "domain": "ue5_code",
+          "description": "配置 Pawn 类和功能数据。"
+        },
+        "classes": "edge-configures"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnData--owns-->ULyraAbilitySet",
+          "source": "ULyraPawnData",
+          "target": "ULyraAbilitySet",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "引用 Pawn 初始 AbilitySets。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ALyraCharacter--owns-->ULyraPawnExtensionComponent",
+          "source": "ALyraCharacter",
+          "target": "ULyraPawnExtensionComponent",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "Pawn 初始化协调组件。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ALyraCharacter--owns-->ULyraHeroComponent",
+          "source": "ALyraCharacter",
+          "target": "ULyraHeroComponent",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "本地英雄功能组件。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ALyraCharacter--owns-->ULyraHealthComponent",
+          "source": "ALyraCharacter",
+          "target": "ULyraHealthComponent",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "生命与死亡桥接组件。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ALyraPlayerState--owns-->ULyraAbilitySystemComponent",
+          "source": "ALyraPlayerState",
+          "target": "ULyraAbilitySystemComponent",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "PlayerState 持有 ASC，使能力跨 Pawn 重生。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySystemComponent--binds_as_owner-->ALyraPlayerState",
+          "source": "ULyraAbilitySystemComponent",
+          "target": "ALyraPlayerState",
+          "relation": "binds_as_owner",
+          "domain": "ue5_code",
+          "description": "OwnerActor 固定为 PlayerState。"
+        },
+        "classes": "edge-binds-as-owner"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySystemComponent--binds_as_avatar-->ALyraCharacter",
+          "source": "ULyraAbilitySystemComponent",
+          "target": "ALyraCharacter",
+          "relation": "binds_as_avatar",
+          "domain": "ue5_code",
+          "description": "AvatarActor 绑定当前 Pawn。"
+        },
+        "classes": "edge-binds-as-avatar"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnExtensionComponent--depends_on-->ULyraPawnData",
+          "source": "ULyraPawnExtensionComponent",
+          "target": "ULyraPawnData",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待 PawnData。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnExtensionComponent--depends_on-->ALyraPlayerState",
+          "source": "ULyraPawnExtensionComponent",
+          "target": "ALyraPlayerState",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待 PlayerState/ASC。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "ULyraHeroComponent--depends_on-->ULyraPawnExtensionComponent",
+          "source": "ULyraHeroComponent",
+          "target": "ULyraPawnExtensionComponent",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待 Pawn InitState。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySet--grants-->UGameplayAbility",
+          "source": "ULyraAbilitySet",
+          "target": "UGameplayAbility",
+          "relation": "grants",
+          "domain": "ue5_code",
+          "description": "授予 AbilitySpec。"
+        },
+        "classes": "edge-grants"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySet--grants-->UGameplayEffect",
+          "source": "ULyraAbilitySet",
+          "target": "UGameplayEffect",
+          "relation": "grants",
+          "domain": "ue5_code",
+          "description": "应用初始 GameplayEffects。"
+        },
+        "classes": "edge-grants"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySet--grants-->UAttributeSet",
+          "source": "ULyraAbilitySet",
+          "target": "UAttributeSet",
+          "relation": "grants",
+          "domain": "ue5_code",
+          "description": "创建并加入 AttributeSets。"
+        },
+        "classes": "edge-grants"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySystemComponent--observes-->FGameplayTag",
+          "source": "ULyraAbilitySystemComponent",
+          "target": "FGameplayTag",
+          "relation": "observes",
+          "domain": "ue5_code",
+          "description": "使用 GameplayTag 驱动输入和状态。"
+        },
+        "classes": "edge-observes"
+      },
+      {
+        "data": {
+          "id": "UGameplayEffect--creates-->FGameplayEffectSpec",
+          "source": "UGameplayEffect",
+          "target": "FGameplayEffectSpec",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "运行时生成 EffectSpec。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "UGameplayAbility--creates-->FGameplayAbilitySpec",
+          "source": "UGameplayAbility",
+          "target": "FGameplayAbilitySpec",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "授予后形成 AbilitySpec。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "UGameplayEffect--activates-->concept:GameplayCue",
+          "source": "UGameplayEffect",
+          "target": "concept:GameplayCue",
+          "relation": "activates",
+          "domain": "ue5_code",
+          "description": "通过 Cue Tag 触发表现。"
+        },
+        "classes": "edge-activates"
+      }
+    ]
+  }
+}

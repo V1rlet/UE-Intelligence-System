@@ -1,0 +1,18 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "GraphBrain Geometry Manifest",
+	"description": "稳定几何交付数据资产（export:geometry 产物），<atlas_id>-manifest.json",
+	"type": "object",
+	"required": ["schema", "atlas_id", "project_id", "unit", "spaces", "routes", "volumes", "beats"],
+	"properties": {
+		"schema": { "const": "graphbrain-geometry-manifest/1" },
+		"atlas_id": { "type": "string", "minLength": 1 },
+		"project_id": { "type": "string", "minLength": 1 },
+		"unit": { "const": "meter" },
+		"spaces": { "type": "array" },
+		"routes": { "type": "array" },
+		"volumes": { "type": "array" },
+		"beats": { "type": "array" }
+	},
+	"additionalProperties": true
+}

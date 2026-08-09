@@ -1,0 +1,756 @@
+{
+  "meta": {
+    "domain": "ue5_code",
+    "subsystem": "lifecycle-dependencies-reference",
+    "title": "UE5 / Lyra · 生命周期作用域与初始化依赖",
+    "kind": "reference",
+    "viewpoint": "lifecycle-dependencies",
+    "generated_at": "2026-07-16T14:16:45.090Z",
+    "generator": "build-architecture-references.ts / UE5 Lyra Cytoscape brief",
+    "format_version": 2,
+    "provenance": {
+      "schema_version": 1,
+      "status": "unknown",
+      "source_kind": "unknown",
+      "source_roots": []
+    },
+    "coverage": {
+      "status": "unknown",
+      "discovered_files": null,
+      "consumed_files": null,
+      "skipped_files": null,
+      "failed_files": null,
+      "diagnostics": [
+        {
+          "code": "legacy-v1-no-provenance-or-coverage"
+        }
+      ]
+    }
+  },
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "life:process",
+          "label": "Process Scope",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "进程级生命周期",
+          "visibility": "explored",
+          "children_count": 2,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "life:session",
+          "label": "GameInstance / LocalPlayer Scope",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "跨地图会话与本地玩家生命周期",
+          "visibility": "explored",
+          "children_count": 4,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "life:world",
+          "label": "World Scope",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "随地图创建销毁",
+          "visibility": "explored",
+          "children_count": 4,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "life:actor",
+          "label": "Actor / Component Scope",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "Actor 与组件初始化依赖",
+          "visibility": "explored",
+          "children_count": 8,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UEngine",
+          "label": "UEngine",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "进程级引擎根。",
+          "visibility": "explored",
+          "parent": "life:process",
+          "origin": "UE",
+          "lifetime_scope": "process",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UEngineSubsystem",
+          "label": "UEngineSubsystem",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "进程级 Subsystem。",
+          "visibility": "explored",
+          "parent": "life:process",
+          "origin": "UE",
+          "lifetime_scope": "process",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameInstance",
+          "label": "UGameInstance",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "跨 World 会话根。",
+          "visibility": "explored",
+          "parent": "life:session",
+          "origin": "UE",
+          "lifetime_scope": "game-instance",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 3
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameInstanceSubsystem",
+          "label": "UGameInstanceSubsystem",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "会话级服务。",
+          "visibility": "explored",
+          "parent": "life:session",
+          "origin": "UE",
+          "lifetime_scope": "game-instance",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ULocalPlayer",
+          "label": "ULocalPlayer",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "本地玩家生命周期。",
+          "visibility": "explored",
+          "parent": "life:session",
+          "origin": "UE",
+          "lifetime_scope": "local-player",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ULocalPlayerSubsystem",
+          "label": "ULocalPlayerSubsystem",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "本地玩家服务。",
+          "visibility": "explored",
+          "parent": "life:session",
+          "origin": "UE",
+          "lifetime_scope": "local-player",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UWorld",
+          "label": "UWorld",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "地图世界生命周期。",
+          "visibility": "explored",
+          "parent": "life:world",
+          "origin": "UE",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UWorldSubsystem",
+          "label": "UWorldSubsystem",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "World 服务。",
+          "visibility": "explored",
+          "parent": "life:world",
+          "origin": "UE",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ULyraExperienceManagerComponent",
+          "label": "ULyraExperienceManagerComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "Experience 加载状态协调。",
+          "visibility": "explored",
+          "parent": "life:world",
+          "origin": "Lyra",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraExperienceDefinition",
+          "label": "ULyraExperienceDefinition",
+          "type": "uclass",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "当前体验配置资产。",
+          "visibility": "explored",
+          "parent": "life:world",
+          "origin": "Lyra",
+          "lifetime_scope": "asset",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "APawn",
+          "label": "APawn",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "可重生 Actor。",
+          "visibility": "explored",
+          "parent": "life:actor",
+          "origin": "UE",
+          "lifetime_scope": "actor",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "APlayerController",
+          "label": "APlayerController",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "Pawn 初始化所需 Controller。",
+          "visibility": "explored",
+          "parent": "life:actor",
+          "origin": "UE",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "APlayerState",
+          "label": "APlayerState",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "Pawn 初始化所需 PlayerState。",
+          "visibility": "explored",
+          "parent": "life:actor",
+          "origin": "UE",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 3,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnData",
+          "label": "ULyraPawnData",
+          "type": "uclass",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "Pawn 功能配置。",
+          "visibility": "explored",
+          "parent": "life:actor",
+          "origin": "Lyra",
+          "lifetime_scope": "asset",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnExtensionComponent",
+          "label": "ULyraPawnExtensionComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "协调 InitState 和 ASC 绑定。",
+          "visibility": "explored",
+          "parent": "life:actor",
+          "origin": "Lyra",
+          "lifetime_scope": "actor-component",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 3
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraHeroComponent",
+          "label": "ULyraHeroComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "等待输入组件与 PawnExtension。",
+          "visibility": "explored",
+          "parent": "life:actor",
+          "origin": "Lyra",
+          "lifetime_scope": "actor-component",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySystemComponent",
+          "label": "ULyraAbilitySystemComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "等待 OwnerActor/AvatarActor。",
+          "visibility": "explored",
+          "parent": "life:actor",
+          "origin": "Lyra",
+          "lifetime_scope": "player-state",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySet",
+          "label": "ULyraAbilitySet",
+          "type": "uclass",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "等待 ASC 初始化后授予能力。",
+          "visibility": "explored",
+          "parent": "life:actor",
+          "origin": "Lyra",
+          "lifetime_scope": "asset",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "concept:GameplayReady",
+          "label": "GameplayReady（InitState）",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "所有必要功能达到 GameplayReady 后才可开始 gameplay。",
+          "visibility": "explored",
+          "children_count": 0,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 3
+          }
+        },
+        "classes": "origin-ue"
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "UEngine--owns-->UEngineSubsystem",
+          "source": "UEngine",
+          "target": "UEngineSubsystem",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "进程级作用域。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UEngine--creates-->UGameInstance",
+          "source": "UEngine",
+          "target": "UGameInstance",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "创建会话根。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "UGameInstance--owns-->UGameInstanceSubsystem",
+          "source": "UGameInstance",
+          "target": "UGameInstanceSubsystem",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "会话级作用域。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UGameInstance--owns-->ULocalPlayer",
+          "source": "UGameInstance",
+          "target": "ULocalPlayer",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "本地玩家生命周期。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ULocalPlayer--owns-->ULocalPlayerSubsystem",
+          "source": "ULocalPlayer",
+          "target": "ULocalPlayerSubsystem",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "本地玩家服务作用域。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UGameInstance--loads-->UWorld",
+          "source": "UGameInstance",
+          "target": "UWorld",
+          "relation": "loads",
+          "domain": "ue5_code",
+          "description": "Travel 创建新 World。"
+        },
+        "classes": "edge-loads"
+      },
+      {
+        "data": {
+          "id": "UWorld--owns-->UWorldSubsystem",
+          "source": "UWorld",
+          "target": "UWorldSubsystem",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "World 级作用域。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UWorld--owns-->ULyraExperienceManagerComponent",
+          "source": "UWorld",
+          "target": "ULyraExperienceManagerComponent",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "Experience 状态随 World。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ULyraExperienceManagerComponent--loads-->ULyraExperienceDefinition",
+          "source": "ULyraExperienceManagerComponent",
+          "target": "ULyraExperienceDefinition",
+          "relation": "loads",
+          "domain": "ue5_code",
+          "description": "异步加载当前 Experience。"
+        },
+        "classes": "edge-loads"
+      },
+      {
+        "data": {
+          "id": "APawn--depends_on-->APlayerController",
+          "source": "APawn",
+          "target": "APlayerController",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "Pawn 等待 Controller。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "APawn--depends_on-->APlayerState",
+          "source": "APawn",
+          "target": "APlayerState",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "Pawn 等待 PlayerState。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnExtensionComponent--depends_on-->ULyraPawnData",
+          "source": "ULyraPawnExtensionComponent",
+          "target": "ULyraPawnData",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待 PawnData。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnExtensionComponent--depends_on-->ULyraExperienceManagerComponent",
+          "source": "ULyraPawnExtensionComponent",
+          "target": "ULyraExperienceManagerComponent",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待 Experience Loaded。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "ULyraPawnExtensionComponent--depends_on-->APlayerState",
+          "source": "ULyraPawnExtensionComponent",
+          "target": "APlayerState",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待 PlayerState/ASC。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "ULyraHeroComponent--depends_on-->ULyraPawnExtensionComponent",
+          "source": "ULyraHeroComponent",
+          "target": "ULyraPawnExtensionComponent",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待 PawnExtension 初始化。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "ULyraHeroComponent--depends_on-->APlayerController",
+          "source": "ULyraHeroComponent",
+          "target": "APlayerController",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待 InputComponent/Controller。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySystemComponent--binds_as_owner-->APlayerState",
+          "source": "ULyraAbilitySystemComponent",
+          "target": "APlayerState",
+          "relation": "binds_as_owner",
+          "domain": "ue5_code",
+          "description": "OwnerActor 准备。"
+        },
+        "classes": "edge-binds-as-owner"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySystemComponent--binds_as_avatar-->APawn",
+          "source": "ULyraAbilitySystemComponent",
+          "target": "APawn",
+          "relation": "binds_as_avatar",
+          "domain": "ue5_code",
+          "description": "AvatarActor 准备。"
+        },
+        "classes": "edge-binds-as-avatar"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySet--depends_on-->ULyraAbilitySystemComponent",
+          "source": "ULyraAbilitySet",
+          "target": "ULyraAbilitySystemComponent",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "ASC 初始化后授予。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "concept:GameplayReady--depends_on-->ULyraPawnExtensionComponent",
+          "source": "concept:GameplayReady",
+          "target": "ULyraPawnExtensionComponent",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待扩展组件 InitState。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "concept:GameplayReady--depends_on-->ULyraHeroComponent",
+          "source": "concept:GameplayReady",
+          "target": "ULyraHeroComponent",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待英雄组件 InitState。"
+        },
+        "classes": "edge-depends-on"
+      },
+      {
+        "data": {
+          "id": "concept:GameplayReady--depends_on-->ULyraAbilitySystemComponent",
+          "source": "concept:GameplayReady",
+          "target": "ULyraAbilitySystemComponent",
+          "relation": "depends_on",
+          "domain": "ue5_code",
+          "description": "等待 ASC Owner/Avatar 绑定。"
+        },
+        "classes": "edge-depends-on"
+      }
+    ]
+  }
+}

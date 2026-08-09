@@ -1,0 +1,4014 @@
+{
+  "format_version": 1,
+  "domain": "ue5_code",
+  "subsystem": "project",
+  "generated_at": "2026-08-09T08:57:41.435Z",
+  "generator": "graphbrain/change-report@1",
+  "baseline": {
+    "file": "ue5_code_project_2026-07-18.cyto.json",
+    "generated_at": "2026-07-18T11:20:48.231Z",
+    "fingerprint": null
+  },
+  "current": {
+    "file": "ue5_code_project_2026-08-09.cyto.json",
+    "generated_at": "2026-08-09T06:50:39.983Z",
+    "fingerprint": "4f842c7f0931d646bb534af0c18a250d28190addc83903e34dec6c52e8da5838"
+  },
+  "summary": {
+    "nodes": {
+      "added": 400,
+      "removed": 0,
+      "changed": 18
+    },
+    "edges": {
+      "added": 77,
+      "removed": 0,
+      "changed": 0
+    },
+    "direct_nodes": 418,
+    "affected_nodes": 55,
+    "affected_modules": 8
+  },
+  "changes": {
+    "added_nodes": [
+      {
+        "id": "dir:Engine/Runtime/Engine/Public",
+        "label": "Public",
+        "type": "folder",
+        "module": "Engine",
+        "source_path": null
+      },
+      {
+        "id": "dir:Engine/Runtime/Engine/Public/Subsystems",
+        "label": "Subsystems",
+        "type": "folder",
+        "module": "Engine",
+        "source_path": null
+      },
+      {
+        "id": "dir:Engine/Runtime/MovieScene",
+        "label": "MovieScene",
+        "type": "folder",
+        "module": "MovieScene",
+        "source_path": null
+      },
+      {
+        "id": "dir:Engine/Runtime/MovieScene/Public",
+        "label": "Public",
+        "type": "folder",
+        "module": "MovieScene",
+        "source_path": null
+      },
+      {
+        "id": "dir:Engine/Runtime/UMG/Public/Animation",
+        "label": "Animation",
+        "type": "folder",
+        "module": "UMG",
+        "source_path": null
+      },
+      {
+        "id": "dir:Source/Sabotage/Core",
+        "label": "Core",
+        "type": "folder",
+        "module": "Sabotage",
+        "source_path": null
+      },
+      {
+        "id": "dir:Source/Sabotage/Settings",
+        "label": "Settings",
+        "type": "folder",
+        "module": "Sabotage",
+        "source_path": null
+      },
+      {
+        "id": "dir:Source/Sabotage/UI",
+        "label": "UI",
+        "type": "folder",
+        "module": "Sabotage",
+        "source_path": null
+      },
+      {
+        "id": "dir:Source/SabotageTests",
+        "label": "SabotageTests",
+        "type": "folder",
+        "module": "SabotageTests",
+        "source_path": null
+      },
+      {
+        "id": "EUI_SettingsBus",
+        "label": "EUI_SettingsBus",
+        "type": "uenum",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsTypes.h"
+      },
+      {
+        "id": "EUI_SettingsKeyPlatform",
+        "label": "EUI_SettingsKeyPlatform",
+        "type": "uenum",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsTypes.h"
+      },
+      {
+        "id": "EUI_SettingsModalState",
+        "label": "EUI_SettingsModalState",
+        "type": "uenum",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "EUI_SettingsMotionLevel",
+        "label": "EUI_SettingsMotionLevel",
+        "type": "uenum",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsTypes.h"
+      },
+      {
+        "id": "EUI_SettingsReasonCode",
+        "label": "EUI_SettingsReasonCode",
+        "type": "uenum",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsTypes.h"
+      },
+      {
+        "id": "EUI_SettingsUiScale",
+        "label": "EUI_SettingsUiScale",
+        "type": "uenum",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsTypes.h"
+      },
+      {
+        "id": "file:Engine/Runtime/Engine/Public/Subsystems/Subsystem",
+        "label": "Subsystem",
+        "type": "file",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/Subsystem.h"
+      },
+      {
+        "id": "file:Engine/Runtime/Engine/Public/Subsystems/WorldSubsystem",
+        "label": "WorldSubsystem",
+        "type": "file",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "file:Engine/Runtime/MovieScene/Public/MovieSceneSequence",
+        "label": "MovieSceneSequence",
+        "type": "file",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "file:Engine/Runtime/MovieScene/Public/MovieSceneSignedObject",
+        "label": "MovieSceneSignedObject",
+        "type": "file",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "file:Engine/Runtime/UMG/Public/Animation/WidgetAnimation",
+        "label": "WidgetAnimation",
+        "type": "file",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "file:Engine/Runtime/UMG/Public/Components/PanelWidget",
+        "label": "PanelWidget",
+        "type": "file",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "file:Engine/Runtime/UMG/Public/Components/ScrollBox",
+        "label": "ScrollBox",
+        "type": "file",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "file:Source/Sabotage/Core/ISabotageSaveParticipant",
+        "label": "ISabotageSaveParticipant",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "file:Source/Sabotage/Core/SabotageTagEventPayload",
+        "label": "SabotageTagEventPayload",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventPayload.h"
+      },
+      {
+        "id": "file:Source/Sabotage/Core/SabotageTagEventSubsystem",
+        "label": "SabotageTagEventSubsystem",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "file:Source/Sabotage/Settings/PlayerSettingsParticipant",
+        "label": "PlayerSettingsParticipant",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "file:Source/Sabotage/Settings/PlayerSettingsTypes",
+        "label": "PlayerSettingsTypes",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsTypes.h"
+      },
+      {
+        "id": "file:Source/Sabotage/Settings/SettingsTags",
+        "label": "SettingsTags",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/SettingsTags.h"
+      },
+      {
+        "id": "file:Source/Sabotage/UI/UI_CategoryTab",
+        "label": "UI_CategoryTab",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "file:Source/Sabotage/UI/UI_DiegeticHintBase",
+        "label": "UI_DiegeticHintBase",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_DiegeticHintBase.h"
+      },
+      {
+        "id": "file:Source/Sabotage/UI/UI_SegmentedRowBase",
+        "label": "UI_SegmentedRowBase",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "file:Source/Sabotage/UI/UI_SettingsPanel",
+        "label": "UI_SettingsPanel",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "file:Source/Sabotage/UI/UI_SliderBase",
+        "label": "UI_SliderBase",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "file:Source/Sabotage/UI/UI_ToggleBase",
+        "label": "UI_ToggleBase",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "file:Source/SabotageTests/SabotageTests.Build.cs",
+        "label": "SabotageTests.Build.cs",
+        "type": "file",
+        "module": "SabotageTests",
+        "source_path": "SabotageTests/SabotageTests.Build.cs"
+      },
+      {
+        "id": "FPlayerSettingsSaveData",
+        "label": "FPlayerSettingsSaveData",
+        "type": "ustruct",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsTypes.h"
+      },
+      {
+        "id": "FSabotageSaveReader",
+        "label": "FSabotageSaveReader",
+        "type": "ustruct",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveReader::GetRemainingSize",
+        "label": "GetRemainingSize",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveReader::ReadBool",
+        "label": "ReadBool",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveReader::ReadBytes",
+        "label": "ReadBytes",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveReader::ReadFloat",
+        "label": "ReadFloat",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveReader::ReadInt32",
+        "label": "ReadInt32",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveReader::ReadString",
+        "label": "ReadString",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveWriter",
+        "label": "FSabotageSaveWriter",
+        "type": "ustruct",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveWriter::GetBuffer",
+        "label": "GetBuffer",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveWriter::GetPayloadSize",
+        "label": "GetPayloadSize",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveWriter::WriteBool",
+        "label": "WriteBool",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveWriter::WriteBytes",
+        "label": "WriteBytes",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveWriter::WriteFloat",
+        "label": "WriteFloat",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveWriter::WriteInt32",
+        "label": "WriteInt32",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageSaveWriter::WriteString",
+        "label": "WriteString",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "FSabotageTagEventBroker",
+        "label": "FSabotageTagEventBroker",
+        "type": "ustruct",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "FSabotageTagEventBroker::Broadcast",
+        "label": "Broadcast",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "FSabotageTagEventBroker::GetSubscriptionCount",
+        "label": "GetSubscriptionCount",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "FSabotageTagEventBroker::IsEventRegistered",
+        "label": "IsEventRegistered",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "FSabotageTagEventBroker::RegisterEvent",
+        "label": "RegisterEvent",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "FSabotageTagEventBroker::Reset",
+        "label": "Reset",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "FSabotageTagEventBroker::Subscribe",
+        "label": "Subscribe",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "FSabotageTagEventBroker::Unsubscribe",
+        "label": "Unsubscribe",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "FSabotageTagEventPayload",
+        "label": "FSabotageTagEventPayload",
+        "type": "ustruct",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventPayload.h"
+      },
+      {
+        "id": "ISabotageSaveParticipant",
+        "label": "ISabotageSaveParticipant",
+        "type": "uinterface",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "ISabotageSaveParticipant::GetSaveLayerTag",
+        "label": "GetSaveLayerTag",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "ISabotageSaveParticipant::ReadSaveData",
+        "label": "ReadSaveData",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "ISabotageSaveParticipant::WriteSaveData",
+        "label": "WriteSaveData",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/ISabotageSaveParticipant.h"
+      },
+      {
+        "id": "UMovieScene",
+        "label": "UMovieScene",
+        "type": "uclass",
+        "module": null,
+        "source_path": null
+      },
+      {
+        "id": "UMovieSceneCompiledData",
+        "label": "UMovieSceneCompiledData",
+        "type": "uclass",
+        "module": null,
+        "source_path": null
+      },
+      {
+        "id": "UMovieSceneSequence",
+        "label": "UMovieSceneSequence",
+        "type": "uclass",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::AllowsCustomBindings",
+        "label": "AllowsCustomBindings",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::AllowsSpawnableObjects",
+        "label": "AllowsSpawnableObjects",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::AreParentContextsSignificant",
+        "label": "AreParentContextsSignificant",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::BeginDestroy",
+        "label": "BeginDestroy",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::CanAnimateObject",
+        "label": "CanAnimateObject",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::CanRebindPossessable",
+        "label": "CanRebindPossessable",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::CreateDirectorInstance",
+        "label": "CreateDirectorInstance",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::CreatePossessable",
+        "label": "CreatePossessable",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::CreateSpawnable",
+        "label": "CreateSpawnable",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::FindBindingByTag",
+        "label": "FindBindingByTag",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::FindBindingFromObject",
+        "label": "FindBindingFromObject",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::FindBindingsByTag",
+        "label": "FindBindingsByTag",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::FindPossessableObjectId",
+        "label": "FindPossessableObjectId",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::GatherExpiredObjects",
+        "label": "GatherExpiredObjects",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::GetBindingReferences",
+        "label": "GetBindingReferences",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::GetCompiledData",
+        "label": "GetCompiledData",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::GetCustomBrushForBinding",
+        "label": "GetCustomBrushForBinding",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::GetDisplayName",
+        "label": "GetDisplayName",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::GetEarliestTimecodeSource",
+        "label": "GetEarliestTimecodeSource",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::GetFlags",
+        "label": "GetFlags",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::GetOrCreateCompiledData",
+        "label": "GetOrCreateCompiledData",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::IsCompatibleAsSubSequence",
+        "label": "IsCompatibleAsSubSequence",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::IsCompatibleSubSequence",
+        "label": "IsCompatibleSubSequence",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::IsFilterSupported",
+        "label": "IsFilterSupported",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::IsFilterSupportedImpl",
+        "label": "IsFilterSupportedImpl",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::IsPlayableDirectly",
+        "label": "IsPlayableDirectly",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::IsSubSequenceCompatible",
+        "label": "IsSubSequenceCompatible",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::IsTrackSupported",
+        "label": "IsTrackSupported",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::IsTrackSupportedImpl",
+        "label": "IsTrackSupportedImpl",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::LocateBoundObjects",
+        "label": "LocateBoundObjects",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::MakeLocatorForObject",
+        "label": "MakeLocatorForObject",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::MakeSpawnableTemplateFromInstance",
+        "label": "MakeSpawnableTemplateFromInstance",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::OptimizeForCook",
+        "label": "OptimizeForCook",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::OverrideNetworkMask",
+        "label": "OverrideNetworkMask",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::PostDuplicate",
+        "label": "PostDuplicate",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::PostLoad",
+        "label": "PostLoad",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::PreSave",
+        "label": "PreSave",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::PURE_VIRTUAL",
+        "label": "PURE_VIRTUAL",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::Serialize",
+        "label": "Serialize",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::SetPlayableDirectly",
+        "label": "SetPlayableDirectly",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::SetSequenceFlags",
+        "label": "SetSequenceFlags",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSequence::UnloadBoundObject",
+        "label": "UnloadBoundObject",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSequence.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject",
+        "label": "UMovieSceneSignedObject",
+        "type": "uclass",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::AddFlushSignal",
+        "label": "AddFlushSignal",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::BroadcastChanged",
+        "label": "BroadcastChanged",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::GetDeferredHandler",
+        "label": "GetDeferredHandler",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::GetSignature",
+        "label": "GetSignature",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::MarkAsChanged",
+        "label": "MarkAsChanged",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::Modify",
+        "label": "Modify",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::OnSignatureChanged",
+        "label": "OnSignatureChanged",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::PostEditChangeProperty",
+        "label": "PostEditChangeProperty",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::PostEditUndo",
+        "label": "PostEditUndo",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::PostInitProperties",
+        "label": "PostInitProperties",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::PostLoad",
+        "label": "PostLoad",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::ResetImplicitScopedModifyDefer",
+        "label": "ResetImplicitScopedModifyDefer",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UMovieSceneSignedObject::SetDeferredHandler",
+        "label": "SetDeferredHandler",
+        "type": "ufunction",
+        "module": "MovieScene",
+        "source_path": "Runtime/MovieScene/Public/MovieSceneSignedObject.h"
+      },
+      {
+        "id": "UPanelWidget",
+        "label": "UPanelWidget",
+        "type": "uclass",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::AddChild",
+        "label": "AddChild",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::CanAddMoreChildren",
+        "label": "CanAddMoreChildren",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::CanHaveMultipleChildren",
+        "label": "CanHaveMultipleChildren",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::ClearChildren",
+        "label": "ClearChildren",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::ConnectEditorData",
+        "label": "ConnectEditorData",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::GetAllChildren",
+        "label": "GetAllChildren",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::GetChildAt",
+        "label": "GetChildAt",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::GetChildIndex",
+        "label": "GetChildIndex",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::GetChildrenCount",
+        "label": "GetChildrenCount",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::GetSlotClass",
+        "label": "GetSlotClass",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::GetSlots",
+        "label": "GetSlots",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::HasAnyChildren",
+        "label": "HasAnyChildren",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::HasChild",
+        "label": "HasChild",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::InsertChildAt",
+        "label": "InsertChildAt",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::LockToPanelOnDrag",
+        "label": "LockToPanelOnDrag",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::OnSlotAdded",
+        "label": "OnSlotAdded",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::OnSlotRemoved",
+        "label": "OnSlotRemoved",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::PostLoad",
+        "label": "PostLoad",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::RebuildDesignWidget",
+        "label": "RebuildDesignWidget",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::ReleaseSlateResources",
+        "label": "ReleaseSlateResources",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::RemoveChild",
+        "label": "RemoveChild",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::RemoveChildAt",
+        "label": "RemoveChildAt",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::ReplaceChild",
+        "label": "ReplaceChild",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::ReplaceChildAt",
+        "label": "ReplaceChildAt",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::SetDesignerFlags",
+        "label": "SetDesignerFlags",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "UPanelWidget::ShiftChild",
+        "label": "ShiftChild",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/PanelWidget.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant",
+        "label": "USabotagePlayerSettingsParticipant",
+        "type": "uclass",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::ApplyResetRequest",
+        "label": "ApplyResetRequest",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::ApplyScalar",
+        "label": "ApplyScalar",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::ApplySubIdScalar",
+        "label": "ApplySubIdScalar",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::ApplyValueChange",
+        "label": "ApplyValueChange",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::DebugSimulateWriteFailure",
+        "label": "DebugSimulateWriteFailure",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::GetData",
+        "label": "GetData",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::GetSaveLayerTag",
+        "label": "GetSaveLayerTag",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::HasPendingWrite",
+        "label": "HasPendingWrite",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::MarkInitialDataRead",
+        "label": "MarkInitialDataRead",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::ReadSaveData",
+        "label": "ReadSaveData",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::ResetCategory",
+        "label": "ResetCategory",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant::WriteSaveData",
+        "label": "WriteSaveData",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Settings/PlayerSettingsParticipant.h"
+      },
+      {
+        "id": "USabotageTagEventSubsystem",
+        "label": "USabotageTagEventSubsystem",
+        "type": "uclass",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "USabotageTagEventSubsystem::BroadcastTagEvent",
+        "label": "BroadcastTagEvent",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "USabotageTagEventSubsystem::Deinitialize",
+        "label": "Deinitialize",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "USabotageTagEventSubsystem::GetSubscriptionCount",
+        "label": "GetSubscriptionCount",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "USabotageTagEventSubsystem::Initialize",
+        "label": "Initialize",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "USabotageTagEventSubsystem::IsEventRegistered",
+        "label": "IsEventRegistered",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "USabotageTagEventSubsystem::RegisterEvent",
+        "label": "RegisterEvent",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "USabotageTagEventSubsystem::SubscribeTagEvent",
+        "label": "SubscribeTagEvent",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "USabotageTagEventSubsystem::UnsubscribeTagEvent",
+        "label": "UnsubscribeTagEvent",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageTagEventSubsystem.h"
+      },
+      {
+        "id": "UScrollBox",
+        "label": "UScrollBox",
+        "type": "uclass",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::EndInertialScrolling",
+        "label": "EndInertialScrolling",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetAnalogMouseWheelKey",
+        "label": "GetAnalogMouseWheelKey",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetConsumeMouseWheel",
+        "label": "GetConsumeMouseWheel",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetConsumePointerInput",
+        "label": "GetConsumePointerInput",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetIsFocusable",
+        "label": "GetIsFocusable",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetIsScrolling",
+        "label": "GetIsScrolling",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetIsTouchScrollingEnabled",
+        "label": "GetIsTouchScrollingEnabled",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetNavigationDestination",
+        "label": "GetNavigationDestination",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetNavigationScrollPadding",
+        "label": "GetNavigationScrollPadding",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetOrientation",
+        "label": "GetOrientation",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetOverscrollOffset",
+        "label": "GetOverscrollOffset",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetOverscrollPercentage",
+        "label": "GetOverscrollPercentage",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetPaletteCategory",
+        "label": "GetPaletteCategory",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetScrollAnimationInterpolationSpeed",
+        "label": "GetScrollAnimationInterpolationSpeed",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetScrollbarPadding",
+        "label": "GetScrollbarPadding",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetScrollbarThickness",
+        "label": "GetScrollbarThickness",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetScrollBarVisibility",
+        "label": "GetScrollBarVisibility",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetScrollOffset",
+        "label": "GetScrollOffset",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetScrollOffsetOfEnd",
+        "label": "GetScrollOffsetOfEnd",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetScrollWhenFocusChanges",
+        "label": "GetScrollWhenFocusChanges",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetSlotClass",
+        "label": "GetSlotClass",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetViewFraction",
+        "label": "GetViewFraction",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetViewOffsetFraction",
+        "label": "GetViewOffsetFraction",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetWheelScrollMultiplier",
+        "label": "GetWheelScrollMultiplier",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetWidgetBarStyle",
+        "label": "GetWidgetBarStyle",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::GetWidgetStyle",
+        "label": "GetWidgetStyle",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::InitBackPadScrolling",
+        "label": "InitBackPadScrolling",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::InitFrontPadScrolling",
+        "label": "InitFrontPadScrolling",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::InitNavigationScrollPadding",
+        "label": "InitNavigationScrollPadding",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::IsAllowOverscroll",
+        "label": "IsAllowOverscroll",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::IsAllowRightClickDragScrolling",
+        "label": "IsAllowRightClickDragScrolling",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::IsAlwaysShowScrollbar",
+        "label": "IsAlwaysShowScrollbar",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::IsAlwaysShowScrollbarTrack",
+        "label": "IsAlwaysShowScrollbarTrack",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::IsAnimateWheelScrolling",
+        "label": "IsAnimateWheelScrolling",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::IsBackPadScrolling",
+        "label": "IsBackPadScrolling",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::IsFrontPadScrolling",
+        "label": "IsFrontPadScrolling",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::OnDescendantDeselectedByDesigner",
+        "label": "OnDescendantDeselectedByDesigner",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::OnDescendantSelectedByDesigner",
+        "label": "OnDescendantSelectedByDesigner",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::OnSlotAdded",
+        "label": "OnSlotAdded",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::OnSlotRemoved",
+        "label": "OnSlotRemoved",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::RebuildWidget",
+        "label": "RebuildWidget",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::ReleaseSlateResources",
+        "label": "ReleaseSlateResources",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::ScrollToEnd",
+        "label": "ScrollToEnd",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::ScrollToStart",
+        "label": "ScrollToStart",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::ScrollWidgetIntoView",
+        "label": "ScrollWidgetIntoView",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::Serialize",
+        "label": "Serialize",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetAllowOverscroll",
+        "label": "SetAllowOverscroll",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetAllowRightClickDragScrolling",
+        "label": "SetAllowRightClickDragScrolling",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetAlwaysShowScrollbar",
+        "label": "SetAlwaysShowScrollbar",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetAlwaysShowScrollbarTrack",
+        "label": "SetAlwaysShowScrollbarTrack",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetAnalogMouseWheelKey",
+        "label": "SetAnalogMouseWheelKey",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetAnimateWheelScrolling",
+        "label": "SetAnimateWheelScrolling",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetConsumeMouseWheel",
+        "label": "SetConsumeMouseWheel",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetConsumePointerInput",
+        "label": "SetConsumePointerInput",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetIsFocusable",
+        "label": "SetIsFocusable",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetIsTouchScrollingEnabled",
+        "label": "SetIsTouchScrollingEnabled",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetNavigationDestination",
+        "label": "SetNavigationDestination",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetOrientation",
+        "label": "SetOrientation",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetScrollAnimationInterpolationSpeed",
+        "label": "SetScrollAnimationInterpolationSpeed",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetScrollbarPadding",
+        "label": "SetScrollbarPadding",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetScrollbarThickness",
+        "label": "SetScrollbarThickness",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetScrollBarVisibility",
+        "label": "SetScrollBarVisibility",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetScrollOffset",
+        "label": "SetScrollOffset",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetScrollWhenFocusChanges",
+        "label": "SetScrollWhenFocusChanges",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetWheelScrollMultiplier",
+        "label": "SetWheelScrollMultiplier",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetWidgetBarStyle",
+        "label": "SetWidgetBarStyle",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SetWidgetStyle",
+        "label": "SetWidgetStyle",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SlateHandleFocusChanging",
+        "label": "SlateHandleFocusChanging",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SlateHandleFocusLost",
+        "label": "SlateHandleFocusLost",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SlateHandleFocusReceived",
+        "label": "SlateHandleFocusReceived",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SlateHandleScrollBarVisibilityChanged",
+        "label": "SlateHandleScrollBarVisibilityChanged",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SlateHandleUserScrolled",
+        "label": "SlateHandleUserScrolled",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "UScrollBox::SynchronizeProperties",
+        "label": "SynchronizeProperties",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/ScrollBox.h"
+      },
+      {
+        "id": "USubsystem",
+        "label": "USubsystem",
+        "type": "uclass",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/Subsystem.h"
+      },
+      {
+        "id": "USubsystem::Deinitialize",
+        "label": "Deinitialize",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/Subsystem.h"
+      },
+      {
+        "id": "USubsystem::GetFunctionCallspace",
+        "label": "GetFunctionCallspace",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/Subsystem.h"
+      },
+      {
+        "id": "USubsystem::Initialize",
+        "label": "Initialize",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/Subsystem.h"
+      },
+      {
+        "id": "USubsystem::ShouldCreateSubsystem",
+        "label": "ShouldCreateSubsystem",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/Subsystem.h"
+      },
+      {
+        "id": "UUI_CategoryTab",
+        "label": "UUI_CategoryTab",
+        "type": "uclass",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_CategoryTab::GetCategoryTag",
+        "label": "GetCategoryTag",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_CategoryTab::IsFocused",
+        "label": "IsFocused",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_CategoryTab::IsSelected",
+        "label": "IsSelected",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_CategoryTab::NativeOnFocusLost",
+        "label": "NativeOnFocusLost",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_CategoryTab::NativeOnFocusReceived",
+        "label": "NativeOnFocusReceived",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_CategoryTab::NativeOnKeyDown",
+        "label": "NativeOnKeyDown",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_CategoryTab::NotifyActivated",
+        "label": "NotifyActivated",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_CategoryTab::OnSelectionVisualChanged",
+        "label": "OnSelectionVisualChanged",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_CategoryTab::SetFocused",
+        "label": "SetFocused",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_CategoryTab::SetSelected",
+        "label": "SetSelected",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_CategoryTab.h"
+      },
+      {
+        "id": "UUI_DiegeticHintBase",
+        "label": "UUI_DiegeticHintBase",
+        "type": "uclass",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_DiegeticHintBase.h"
+      },
+      {
+        "id": "UUI_DiegeticHintBase::GetReason",
+        "label": "GetReason",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_DiegeticHintBase.h"
+      },
+      {
+        "id": "UUI_DiegeticHintBase::GetReasonLocalizationKey",
+        "label": "GetReasonLocalizationKey",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_DiegeticHintBase.h"
+      },
+      {
+        "id": "UUI_DiegeticHintBase::Hide",
+        "label": "Hide",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_DiegeticHintBase.h"
+      },
+      {
+        "id": "UUI_DiegeticHintBase::IsHintVisible",
+        "label": "IsHintVisible",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_DiegeticHintBase.h"
+      },
+      {
+        "id": "UUI_DiegeticHintBase::OnHintAppearanceChanged",
+        "label": "OnHintAppearanceChanged",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_DiegeticHintBase.h"
+      },
+      {
+        "id": "UUI_DiegeticHintBase::Show",
+        "label": "Show",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_DiegeticHintBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase",
+        "label": "UUI_SegmentedRowBase",
+        "type": "uclass",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::CycleSelection",
+        "label": "CycleSelection",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::DisableWithReason",
+        "label": "DisableWithReason",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::Enable",
+        "label": "Enable",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::GetDisabledReason",
+        "label": "GetDisabledReason",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::GetOptionCount",
+        "label": "GetOptionCount",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::GetSelectedIndex",
+        "label": "GetSelectedIndex",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::GetSelectedValue",
+        "label": "GetSelectedValue",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::GetValuePropertyTag",
+        "label": "GetValuePropertyTag",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::NativeOnKeyDown",
+        "label": "NativeOnKeyDown",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::NativeOnNavigation",
+        "label": "NativeOnNavigation",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::SelectIndex",
+        "label": "SelectIndex",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SegmentedRowBase::WrapSelectionIndex",
+        "label": "WrapSelectionIndex",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SegmentedRowBase.h"
+      },
+      {
+        "id": "UUI_SettingsPanel",
+        "label": "UUI_SettingsPanel",
+        "type": "uclass",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::ApplyCrossPaneFocus",
+        "label": "ApplyCrossPaneFocus",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::ApplyInitialState",
+        "label": "ApplyInitialState",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::BroadcastKeyRebindRejected",
+        "label": "BroadcastKeyRebindRejected",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::BroadcastKeyRebound",
+        "label": "BroadcastKeyRebound",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::BroadcastResetRequested",
+        "label": "BroadcastResetRequested",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::BroadcastValueChanged",
+        "label": "BroadcastValueChanged",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::ClosePanel",
+        "label": "ClosePanel",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::CrossPaneTo",
+        "label": "CrossPaneTo",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::DeferFocusRetry",
+        "label": "DeferFocusRetry",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::GetContentFocusAnchor",
+        "label": "GetContentFocusAnchor",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::GetFirstFocusableInPane",
+        "label": "GetFirstFocusableInPane",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::GetLastFocusableInPane",
+        "label": "GetLastFocusableInPane",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::GetSelectedTabWidget",
+        "label": "GetSelectedTabWidget",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::GetTagEventSubsystem",
+        "label": "GetTagEventSubsystem",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::Handle_ApplyPendingFocus",
+        "label": "Handle_ApplyPendingFocus",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::Handle_OnCategoryActivated",
+        "label": "Handle_OnCategoryActivated",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::Handle_OnCloseFinished",
+        "label": "Handle_OnCloseFinished",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::Handle_OnOpenFinished",
+        "label": "Handle_OnOpenFinished",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::Handle_OnSwitchPaneLeft",
+        "label": "Handle_OnSwitchPaneLeft",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::Handle_OnSwitchPaneRight",
+        "label": "Handle_OnSwitchPaneRight",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::Handle_OnWriteFailed",
+        "label": "Handle_OnWriteFailed",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::InitterCategories",
+        "label": "InitterCategories",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::InitterInput",
+        "label": "InitterInput",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::InitterWriteFailure",
+        "label": "InitterWriteFailure",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::IsFirstFocusableInPane",
+        "label": "IsFirstFocusableInPane",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::IsFocusInLeftPane",
+        "label": "IsFocusInLeftPane",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::IsLastFocusableInPane",
+        "label": "IsLastFocusableInPane",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::NativeConstruct",
+        "label": "NativeConstruct",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::NativeDestruct",
+        "label": "NativeDestruct",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::NativeOnKeyDown",
+        "label": "NativeOnKeyDown",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::NativeOnNavigation",
+        "label": "NativeOnNavigation",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::NotifyConfirmWindowCancelled",
+        "label": "NotifyConfirmWindowCancelled",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::NotifyConfirmWindowConfirmed",
+        "label": "NotifyConfirmWindowConfirmed",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::NotifyRowSelectionChanged",
+        "label": "NotifyRowSelectionChanged",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::NotifySliderCommitted",
+        "label": "NotifySliderCommitted",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::NotifyToggleChanged",
+        "label": "NotifyToggleChanged",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::OnAnimationFinished_Implementation",
+        "label": "OnAnimationFinished_Implementation",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::OnConfirmWindowDismissed",
+        "label": "OnConfirmWindowDismissed",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::OnConfirmWindowRequested",
+        "label": "OnConfirmWindowRequested",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::OpenPanel",
+        "label": "OpenPanel",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::PlayCloseTransition",
+        "label": "PlayCloseTransition",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::PlayOpenTransition",
+        "label": "PlayOpenTransition",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::RequestRestoreDefaults",
+        "label": "RequestRestoreDefaults",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::SelectCategory",
+        "label": "SelectCategory",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::SetInstantTransitions",
+        "label": "SetInstantTransitions",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::SetModalState",
+        "label": "SetModalState",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::ShouldEscapeCloseModal",
+        "label": "ShouldEscapeCloseModal",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SettingsPanel::UpdateRestoreDefaultAvailability",
+        "label": "UpdateRestoreDefaultAvailability",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SettingsPanel.h"
+      },
+      {
+        "id": "UUI_SliderBase",
+        "label": "UUI_SliderBase",
+        "type": "uclass",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::CommitValue",
+        "label": "CommitValue",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::DisableWithReason",
+        "label": "DisableWithReason",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::Enable",
+        "label": "Enable",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::GetDisabledReason",
+        "label": "GetDisabledReason",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::GetValue",
+        "label": "GetValue",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::GetValuePropertyTag",
+        "label": "GetValuePropertyTag",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::GetValueSubId",
+        "label": "GetValueSubId",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::HandleSliderCommit",
+        "label": "HandleSliderCommit",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::HandleSliderPreviewValue",
+        "label": "HandleSliderPreviewValue",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::NativeOnKeyDown",
+        "label": "NativeOnKeyDown",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::NativeOnNavigation",
+        "label": "NativeOnNavigation",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::SetValue",
+        "label": "SetValue",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::SnapToStep",
+        "label": "SnapToStep",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_SliderBase::StepBy",
+        "label": "StepBy",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_SliderBase.h"
+      },
+      {
+        "id": "UUI_ToggleBase",
+        "label": "UUI_ToggleBase",
+        "type": "uclass",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "UUI_ToggleBase::DisableWithReason",
+        "label": "DisableWithReason",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "UUI_ToggleBase::Enable",
+        "label": "Enable",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "UUI_ToggleBase::GetDisabledReason",
+        "label": "GetDisabledReason",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "UUI_ToggleBase::GetValuePropertyTag",
+        "label": "GetValuePropertyTag",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "UUI_ToggleBase::IsChecked",
+        "label": "IsChecked",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "UUI_ToggleBase::NativeOnKeyDown",
+        "label": "NativeOnKeyDown",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "UUI_ToggleBase::NotifyToggledByUser",
+        "label": "NotifyToggledByUser",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "UUI_ToggleBase::SetChecked",
+        "label": "SetChecked",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "UUI_ToggleBase::Toggle",
+        "label": "Toggle",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/UI/UI_ToggleBase.h"
+      },
+      {
+        "id": "UWidgetAnimation",
+        "label": "UWidgetAnimation",
+        "type": "uclass",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::BindPossessableObject",
+        "label": "BindPossessableObject",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::BindToAnimationFinished",
+        "label": "BindToAnimationFinished",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::BindToAnimationStarted",
+        "label": "BindToAnimationStarted",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::CanPossessObject",
+        "label": "CanPossessObject",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::CreateDirectorInstance",
+        "label": "CreateDirectorInstance",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::GetBindings",
+        "label": "GetBindings",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::GetCustomBrushForBinding",
+        "label": "GetCustomBrushForBinding",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::GetDisplayLabel",
+        "label": "GetDisplayLabel",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::GetDisplayName",
+        "label": "GetDisplayName",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::GetEndTime",
+        "label": "GetEndTime",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::GetLegacyFinishOnStop",
+        "label": "GetLegacyFinishOnStop",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::GetMovieScene",
+        "label": "GetMovieScene",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::GetNullAnimation",
+        "label": "GetNullAnimation",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::GetParentObject",
+        "label": "GetParentObject",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::GetStartTime",
+        "label": "GetStartTime",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::IsFilterSupportedImpl",
+        "label": "IsFilterSupportedImpl",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::IsPostLoadThreadSafe",
+        "label": "IsPostLoadThreadSafe",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::IsTrackSupportedImpl",
+        "label": "IsTrackSupportedImpl",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::LocateBoundObjects",
+        "label": "LocateBoundObjects",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::PostLoad",
+        "label": "PostLoad",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::RemoveBinding",
+        "label": "RemoveBinding",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::SetDisplayLabel",
+        "label": "SetDisplayLabel",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::UnbindAllFromAnimationFinished",
+        "label": "UnbindAllFromAnimationFinished",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::UnbindAllFromAnimationStarted",
+        "label": "UnbindAllFromAnimationStarted",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::UnbindFromAnimationFinished",
+        "label": "UnbindFromAnimationFinished",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::UnbindFromAnimationStarted",
+        "label": "UnbindFromAnimationStarted",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::UnbindInvalidObjects",
+        "label": "UnbindInvalidObjects",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::UnbindObjects",
+        "label": "UnbindObjects",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWidgetAnimation::UnbindPossessableObjects",
+        "label": "UnbindPossessableObjects",
+        "type": "ufunction",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Animation/WidgetAnimation.h"
+      },
+      {
+        "id": "UWorldSubsystem",
+        "label": "UWorldSubsystem",
+        "type": "uclass",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::DoesSupportWorldType",
+        "label": "DoesSupportWorldType",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::EnsureHasCalledBeginPlay",
+        "label": "EnsureHasCalledBeginPlay",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::EnsureHasCalledPostInitialize",
+        "label": "EnsureHasCalledPostInitialize",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::GetWorld",
+        "label": "GetWorld",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::GetWorldRef",
+        "label": "GetWorldRef",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::HasCalledBeginPlay",
+        "label": "HasCalledBeginPlay",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::HasCalledPostInitialize",
+        "label": "HasCalledPostInitialize",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::OnWorldBeginPlay",
+        "label": "OnWorldBeginPlay",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::OnWorldComponentsUpdated",
+        "label": "OnWorldComponentsUpdated",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::OnWorldEndPlay",
+        "label": "OnWorldEndPlay",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::PostInitialize",
+        "label": "PostInitialize",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::PreDeinitialize",
+        "label": "PreDeinitialize",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      },
+      {
+        "id": "UWorldSubsystem::ShouldCreateSubsystem",
+        "label": "ShouldCreateSubsystem",
+        "type": "ufunction",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Public/Subsystems/WorldSubsystem.h"
+      }
+    ],
+    "removed_nodes": [],
+    "changed_nodes": [
+      {
+        "id": "AActor",
+        "label": "AActor",
+        "type": "uactor",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/GameFramework/Actor.h",
+        "changed_fields": [
+          "cpp_declarations",
+          "data_members",
+          "delegates"
+        ]
+      },
+      {
+        "id": "ACharacter",
+        "label": "ACharacter",
+        "type": "uactor",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/GameFramework/Character.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "AController",
+        "label": "AController",
+        "type": "uactor",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/GameFramework/Controller.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "AGameModeBase",
+        "label": "AGameModeBase",
+        "type": "uactor",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/GameFramework/GameModeBase.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "AInfo",
+        "label": "AInfo",
+        "type": "uactor",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/GameFramework/Info.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "APawn",
+        "label": "APawn",
+        "type": "uactor",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/GameFramework/Pawn.h",
+        "changed_fields": [
+          "data_members",
+          "delegates"
+        ]
+      },
+      {
+        "id": "APlayerController",
+        "label": "APlayerController",
+        "type": "uactor",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/GameFramework/PlayerController.h",
+        "changed_fields": [
+          "cpp_declarations",
+          "data_members",
+          "delegates"
+        ]
+      },
+      {
+        "id": "ASabotageCharacter",
+        "label": "ASabotageCharacter",
+        "type": "uactor",
+        "module": "Sabotage",
+        "source_path": "Sabotage/SabotageCharacter.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "ASabotagePlayerController",
+        "label": "ASabotagePlayerController",
+        "type": "uactor",
+        "module": "Sabotage",
+        "source_path": "Sabotage/SabotagePlayerController.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "UActorComponent",
+        "label": "UActorComponent",
+        "type": "ucomponent",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/Components/ActorComponent.h",
+        "changed_fields": [
+          "data_members",
+          "delegates"
+        ]
+      },
+      {
+        "id": "UCameraComponent",
+        "label": "UCameraComponent",
+        "type": "ucomponent",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/Camera/CameraComponent.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "UInputAction",
+        "label": "UInputAction",
+        "type": "uclass",
+        "module": "EnhancedInput",
+        "source_path": "../Plugins/EnhancedInput/Source/EnhancedInput/Public/InputAction.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "UInputMappingContext",
+        "label": "UInputMappingContext",
+        "type": "uclass",
+        "module": "EnhancedInput",
+        "source_path": "../Plugins/EnhancedInput/Source/EnhancedInput/Public/InputMappingContext.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "UObject",
+        "label": "UObject",
+        "type": "uclass",
+        "module": "CoreUObject",
+        "source_path": "Runtime/CoreUObject/Public/UObject/Object.h",
+        "changed_fields": [
+          "cpp_declarations"
+        ]
+      },
+      {
+        "id": "USceneComponent",
+        "label": "USceneComponent",
+        "type": "ucomponent",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/Components/SceneComponent.h",
+        "changed_fields": [
+          "data_members",
+          "delegates"
+        ]
+      },
+      {
+        "id": "USpringArmComponent",
+        "label": "USpringArmComponent",
+        "type": "ucomponent",
+        "module": "Engine",
+        "source_path": "Runtime/Engine/Classes/GameFramework/SpringArmComponent.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "UUserWidget",
+        "label": "UUserWidget",
+        "type": "uclass",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Blueprint/UserWidget.h",
+        "changed_fields": [
+          "data_members"
+        ]
+      },
+      {
+        "id": "UWidget",
+        "label": "UWidget",
+        "type": "uclass",
+        "module": "UMG",
+        "source_path": "Runtime/UMG/Public/Components/Widget.h",
+        "changed_fields": [
+          "data_members",
+          "delegates"
+        ]
+      }
+    ],
+    "added_edges": [
+      {
+        "id": "dir:Engine/Runtime--contains-->dir:Engine/Runtime/MovieScene",
+        "source": "dir:Engine/Runtime",
+        "target": "dir:Engine/Runtime/MovieScene",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/Engine--contains-->dir:Engine/Runtime/Engine/Public",
+        "source": "dir:Engine/Runtime/Engine",
+        "target": "dir:Engine/Runtime/Engine/Public",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/Engine/Public--contains-->dir:Engine/Runtime/Engine/Public/Subsystems",
+        "source": "dir:Engine/Runtime/Engine/Public",
+        "target": "dir:Engine/Runtime/Engine/Public/Subsystems",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/Engine/Public/Subsystems--contains-->file:Engine/Runtime/Engine/Public/Subsystems/Subsystem",
+        "source": "dir:Engine/Runtime/Engine/Public/Subsystems",
+        "target": "file:Engine/Runtime/Engine/Public/Subsystems/Subsystem",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/Engine/Public/Subsystems--contains-->file:Engine/Runtime/Engine/Public/Subsystems/WorldSubsystem",
+        "source": "dir:Engine/Runtime/Engine/Public/Subsystems",
+        "target": "file:Engine/Runtime/Engine/Public/Subsystems/WorldSubsystem",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/MovieScene--contains-->dir:Engine/Runtime/MovieScene/Public",
+        "source": "dir:Engine/Runtime/MovieScene",
+        "target": "dir:Engine/Runtime/MovieScene/Public",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/MovieScene/Public--contains-->file:Engine/Runtime/MovieScene/Public/MovieSceneSequence",
+        "source": "dir:Engine/Runtime/MovieScene/Public",
+        "target": "file:Engine/Runtime/MovieScene/Public/MovieSceneSequence",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/MovieScene/Public--contains-->file:Engine/Runtime/MovieScene/Public/MovieSceneSignedObject",
+        "source": "dir:Engine/Runtime/MovieScene/Public",
+        "target": "file:Engine/Runtime/MovieScene/Public/MovieSceneSignedObject",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/UMG/Public--contains-->dir:Engine/Runtime/UMG/Public/Animation",
+        "source": "dir:Engine/Runtime/UMG/Public",
+        "target": "dir:Engine/Runtime/UMG/Public/Animation",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/UMG/Public/Animation--contains-->file:Engine/Runtime/UMG/Public/Animation/WidgetAnimation",
+        "source": "dir:Engine/Runtime/UMG/Public/Animation",
+        "target": "file:Engine/Runtime/UMG/Public/Animation/WidgetAnimation",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/UMG/Public/Components--contains-->file:Engine/Runtime/UMG/Public/Components/PanelWidget",
+        "source": "dir:Engine/Runtime/UMG/Public/Components",
+        "target": "file:Engine/Runtime/UMG/Public/Components/PanelWidget",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Engine/Runtime/UMG/Public/Components--contains-->file:Engine/Runtime/UMG/Public/Components/ScrollBox",
+        "source": "dir:Engine/Runtime/UMG/Public/Components",
+        "target": "file:Engine/Runtime/UMG/Public/Components/ScrollBox",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source--contains-->dir:Source/SabotageTests",
+        "source": "dir:Source",
+        "target": "dir:Source/SabotageTests",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage--contains-->dir:Source/Sabotage/Core",
+        "source": "dir:Source/Sabotage",
+        "target": "dir:Source/Sabotage/Core",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage--contains-->dir:Source/Sabotage/Settings",
+        "source": "dir:Source/Sabotage",
+        "target": "dir:Source/Sabotage/Settings",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage--contains-->dir:Source/Sabotage/UI",
+        "source": "dir:Source/Sabotage",
+        "target": "dir:Source/Sabotage/UI",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/Core--contains-->file:Source/Sabotage/Core/ISabotageSaveParticipant",
+        "source": "dir:Source/Sabotage/Core",
+        "target": "file:Source/Sabotage/Core/ISabotageSaveParticipant",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/Core--contains-->file:Source/Sabotage/Core/SabotageTagEventPayload",
+        "source": "dir:Source/Sabotage/Core",
+        "target": "file:Source/Sabotage/Core/SabotageTagEventPayload",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/Core--contains-->file:Source/Sabotage/Core/SabotageTagEventSubsystem",
+        "source": "dir:Source/Sabotage/Core",
+        "target": "file:Source/Sabotage/Core/SabotageTagEventSubsystem",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/Settings--contains-->file:Source/Sabotage/Settings/PlayerSettingsParticipant",
+        "source": "dir:Source/Sabotage/Settings",
+        "target": "file:Source/Sabotage/Settings/PlayerSettingsParticipant",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/Settings--contains-->file:Source/Sabotage/Settings/PlayerSettingsTypes",
+        "source": "dir:Source/Sabotage/Settings",
+        "target": "file:Source/Sabotage/Settings/PlayerSettingsTypes",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/Settings--contains-->file:Source/Sabotage/Settings/SettingsTags",
+        "source": "dir:Source/Sabotage/Settings",
+        "target": "file:Source/Sabotage/Settings/SettingsTags",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/UI--contains-->file:Source/Sabotage/UI/UI_CategoryTab",
+        "source": "dir:Source/Sabotage/UI",
+        "target": "file:Source/Sabotage/UI/UI_CategoryTab",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/UI--contains-->file:Source/Sabotage/UI/UI_DiegeticHintBase",
+        "source": "dir:Source/Sabotage/UI",
+        "target": "file:Source/Sabotage/UI/UI_DiegeticHintBase",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/UI--contains-->file:Source/Sabotage/UI/UI_SegmentedRowBase",
+        "source": "dir:Source/Sabotage/UI",
+        "target": "file:Source/Sabotage/UI/UI_SegmentedRowBase",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/UI--contains-->file:Source/Sabotage/UI/UI_SettingsPanel",
+        "source": "dir:Source/Sabotage/UI",
+        "target": "file:Source/Sabotage/UI/UI_SettingsPanel",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/UI--contains-->file:Source/Sabotage/UI/UI_SliderBase",
+        "source": "dir:Source/Sabotage/UI",
+        "target": "file:Source/Sabotage/UI/UI_SliderBase",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/UI--contains-->file:Source/Sabotage/UI/UI_ToggleBase",
+        "source": "dir:Source/Sabotage/UI",
+        "target": "file:Source/Sabotage/UI/UI_ToggleBase",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/SabotageTests--contains-->file:Source/SabotageTests/SabotageTests.Build.cs",
+        "source": "dir:Source/SabotageTests",
+        "target": "file:Source/SabotageTests/SabotageTests.Build.cs",
+        "relation": "contains"
+      },
+      {
+        "id": "FSabotageTagEventPayload--aggregates-->AActor",
+        "source": "FSabotageTagEventPayload",
+        "target": "AActor",
+        "relation": "aggregates"
+      },
+      {
+        "id": "UMovieSceneSequence--composes-->UMovieSceneCompiledData",
+        "source": "UMovieSceneSequence",
+        "target": "UMovieSceneCompiledData",
+        "relation": "composes"
+      },
+      {
+        "id": "UMovieSceneSequence--inherits-->UMovieSceneSignedObject",
+        "source": "UMovieSceneSequence",
+        "target": "UMovieSceneSignedObject",
+        "relation": "inherits"
+      },
+      {
+        "id": "UMovieSceneSignedObject--inherits-->UObject",
+        "source": "UMovieSceneSignedObject",
+        "target": "UObject",
+        "relation": "inherits"
+      },
+      {
+        "id": "UMovieSceneSignedObject::PostInitProperties--overrides-->lifecycle:PostInitProperties",
+        "source": "UMovieSceneSignedObject::PostInitProperties",
+        "target": "lifecycle:PostInitProperties",
+        "relation": "overrides"
+      },
+      {
+        "id": "UPanelWidget--aggregates-->UPanelSlot",
+        "source": "UPanelWidget",
+        "target": "UPanelSlot",
+        "relation": "aggregates"
+      },
+      {
+        "id": "UPanelWidget--inherits-->UWidget",
+        "source": "UPanelWidget",
+        "target": "UWidget",
+        "relation": "inherits"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant--implements-->ISabotageSaveParticipant",
+        "source": "USabotagePlayerSettingsParticipant",
+        "target": "ISabotageSaveParticipant",
+        "relation": "implements"
+      },
+      {
+        "id": "USabotagePlayerSettingsParticipant--inherits-->UObject",
+        "source": "USabotagePlayerSettingsParticipant",
+        "target": "UObject",
+        "relation": "inherits"
+      },
+      {
+        "id": "USabotageTagEventSubsystem--inherits-->UWorldSubsystem",
+        "source": "USabotageTagEventSubsystem",
+        "target": "UWorldSubsystem",
+        "relation": "inherits"
+      },
+      {
+        "id": "UScrollBox--inherits-->UPanelWidget",
+        "source": "UScrollBox",
+        "target": "UPanelWidget",
+        "relation": "inherits"
+      },
+      {
+        "id": "USubsystem--inherits-->UObject",
+        "source": "USubsystem",
+        "target": "UObject",
+        "relation": "inherits"
+      },
+      {
+        "id": "UUI_CategoryTab--inherits-->UUserWidget",
+        "source": "UUI_CategoryTab",
+        "target": "UUserWidget",
+        "relation": "inherits"
+      },
+      {
+        "id": "UUI_DiegeticHintBase--inherits-->UUserWidget",
+        "source": "UUI_DiegeticHintBase",
+        "target": "UUserWidget",
+        "relation": "inherits"
+      },
+      {
+        "id": "UUI_SegmentedRowBase--inherits-->UUserWidget",
+        "source": "UUI_SegmentedRowBase",
+        "target": "UUserWidget",
+        "relation": "inherits"
+      },
+      {
+        "id": "UUI_SettingsPanel--aggregates-->UUI_CategoryTab",
+        "source": "UUI_SettingsPanel",
+        "target": "UUI_CategoryTab",
+        "relation": "aggregates"
+      },
+      {
+        "id": "UUI_SettingsPanel--composes-->UInputAction",
+        "source": "UUI_SettingsPanel",
+        "target": "UInputAction",
+        "relation": "composes"
+      },
+      {
+        "id": "UUI_SettingsPanel--composes-->UPanelWidget",
+        "source": "UUI_SettingsPanel",
+        "target": "UPanelWidget",
+        "relation": "composes"
+      },
+      {
+        "id": "UUI_SettingsPanel--composes-->USabotagePlayerSettingsParticipant",
+        "source": "UUI_SettingsPanel",
+        "target": "USabotagePlayerSettingsParticipant",
+        "relation": "composes"
+      },
+      {
+        "id": "UUI_SettingsPanel--composes-->UScrollBox",
+        "source": "UUI_SettingsPanel",
+        "target": "UScrollBox",
+        "relation": "composes"
+      },
+      {
+        "id": "UUI_SettingsPanel--composes-->UUI_DiegeticHintBase",
+        "source": "UUI_SettingsPanel",
+        "target": "UUI_DiegeticHintBase",
+        "relation": "composes"
+      },
+      {
+        "id": "UUI_SettingsPanel--composes-->UWidget",
+        "source": "UUI_SettingsPanel",
+        "target": "UWidget",
+        "relation": "composes"
+      },
+      {
+        "id": "UUI_SettingsPanel--composes-->UWidgetAnimation",
+        "source": "UUI_SettingsPanel",
+        "target": "UWidgetAnimation",
+        "relation": "composes"
+      },
+      {
+        "id": "UUI_SettingsPanel--inherits-->UUserWidget",
+        "source": "UUI_SettingsPanel",
+        "target": "UUserWidget",
+        "relation": "inherits"
+      },
+      {
+        "id": "UUI_SettingsPanel::GetFirstFocusableInPane--uses_member-->UPanelWidget",
+        "source": "UUI_SettingsPanel::GetFirstFocusableInPane",
+        "target": "UPanelWidget",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::GetLastFocusableInPane--uses_member-->UPanelWidget",
+        "source": "UUI_SettingsPanel::GetLastFocusableInPane",
+        "target": "UPanelWidget",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::GetSelectedTabWidget--uses_member-->UUI_CategoryTab",
+        "source": "UUI_SettingsPanel::GetSelectedTabWidget",
+        "target": "UUI_CategoryTab",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::Handle_OnWriteFailed--uses_member-->UUI_DiegeticHintBase",
+        "source": "UUI_SettingsPanel::Handle_OnWriteFailed",
+        "target": "UUI_DiegeticHintBase",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::InitterCategories--uses_member-->UUI_CategoryTab",
+        "source": "UUI_SettingsPanel::InitterCategories",
+        "target": "UUI_CategoryTab",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::InitterInput--uses_member-->UInputAction",
+        "source": "UUI_SettingsPanel::InitterInput",
+        "target": "UInputAction",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::InitterWriteFailure--uses_member-->USabotagePlayerSettingsParticipant",
+        "source": "UUI_SettingsPanel::InitterWriteFailure",
+        "target": "USabotagePlayerSettingsParticipant",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::IsFocusInLeftPane--uses_member-->UScrollBox",
+        "source": "UUI_SettingsPanel::IsFocusInLeftPane",
+        "target": "UScrollBox",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::NativeDestruct--uses_member-->USabotagePlayerSettingsParticipant",
+        "source": "UUI_SettingsPanel::NativeDestruct",
+        "target": "USabotagePlayerSettingsParticipant",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::NativeDestruct--uses_member-->UUI_CategoryTab",
+        "source": "UUI_SettingsPanel::NativeDestruct",
+        "target": "UUI_CategoryTab",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::OnAnimationFinished_Implementation--uses_member-->UWidgetAnimation",
+        "source": "UUI_SettingsPanel::OnAnimationFinished_Implementation",
+        "target": "UWidgetAnimation",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::PlayCloseTransition--uses_member-->UWidgetAnimation",
+        "source": "UUI_SettingsPanel::PlayCloseTransition",
+        "target": "UWidgetAnimation",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::PlayOpenTransition--uses_member-->UWidgetAnimation",
+        "source": "UUI_SettingsPanel::PlayOpenTransition",
+        "target": "UWidgetAnimation",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::RequestRestoreDefaults--uses_member-->UWidget",
+        "source": "UUI_SettingsPanel::RequestRestoreDefaults",
+        "target": "UWidget",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::SelectCategory--uses_member-->UUI_CategoryTab",
+        "source": "UUI_SettingsPanel::SelectCategory",
+        "target": "UUI_CategoryTab",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::SelectCategory--uses_member-->UWidgetAnimation",
+        "source": "UUI_SettingsPanel::SelectCategory",
+        "target": "UWidgetAnimation",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::SetModalState--uses_member-->UPanelWidget",
+        "source": "UUI_SettingsPanel::SetModalState",
+        "target": "UPanelWidget",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::SetModalState--uses_member-->UWidget",
+        "source": "UUI_SettingsPanel::SetModalState",
+        "target": "UWidget",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SettingsPanel::UpdateRestoreDefaultAvailability--uses_member-->UWidget",
+        "source": "UUI_SettingsPanel::UpdateRestoreDefaultAvailability",
+        "target": "UWidget",
+        "relation": "uses_member"
+      },
+      {
+        "id": "UUI_SliderBase--inherits-->UUserWidget",
+        "source": "UUI_SliderBase",
+        "target": "UUserWidget",
+        "relation": "inherits"
+      },
+      {
+        "id": "UUI_ToggleBase--inherits-->UUserWidget",
+        "source": "UUI_ToggleBase",
+        "target": "UUserWidget",
+        "relation": "inherits"
+      },
+      {
+        "id": "UWidgetAnimation--composes-->UMovieScene",
+        "source": "UWidgetAnimation",
+        "target": "UMovieScene",
+        "relation": "composes"
+      },
+      {
+        "id": "UWidgetAnimation--inherits-->UMovieSceneSequence",
+        "source": "UWidgetAnimation",
+        "target": "UMovieSceneSequence",
+        "relation": "inherits"
+      },
+      {
+        "id": "UWorldSubsystem--inherits-->USubsystem",
+        "source": "UWorldSubsystem",
+        "target": "USubsystem",
+        "relation": "inherits"
+      }
+    ],
+    "removed_edges": [],
+    "changed_edges": []
+  },
+  "impact": {
+    "direct_node_ids": [
+      "AActor",
+      "ACharacter",
+      "AController",
+      "AGameModeBase",
+      "AInfo",
+      "APawn",
+      "APlayerController",
+      "ASabotageCharacter",
+      "ASabotagePlayerController",
+      "EUI_SettingsBus",
+      "EUI_SettingsKeyPlatform",
+      "EUI_SettingsModalState",
+      "EUI_SettingsMotionLevel",
+      "EUI_SettingsReasonCode",
+      "EUI_SettingsUiScale",
+      "FPlayerSettingsSaveData",
+      "FSabotageSaveReader",
+      "FSabotageSaveReader::GetRemainingSize",
+      "FSabotageSaveReader::ReadBool",
+      "FSabotageSaveReader::ReadBytes",
+      "FSabotageSaveReader::ReadFloat",
+      "FSabotageSaveReader::ReadInt32",
+      "FSabotageSaveReader::ReadString",
+      "FSabotageSaveWriter",
+      "FSabotageSaveWriter::GetBuffer",
+      "FSabotageSaveWriter::GetPayloadSize",
+      "FSabotageSaveWriter::WriteBool",
+      "FSabotageSaveWriter::WriteBytes",
+      "FSabotageSaveWriter::WriteFloat",
+      "FSabotageSaveWriter::WriteInt32",
+      "FSabotageSaveWriter::WriteString",
+      "FSabotageTagEventBroker",
+      "FSabotageTagEventBroker::Broadcast",
+      "FSabotageTagEventBroker::GetSubscriptionCount",
+      "FSabotageTagEventBroker::IsEventRegistered",
+      "FSabotageTagEventBroker::RegisterEvent",
+      "FSabotageTagEventBroker::Reset",
+      "FSabotageTagEventBroker::Subscribe",
+      "FSabotageTagEventBroker::Unsubscribe",
+      "FSabotageTagEventPayload",
+      "ISabotageSaveParticipant",
+      "ISabotageSaveParticipant::GetSaveLayerTag",
+      "ISabotageSaveParticipant::ReadSaveData",
+      "ISabotageSaveParticipant::WriteSaveData",
+      "UActorComponent",
+      "UCameraComponent",
+      "UInputAction",
+      "UInputMappingContext",
+      "UMovieScene",
+      "UMovieSceneCompiledData",
+      "UMovieSceneSequence",
+      "UMovieSceneSequence::AllowsCustomBindings",
+      "UMovieSceneSequence::AllowsSpawnableObjects",
+      "UMovieSceneSequence::AreParentContextsSignificant",
+      "UMovieSceneSequence::BeginDestroy",
+      "UMovieSceneSequence::CanAnimateObject",
+      "UMovieSceneSequence::CanRebindPossessable",
+      "UMovieSceneSequence::CreateDirectorInstance",
+      "UMovieSceneSequence::CreatePossessable",
+      "UMovieSceneSequence::CreateSpawnable",
+      "UMovieSceneSequence::FindBindingByTag",
+      "UMovieSceneSequence::FindBindingFromObject",
+      "UMovieSceneSequence::FindBindingsByTag",
+      "UMovieSceneSequence::FindPossessableObjectId",
+      "UMovieSceneSequence::GatherExpiredObjects",
+      "UMovieSceneSequence::GetBindingReferences",
+      "UMovieSceneSequence::GetCompiledData",
+      "UMovieSceneSequence::GetCustomBrushForBinding",
+      "UMovieSceneSequence::GetDisplayName",
+      "UMovieSceneSequence::GetEarliestTimecodeSource",
+      "UMovieSceneSequence::GetFlags",
+      "UMovieSceneSequence::GetOrCreateCompiledData",
+      "UMovieSceneSequence::IsCompatibleAsSubSequence",
+      "UMovieSceneSequence::IsCompatibleSubSequence",
+      "UMovieSceneSequence::IsFilterSupported",
+      "UMovieSceneSequence::IsFilterSupportedImpl",
+      "UMovieSceneSequence::IsPlayableDirectly",
+      "UMovieSceneSequence::IsSubSequenceCompatible",
+      "UMovieSceneSequence::IsTrackSupported",
+      "UMovieSceneSequence::IsTrackSupportedImpl",
+      "UMovieSceneSequence::LocateBoundObjects",
+      "UMovieSceneSequence::MakeLocatorForObject",
+      "UMovieSceneSequence::MakeSpawnableTemplateFromInstance",
+      "UMovieSceneSequence::OptimizeForCook",
+      "UMovieSceneSequence::OverrideNetworkMask",
+      "UMovieSceneSequence::PURE_VIRTUAL",
+      "UMovieSceneSequence::PostDuplicate",
+      "UMovieSceneSequence::PostLoad",
+      "UMovieSceneSequence::PreSave",
+      "UMovieSceneSequence::Serialize",
+      "UMovieSceneSequence::SetPlayableDirectly",
+      "UMovieSceneSequence::SetSequenceFlags",
+      "UMovieSceneSequence::UnloadBoundObject",
+      "UMovieSceneSignedObject",
+      "UMovieSceneSignedObject::AddFlushSignal",
+      "UMovieSceneSignedObject::BroadcastChanged",
+      "UMovieSceneSignedObject::GetDeferredHandler",
+      "UMovieSceneSignedObject::GetSignature",
+      "UMovieSceneSignedObject::MarkAsChanged",
+      "UMovieSceneSignedObject::Modify",
+      "UMovieSceneSignedObject::OnSignatureChanged",
+      "UMovieSceneSignedObject::PostEditChangeProperty",
+      "UMovieSceneSignedObject::PostEditUndo",
+      "UMovieSceneSignedObject::PostInitProperties",
+      "UMovieSceneSignedObject::PostLoad",
+      "UMovieSceneSignedObject::ResetImplicitScopedModifyDefer",
+      "UMovieSceneSignedObject::SetDeferredHandler",
+      "UObject",
+      "UPanelWidget",
+      "UPanelWidget::AddChild",
+      "UPanelWidget::CanAddMoreChildren",
+      "UPanelWidget::CanHaveMultipleChildren",
+      "UPanelWidget::ClearChildren",
+      "UPanelWidget::ConnectEditorData",
+      "UPanelWidget::GetAllChildren",
+      "UPanelWidget::GetChildAt",
+      "UPanelWidget::GetChildIndex",
+      "UPanelWidget::GetChildrenCount",
+      "UPanelWidget::GetSlotClass",
+      "UPanelWidget::GetSlots",
+      "UPanelWidget::HasAnyChildren",
+      "UPanelWidget::HasChild",
+      "UPanelWidget::InsertChildAt",
+      "UPanelWidget::LockToPanelOnDrag",
+      "UPanelWidget::OnSlotAdded",
+      "UPanelWidget::OnSlotRemoved",
+      "UPanelWidget::PostLoad",
+      "UPanelWidget::RebuildDesignWidget",
+      "UPanelWidget::ReleaseSlateResources",
+      "UPanelWidget::RemoveChild",
+      "UPanelWidget::RemoveChildAt",
+      "UPanelWidget::ReplaceChild",
+      "UPanelWidget::ReplaceChildAt",
+      "UPanelWidget::SetDesignerFlags",
+      "UPanelWidget::ShiftChild",
+      "USabotagePlayerSettingsParticipant",
+      "USabotagePlayerSettingsParticipant::ApplyResetRequest",
+      "USabotagePlayerSettingsParticipant::ApplyScalar",
+      "USabotagePlayerSettingsParticipant::ApplySubIdScalar",
+      "USabotagePlayerSettingsParticipant::ApplyValueChange",
+      "USabotagePlayerSettingsParticipant::DebugSimulateWriteFailure",
+      "USabotagePlayerSettingsParticipant::GetData",
+      "USabotagePlayerSettingsParticipant::GetSaveLayerTag",
+      "USabotagePlayerSettingsParticipant::HasPendingWrite",
+      "USabotagePlayerSettingsParticipant::MarkInitialDataRead",
+      "USabotagePlayerSettingsParticipant::ReadSaveData",
+      "USabotagePlayerSettingsParticipant::ResetCategory",
+      "USabotagePlayerSettingsParticipant::WriteSaveData",
+      "USabotageTagEventSubsystem",
+      "USabotageTagEventSubsystem::BroadcastTagEvent",
+      "USabotageTagEventSubsystem::Deinitialize",
+      "USabotageTagEventSubsystem::GetSubscriptionCount",
+      "USabotageTagEventSubsystem::Initialize",
+      "USabotageTagEventSubsystem::IsEventRegistered",
+      "USabotageTagEventSubsystem::RegisterEvent",
+      "USabotageTagEventSubsystem::SubscribeTagEvent",
+      "USabotageTagEventSubsystem::UnsubscribeTagEvent",
+      "USceneComponent",
+      "UScrollBox",
+      "UScrollBox::EndInertialScrolling",
+      "UScrollBox::GetAnalogMouseWheelKey",
+      "UScrollBox::GetConsumeMouseWheel",
+      "UScrollBox::GetConsumePointerInput",
+      "UScrollBox::GetIsFocusable",
+      "UScrollBox::GetIsScrolling",
+      "UScrollBox::GetIsTouchScrollingEnabled",
+      "UScrollBox::GetNavigationDestination",
+      "UScrollBox::GetNavigationScrollPadding",
+      "UScrollBox::GetOrientation",
+      "UScrollBox::GetOverscrollOffset",
+      "UScrollBox::GetOverscrollPercentage",
+      "UScrollBox::GetPaletteCategory",
+      "UScrollBox::GetScrollAnimationInterpolationSpeed",
+      "UScrollBox::GetScrollBarVisibility",
+      "UScrollBox::GetScrollOffset",
+      "UScrollBox::GetScrollOffsetOfEnd",
+      "UScrollBox::GetScrollWhenFocusChanges",
+      "UScrollBox::GetScrollbarPadding",
+      "UScrollBox::GetScrollbarThickness",
+      "UScrollBox::GetSlotClass",
+      "UScrollBox::GetViewFraction",
+      "UScrollBox::GetViewOffsetFraction",
+      "UScrollBox::GetWheelScrollMultiplier",
+      "UScrollBox::GetWidgetBarStyle",
+      "UScrollBox::GetWidgetStyle",
+      "UScrollBox::InitBackPadScrolling",
+      "UScrollBox::InitFrontPadScrolling",
+      "UScrollBox::InitNavigationScrollPadding",
+      "UScrollBox::IsAllowOverscroll",
+      "UScrollBox::IsAllowRightClickDragScrolling",
+      "UScrollBox::IsAlwaysShowScrollbar",
+      "UScrollBox::IsAlwaysShowScrollbarTrack",
+      "UScrollBox::IsAnimateWheelScrolling",
+      "UScrollBox::IsBackPadScrolling",
+      "UScrollBox::IsFrontPadScrolling",
+      "UScrollBox::OnDescendantDeselectedByDesigner",
+      "UScrollBox::OnDescendantSelectedByDesigner",
+      "UScrollBox::OnSlotAdded",
+      "UScrollBox::OnSlotRemoved",
+      "UScrollBox::RebuildWidget",
+      "UScrollBox::ReleaseSlateResources",
+      "UScrollBox::ScrollToEnd",
+      "UScrollBox::ScrollToStart",
+      "UScrollBox::ScrollWidgetIntoView",
+      "UScrollBox::Serialize",
+      "UScrollBox::SetAllowOverscroll",
+      "UScrollBox::SetAllowRightClickDragScrolling",
+      "UScrollBox::SetAlwaysShowScrollbar",
+      "UScrollBox::SetAlwaysShowScrollbarTrack",
+      "UScrollBox::SetAnalogMouseWheelKey",
+      "UScrollBox::SetAnimateWheelScrolling",
+      "UScrollBox::SetConsumeMouseWheel",
+      "UScrollBox::SetConsumePointerInput",
+      "UScrollBox::SetIsFocusable",
+      "UScrollBox::SetIsTouchScrollingEnabled",
+      "UScrollBox::SetNavigationDestination",
+      "UScrollBox::SetOrientation",
+      "UScrollBox::SetScrollAnimationInterpolationSpeed",
+      "UScrollBox::SetScrollBarVisibility",
+      "UScrollBox::SetScrollOffset",
+      "UScrollBox::SetScrollWhenFocusChanges",
+      "UScrollBox::SetScrollbarPadding",
+      "UScrollBox::SetScrollbarThickness",
+      "UScrollBox::SetWheelScrollMultiplier",
+      "UScrollBox::SetWidgetBarStyle",
+      "UScrollBox::SetWidgetStyle",
+      "UScrollBox::SlateHandleFocusChanging",
+      "UScrollBox::SlateHandleFocusLost",
+      "UScrollBox::SlateHandleFocusReceived",
+      "UScrollBox::SlateHandleScrollBarVisibilityChanged",
+      "UScrollBox::SlateHandleUserScrolled",
+      "UScrollBox::SynchronizeProperties",
+      "USpringArmComponent",
+      "USubsystem",
+      "USubsystem::Deinitialize",
+      "USubsystem::GetFunctionCallspace",
+      "USubsystem::Initialize",
+      "USubsystem::ShouldCreateSubsystem",
+      "UUI_CategoryTab",
+      "UUI_CategoryTab::GetCategoryTag",
+      "UUI_CategoryTab::IsFocused",
+      "UUI_CategoryTab::IsSelected",
+      "UUI_CategoryTab::NativeOnFocusLost",
+      "UUI_CategoryTab::NativeOnFocusReceived",
+      "UUI_CategoryTab::NativeOnKeyDown",
+      "UUI_CategoryTab::NotifyActivated",
+      "UUI_CategoryTab::OnSelectionVisualChanged",
+      "UUI_CategoryTab::SetFocused",
+      "UUI_CategoryTab::SetSelected",
+      "UUI_DiegeticHintBase",
+      "UUI_DiegeticHintBase::GetReason",
+      "UUI_DiegeticHintBase::GetReasonLocalizationKey",
+      "UUI_DiegeticHintBase::Hide",
+      "UUI_DiegeticHintBase::IsHintVisible",
+      "UUI_DiegeticHintBase::OnHintAppearanceChanged",
+      "UUI_DiegeticHintBase::Show",
+      "UUI_SegmentedRowBase",
+      "UUI_SegmentedRowBase::CycleSelection",
+      "UUI_SegmentedRowBase::DisableWithReason",
+      "UUI_SegmentedRowBase::Enable",
+      "UUI_SegmentedRowBase::GetDisabledReason",
+      "UUI_SegmentedRowBase::GetOptionCount",
+      "UUI_SegmentedRowBase::GetSelectedIndex",
+      "UUI_SegmentedRowBase::GetSelectedValue",
+      "UUI_SegmentedRowBase::GetValuePropertyTag",
+      "UUI_SegmentedRowBase::NativeOnKeyDown",
+      "UUI_SegmentedRowBase::NativeOnNavigation",
+      "UUI_SegmentedRowBase::SelectIndex",
+      "UUI_SegmentedRowBase::WrapSelectionIndex",
+      "UUI_SettingsPanel",
+      "UUI_SettingsPanel::ApplyCrossPaneFocus",
+      "UUI_SettingsPanel::ApplyInitialState",
+      "UUI_SettingsPanel::BroadcastKeyRebindRejected",
+      "UUI_SettingsPanel::BroadcastKeyRebound",
+      "UUI_SettingsPanel::BroadcastResetRequested",
+      "UUI_SettingsPanel::BroadcastValueChanged",
+      "UUI_SettingsPanel::ClosePanel",
+      "UUI_SettingsPanel::CrossPaneTo",
+      "UUI_SettingsPanel::DeferFocusRetry",
+      "UUI_SettingsPanel::GetContentFocusAnchor",
+      "UUI_SettingsPanel::GetFirstFocusableInPane",
+      "UUI_SettingsPanel::GetLastFocusableInPane",
+      "UUI_SettingsPanel::GetSelectedTabWidget",
+      "UUI_SettingsPanel::GetTagEventSubsystem",
+      "UUI_SettingsPanel::Handle_ApplyPendingFocus",
+      "UUI_SettingsPanel::Handle_OnCategoryActivated",
+      "UUI_SettingsPanel::Handle_OnCloseFinished",
+      "UUI_SettingsPanel::Handle_OnOpenFinished",
+      "UUI_SettingsPanel::Handle_OnSwitchPaneLeft",
+      "UUI_SettingsPanel::Handle_OnSwitchPaneRight",
+      "UUI_SettingsPanel::Handle_OnWriteFailed",
+      "UUI_SettingsPanel::InitterCategories",
+      "UUI_SettingsPanel::InitterInput",
+      "UUI_SettingsPanel::InitterWriteFailure",
+      "UUI_SettingsPanel::IsFirstFocusableInPane",
+      "UUI_SettingsPanel::IsFocusInLeftPane",
+      "UUI_SettingsPanel::IsLastFocusableInPane",
+      "UUI_SettingsPanel::NativeConstruct",
+      "UUI_SettingsPanel::NativeDestruct",
+      "UUI_SettingsPanel::NativeOnKeyDown",
+      "UUI_SettingsPanel::NativeOnNavigation",
+      "UUI_SettingsPanel::NotifyConfirmWindowCancelled",
+      "UUI_SettingsPanel::NotifyConfirmWindowConfirmed",
+      "UUI_SettingsPanel::NotifyRowSelectionChanged",
+      "UUI_SettingsPanel::NotifySliderCommitted",
+      "UUI_SettingsPanel::NotifyToggleChanged",
+      "UUI_SettingsPanel::OnAnimationFinished_Implementation",
+      "UUI_SettingsPanel::OnConfirmWindowDismissed",
+      "UUI_SettingsPanel::OnConfirmWindowRequested",
+      "UUI_SettingsPanel::OpenPanel",
+      "UUI_SettingsPanel::PlayCloseTransition",
+      "UUI_SettingsPanel::PlayOpenTransition",
+      "UUI_SettingsPanel::RequestRestoreDefaults",
+      "UUI_SettingsPanel::SelectCategory",
+      "UUI_SettingsPanel::SetInstantTransitions",
+      "UUI_SettingsPanel::SetModalState",
+      "UUI_SettingsPanel::ShouldEscapeCloseModal",
+      "UUI_SettingsPanel::UpdateRestoreDefaultAvailability",
+      "UUI_SliderBase",
+      "UUI_SliderBase::CommitValue",
+      "UUI_SliderBase::DisableWithReason",
+      "UUI_SliderBase::Enable",
+      "UUI_SliderBase::GetDisabledReason",
+      "UUI_SliderBase::GetValue",
+      "UUI_SliderBase::GetValuePropertyTag",
+      "UUI_SliderBase::GetValueSubId",
+      "UUI_SliderBase::HandleSliderCommit",
+      "UUI_SliderBase::HandleSliderPreviewValue",
+      "UUI_SliderBase::NativeOnKeyDown",
+      "UUI_SliderBase::NativeOnNavigation",
+      "UUI_SliderBase::SetValue",
+      "UUI_SliderBase::SnapToStep",
+      "UUI_SliderBase::StepBy",
+      "UUI_ToggleBase",
+      "UUI_ToggleBase::DisableWithReason",
+      "UUI_ToggleBase::Enable",
+      "UUI_ToggleBase::GetDisabledReason",
+      "UUI_ToggleBase::GetValuePropertyTag",
+      "UUI_ToggleBase::IsChecked",
+      "UUI_ToggleBase::NativeOnKeyDown",
+      "UUI_ToggleBase::NotifyToggledByUser",
+      "UUI_ToggleBase::SetChecked",
+      "UUI_ToggleBase::Toggle",
+      "UUserWidget",
+      "UWidget",
+      "UWidgetAnimation",
+      "UWidgetAnimation::BindPossessableObject",
+      "UWidgetAnimation::BindToAnimationFinished",
+      "UWidgetAnimation::BindToAnimationStarted",
+      "UWidgetAnimation::CanPossessObject",
+      "UWidgetAnimation::CreateDirectorInstance",
+      "UWidgetAnimation::GetBindings",
+      "UWidgetAnimation::GetCustomBrushForBinding",
+      "UWidgetAnimation::GetDisplayLabel",
+      "UWidgetAnimation::GetDisplayName",
+      "UWidgetAnimation::GetEndTime",
+      "UWidgetAnimation::GetLegacyFinishOnStop",
+      "UWidgetAnimation::GetMovieScene",
+      "UWidgetAnimation::GetNullAnimation",
+      "UWidgetAnimation::GetParentObject",
+      "UWidgetAnimation::GetStartTime",
+      "UWidgetAnimation::IsFilterSupportedImpl",
+      "UWidgetAnimation::IsPostLoadThreadSafe",
+      "UWidgetAnimation::IsTrackSupportedImpl",
+      "UWidgetAnimation::LocateBoundObjects",
+      "UWidgetAnimation::PostLoad",
+      "UWidgetAnimation::RemoveBinding",
+      "UWidgetAnimation::SetDisplayLabel",
+      "UWidgetAnimation::UnbindAllFromAnimationFinished",
+      "UWidgetAnimation::UnbindAllFromAnimationStarted",
+      "UWidgetAnimation::UnbindFromAnimationFinished",
+      "UWidgetAnimation::UnbindFromAnimationStarted",
+      "UWidgetAnimation::UnbindInvalidObjects",
+      "UWidgetAnimation::UnbindObjects",
+      "UWidgetAnimation::UnbindPossessableObjects",
+      "UWorldSubsystem",
+      "UWorldSubsystem::DoesSupportWorldType",
+      "UWorldSubsystem::EnsureHasCalledBeginPlay",
+      "UWorldSubsystem::EnsureHasCalledPostInitialize",
+      "UWorldSubsystem::GetWorld",
+      "UWorldSubsystem::GetWorldRef",
+      "UWorldSubsystem::HasCalledBeginPlay",
+      "UWorldSubsystem::HasCalledPostInitialize",
+      "UWorldSubsystem::OnWorldBeginPlay",
+      "UWorldSubsystem::OnWorldComponentsUpdated",
+      "UWorldSubsystem::OnWorldEndPlay",
+      "UWorldSubsystem::PostInitialize",
+      "UWorldSubsystem::PreDeinitialize",
+      "UWorldSubsystem::ShouldCreateSubsystem",
+      "dir:Engine/Runtime/Engine/Public",
+      "dir:Engine/Runtime/Engine/Public/Subsystems",
+      "dir:Engine/Runtime/MovieScene",
+      "dir:Engine/Runtime/MovieScene/Public",
+      "dir:Engine/Runtime/UMG/Public/Animation",
+      "dir:Source/Sabotage/Core",
+      "dir:Source/Sabotage/Settings",
+      "dir:Source/Sabotage/UI",
+      "dir:Source/SabotageTests",
+      "file:Engine/Runtime/Engine/Public/Subsystems/Subsystem",
+      "file:Engine/Runtime/Engine/Public/Subsystems/WorldSubsystem",
+      "file:Engine/Runtime/MovieScene/Public/MovieSceneSequence",
+      "file:Engine/Runtime/MovieScene/Public/MovieSceneSignedObject",
+      "file:Engine/Runtime/UMG/Public/Animation/WidgetAnimation",
+      "file:Engine/Runtime/UMG/Public/Components/PanelWidget",
+      "file:Engine/Runtime/UMG/Public/Components/ScrollBox",
+      "file:Source/Sabotage/Core/ISabotageSaveParticipant",
+      "file:Source/Sabotage/Core/SabotageTagEventPayload",
+      "file:Source/Sabotage/Core/SabotageTagEventSubsystem",
+      "file:Source/Sabotage/Settings/PlayerSettingsParticipant",
+      "file:Source/Sabotage/Settings/PlayerSettingsTypes",
+      "file:Source/Sabotage/Settings/SettingsTags",
+      "file:Source/Sabotage/UI/UI_CategoryTab",
+      "file:Source/Sabotage/UI/UI_DiegeticHintBase",
+      "file:Source/Sabotage/UI/UI_SegmentedRowBase",
+      "file:Source/Sabotage/UI/UI_SettingsPanel",
+      "file:Source/Sabotage/UI/UI_SliderBase",
+      "file:Source/Sabotage/UI/UI_ToggleBase",
+      "file:Source/SabotageTests/SabotageTests.Build.cs"
+    ],
+    "affected_node_ids": [
+      "AGameSession",
+      "AGameStateBase",
+      "AHUD",
+      "APhysicsVolume",
+      "APlayerCameraManager",
+      "APlayerState",
+      "ASabotageCharacter::SetupPlayerInputComponent",
+      "ASabotageGameMode",
+      "ASabotagePlayerController::BeginPlay",
+      "ASabotagePlayerController::SetupInputComponent",
+      "AServerStatReplicator",
+      "ASpectatorPawn",
+      "IAsyncPhysicsStateProcessor",
+      "IInterface_AssetUserData",
+      "INamedSlotInterface",
+      "INavAgentInterface",
+      "INotifyFieldValueChanged",
+      "IWorldPartitionStreamingSourceProvider",
+      "UArrowComponent",
+      "UAssetUserData",
+      "UBillboardComponent",
+      "UCapsuleComponent",
+      "UCharacterMovementComponent",
+      "UCheatManager",
+      "UChildActorComponent",
+      "UDataAsset",
+      "UHLODLayer",
+      "UInputComponent",
+      "UInputModifier",
+      "UInputTrigger",
+      "UNetConnection",
+      "UObjectBaseUtility",
+      "UPanelSlot",
+      "UPlayer",
+      "UPlayerInput",
+      "UPlayerMappableKeySettings",
+      "UPropertyBinding",
+      "USkeletalMeshComponent",
+      "USlateAccessibleWidgetData",
+      "UStaticMesh",
+      "UTexture2D",
+      "UTouchInterface",
+      "UUMGSequencePlayer",
+      "UUMGSequenceTickManager",
+      "UUserWidgetExtension",
+      "UVisual",
+      "UWidgetNavigation",
+      "UWidgetTree",
+      "dir:Engine/Runtime",
+      "dir:Engine/Runtime/Engine",
+      "dir:Engine/Runtime/UMG/Public",
+      "dir:Engine/Runtime/UMG/Public/Components",
+      "dir:Source",
+      "dir:Source/Sabotage",
+      "lifecycle:PostInitProperties"
+    ],
+    "modules": [
+      {
+        "module": "Sabotage",
+        "direct": 179,
+        "affected": 5
+      },
+      {
+        "module": "UMG",
+        "direct": 137,
+        "affected": 3
+      },
+      {
+        "module": "MovieScene",
+        "direct": 61,
+        "affected": 0
+      },
+      {
+        "module": "Engine",
+        "direct": 34,
+        "affected": 3
+      },
+      {
+        "module": "(unassigned)",
+        "direct": 2,
+        "affected": 44
+      },
+      {
+        "module": "EnhancedInput",
+        "direct": 2,
+        "affected": 0
+      },
+      {
+        "module": "SabotageTests",
+        "direct": 2,
+        "affected": 0
+      },
+      {
+        "module": "CoreUObject",
+        "direct": 1,
+        "affected": 0
+      }
+    ]
+  }
+}

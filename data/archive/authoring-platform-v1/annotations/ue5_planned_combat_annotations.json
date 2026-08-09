@@ -1,0 +1,1130 @@
+[
+  {
+    "node_id": "UAnimNotify_DoAttackTrace",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_mrgiz5gc_apn7",
+        "type": "design_decision",
+        "content": "[规划vs实际审计 2026-07-11] 偏差：`Notify` 改用 UE 5.8 三参数签名；新增 Socket/攻击类型/配置入口，配置新增轨迹半径与轻重攻击点数；原因：UE 5.8 无两参数 override；简报未定义轨迹几何与攻击类型传递方式，且检测/加点数值禁止硬编码（DEVIATIONS.md 已登记）",
+        "created_at": "2026-07-11T15:34:25.116Z",
+        "source_hash": "b224808348a12d6838a408d7d0536847e6937ded"
+      },
+      {
+        "id": "ann_msefbhb7_tb0p",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "b224808348a12d6838a408d7d0536847e6937ded"
+      },
+      {
+        "id": "ann_msefbhb7_z4qx",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "b224808348a12d6838a408d7d0536847e6937ded"
+      }
+    ]
+  },
+  {
+    "node_id": "UAnimNotify_CheckCombo",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_mrgiz5gz_s9ko",
+        "type": "design_decision",
+        "content": "[规划vs实际审计 2026-07-11] 偏差：`Notify` 改用 UE 5.8 三参数签名；以原生 Gameplay Tag 表示窗口状态；原因：UE 5.8 无两参数 override；简报未定义输入缓冲状态的跨类传递协议（DEVIATIONS.md 已登记）",
+        "created_at": "2026-07-11T15:34:25.139Z",
+        "source_hash": "09a8998b1a659c41c568cdc6ac6a4f7067835c09"
+      },
+      {
+        "id": "ann_msefbhb7_ofc5",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "09a8998b1a659c41c568cdc6ac6a4f7067835c09"
+      },
+      {
+        "id": "ann_msefbhb7_dwma",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "09a8998b1a659c41c568cdc6ac6a4f7067835c09"
+      }
+    ]
+  },
+  {
+    "node_id": "UAnimNotify_EndDash",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_mrgiz5gz_vjl9",
+        "type": "design_decision",
+        "content": "[规划vs实际审计 2026-07-11] 偏差：`Notify` 由两参数签名改为三参数签名，新增 `const FAnimNotifyEventReference&`；原因：UE 5.8 的 `UAnimNotify` 仅提供三参数虚函数；两参数版本无法 override（DEVIATIONS.md 已登记）",
+        "created_at": "2026-07-11T15:34:25.139Z",
+        "source_hash": "61225243f4637da57f62ff20f1647aa29217c8b5"
+      },
+      {
+        "id": "ann_msefbhb7_8cfa",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "61225243f4637da57f62ff20f1647aa29217c8b5"
+      },
+      {
+        "id": "ann_msefbhb7_h5pz",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "61225243f4637da57f62ff20f1647aa29217c8b5"
+      }
+    ]
+  },
+  {
+    "node_id": "UCombatAttributeSet",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_mrgj03rx_ygdp",
+        "type": "design_decision",
+        "content": "[规划vs实际审计 2026-07-11] 偏差：规划外新增 Health/MaxHealth GAS AttributeSet；原因：`UExecCalc_CombatDamage` 必须输出可复制的 HP 属性，但 18 类规划未提供 AttributeSet（DEVIATIONS.md 已登记）",
+        "created_at": "2026-07-11T15:35:09.597Z",
+        "source_hash": "ac5ec86adb7e874da6942cb33353fb15fb65d1bf"
+      },
+      {
+        "id": "ann_msefbhb8_u4v3",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "ac5ec86adb7e874da6942cb33353fb15fb65d1bf"
+      },
+      {
+        "id": "ann_msefbhb8_nfnk",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "ac5ec86adb7e874da6942cb33353fb15fb65d1bf"
+      }
+    ]
+  },
+  {
+    "node_id": "ACombatCharacterBase",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_ifxo",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "c1531b0f9c3ca1705a5d5c257ba2810df5a33372"
+      },
+      {
+        "id": "ann_msefbhb7_c7q2",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "c1531b0f9c3ca1705a5d5c257ba2810df5a33372"
+      }
+    ]
+  },
+  {
+    "node_id": "APlayerCombatCharacter",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_jxot",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "eac668eda7fc2f669a81696be9825d92b730b5e8"
+      },
+      {
+        "id": "ann_msefbhb7_aedz",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "eac668eda7fc2f669a81696be9825d92b730b5e8"
+      }
+    ]
+  },
+  {
+    "node_id": "AEnemyCombatCharacter",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_1wsn",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "47cb0345fb7744f24e9eed9595596489f40a3eac"
+      },
+      {
+        "id": "ann_msefbhb7_n51c",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "47cb0345fb7744f24e9eed9595596489f40a3eac"
+      }
+    ]
+  },
+  {
+    "node_id": "AEnemyAIController",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_lt89",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "bc7d77d8f31c2227f9c69940aafa6c86b9cffddb"
+      },
+      {
+        "id": "ann_msefbhb7_jyg5",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "bc7d77d8f31c2227f9c69940aafa6c86b9cffddb"
+      }
+    ]
+  },
+  {
+    "node_id": "UComboComponent",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_g1t5",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "5e9d79188887654ac10bfee9621136fa85ae0cc1"
+      },
+      {
+        "id": "ann_msefbhb7_yquo",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "5e9d79188887654ac10bfee9621136fa85ae0cc1"
+      }
+    ]
+  },
+  {
+    "node_id": "ICombatDamageable",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_eyam",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "6664dbd5933ab50d2cd59ed43d5cb6214708a8cf"
+      },
+      {
+        "id": "ann_msefbhb7_837t",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "6664dbd5933ab50d2cd59ed43d5cb6214708a8cf"
+      }
+    ]
+  },
+  {
+    "node_id": "ICombatAttacker",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_p1fb",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "0ba57b4fc1579574c8555279f8543b8e57809caf"
+      },
+      {
+        "id": "ann_msefbhb7_re70",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "0ba57b4fc1579574c8555279f8543b8e57809caf"
+      }
+    ]
+  },
+  {
+    "node_id": "UGA_MeleeAttack",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_9mex",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "d202442a0cf6018cbd301f027834e973c985f860"
+      },
+      {
+        "id": "ann_msefbhb7_0v1y",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "d202442a0cf6018cbd301f027834e973c985f860"
+      }
+    ]
+  },
+  {
+    "node_id": "UGA_Finisher",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_7lg8",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "4b18935b87f496f5fed78aff8584aaef2c083325"
+      },
+      {
+        "id": "ann_msefbhb7_tbja",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "4b18935b87f496f5fed78aff8584aaef2c083325"
+      }
+    ]
+  },
+  {
+    "node_id": "UGA_Dodge",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_qd2b",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "f22f513f585d9da2fc1aa5129cef2514c9df3485"
+      },
+      {
+        "id": "ann_msefbhb7_79as",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "f22f513f585d9da2fc1aa5129cef2514c9df3485"
+      }
+    ]
+  },
+  {
+    "node_id": "UGE_CombatDamage",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_k64o",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "2382525ae162521e930c37abdaf85c0205f04bf4"
+      },
+      {
+        "id": "ann_msefbhb7_vx16",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "2382525ae162521e930c37abdaf85c0205f04bf4"
+      }
+    ]
+  },
+  {
+    "node_id": "UExecCalc_CombatDamage",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_sqxj",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "b6ad11db7c259bf986e97d836aba2b64688aad96"
+      },
+      {
+        "id": "ann_msefbhb7_fcln",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "b6ad11db7c259bf986e97d836aba2b64688aad96"
+      }
+    ]
+  },
+  {
+    "node_id": "UCombatConfigDataAsset",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_xtsb",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "622b034903ea049ebf07a0731d3a713f0fa819ef"
+      },
+      {
+        "id": "ann_msefbhb7_4dr7",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "622b034903ea049ebf07a0731d3a713f0fa819ef"
+      }
+    ]
+  },
+  {
+    "node_id": "FDamageInfo",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_1sxp",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "82273812c6bdb3f4fb7b365ce26ffec2a3ec3ce6"
+      },
+      {
+        "id": "ann_msefbhb7_omoh",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "82273812c6bdb3f4fb7b365ce26ffec2a3ec3ce6"
+      }
+    ]
+  },
+  {
+    "node_id": "EAttackType",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_fmwm",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "9548ac17cf170bf7ea9ba5ca20426e3331281237"
+      },
+      {
+        "id": "ann_msefbhb7_va76",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "9548ac17cf170bf7ea9ba5ca20426e3331281237"
+      }
+    ]
+  },
+  {
+    "node_id": "ACharacter",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_vikg",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "43ffd8c5fd5ef18d388d4545e78c033790de958b"
+      },
+      {
+        "id": "ann_msefbhb7_k1n7",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "43ffd8c5fd5ef18d388d4545e78c033790de958b"
+      }
+    ]
+  },
+  {
+    "node_id": "AAIController",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_k1kl",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "9693d73477dd532c060ca09ada38613173aa2b02"
+      },
+      {
+        "id": "ann_msefbhb7_m6tu",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "9693d73477dd532c060ca09ada38613173aa2b02"
+      }
+    ]
+  },
+  {
+    "node_id": "UBehaviorTree",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_zc8p",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "52affa6c4fe67f39fdf521deb80d182fdfd61df0"
+      },
+      {
+        "id": "ann_msefbhb7_f0pi",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "52affa6c4fe67f39fdf521deb80d182fdfd61df0"
+      }
+    ]
+  },
+  {
+    "node_id": "UActorComponent",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_jh7a",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "fb3baf0af66d624f86ab8db9168c136dec98c9c4"
+      },
+      {
+        "id": "ann_msefbhb7_6nak",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "fb3baf0af66d624f86ab8db9168c136dec98c9c4"
+      }
+    ]
+  },
+  {
+    "node_id": "UGameplayAbility",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_59h5",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "a904cfdff89b2d265b97f38be78cdaa0a9df779a"
+      },
+      {
+        "id": "ann_msefbhb7_m73p",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "a904cfdff89b2d265b97f38be78cdaa0a9df779a"
+      }
+    ]
+  },
+  {
+    "node_id": "UGameplayEffect",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_2g5o",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "de891e8d4371e6d68b588ac93d8ab0f3679d3f7d"
+      },
+      {
+        "id": "ann_msefbhb7_f5vv",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "de891e8d4371e6d68b588ac93d8ab0f3679d3f7d"
+      }
+    ]
+  },
+  {
+    "node_id": "UGameplayEffectExecutionCalculation",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_pl9l",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "79687b6c4ec66abfa23eda644a7b804e2ce3e97a"
+      },
+      {
+        "id": "ann_msefbhb7_o4xf",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "79687b6c4ec66abfa23eda644a7b804e2ce3e97a"
+      }
+    ]
+  },
+  {
+    "node_id": "UAnimNotify",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_p8la",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "366c691e4b3bcf04bf1462722f3c9c40fe8b8e32"
+      },
+      {
+        "id": "ann_msefbhb7_3b0h",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "366c691e4b3bcf04bf1462722f3c9c40fe8b8e32"
+      }
+    ]
+  },
+  {
+    "node_id": "UPrimaryDataAsset",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb7_mz9k",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.875Z",
+        "source_hash": "90d09cf59c3a48fff4bc531110f59a79dde7fb63"
+      },
+      {
+        "id": "ann_msefbhb8_w81g",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "90d09cf59c3a48fff4bc531110f59a79dde7fb63"
+      }
+    ]
+  },
+  {
+    "node_id": "UAbilitySystemComponent",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_8c60",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "a963397d6bafb0a980e1db4a2a95b92b1cf530a2"
+      },
+      {
+        "id": "ann_msefbhb8_d5dt",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "a963397d6bafb0a980e1db4a2a95b92b1cf530a2"
+      }
+    ]
+  },
+  {
+    "node_id": "UWidgetComponent",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_dga9",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "df9492a48ffa940a7b3e9e8677d9a8df6d2f9683"
+      },
+      {
+        "id": "ann_msefbhb8_84h0",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "df9492a48ffa940a7b3e9e8677d9a8df6d2f9683"
+      }
+    ]
+  },
+  {
+    "node_id": "UInputAction",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_mj4e",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "9c6eb09d84879b5b43514b6347a4916d717d1de0"
+      },
+      {
+        "id": "ann_msefbhb8_7eyq",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "9c6eb09d84879b5b43514b6347a4916d717d1de0"
+      }
+    ]
+  },
+  {
+    "node_id": "ACombatCharacterBase::BeginAttack",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_hinq",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "9f13897fbf0243edd98b6a290d5e34d5295da05a"
+      },
+      {
+        "id": "ann_msefbhb8_budr",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "9f13897fbf0243edd98b6a290d5e34d5295da05a"
+      }
+    ]
+  },
+  {
+    "node_id": "ACombatCharacterBase::ReceiveDamage",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_0i9i",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "1457d8cf7b09d50f30a5208dce3278f799b15b60"
+      },
+      {
+        "id": "ann_msefbhb8_ghf7",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "1457d8cf7b09d50f30a5208dce3278f799b15b60"
+      }
+    ]
+  },
+  {
+    "node_id": "ACombatCharacterBase::GetCurrentHP",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_igvu",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "2aa1782a78faf3aa6071d0cbbf9349639eb669bc"
+      },
+      {
+        "id": "ann_msefbhb8_8u0w",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "2aa1782a78faf3aa6071d0cbbf9349639eb669bc"
+      }
+    ]
+  },
+  {
+    "node_id": "ACombatCharacterBase::GetAttackPower",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_t4ph",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "96ccc7a32526580f9514ee4774493cd4cd2cd344"
+      },
+      {
+        "id": "ann_msefbhb8_1inc",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "96ccc7a32526580f9514ee4774493cd4cd2cd344"
+      }
+    ]
+  },
+  {
+    "node_id": "ACombatCharacterBase::GetComboCount",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_1gsq",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "a93c8fa9c4cb768a04ce8a8f2198967c2430d0f0"
+      },
+      {
+        "id": "ann_msefbhb8_lxtu",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "a93c8fa9c4cb768a04ce8a8f2198967c2430d0f0"
+      }
+    ]
+  },
+  {
+    "node_id": "APlayerCombatCharacter::HandleComboInput",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_bgn8",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "1ab1cfb368d87c42cfa54333dc9782f0e9df8bc9"
+      },
+      {
+        "id": "ann_msefbhb8_seda",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "1ab1cfb368d87c42cfa54333dc9782f0e9df8bc9"
+      }
+    ]
+  },
+  {
+    "node_id": "APlayerCombatCharacter::TriggerFinisher",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_ihwp",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "9b4e457242ba59a373a25688da2ff0978909f2fe"
+      },
+      {
+        "id": "ann_msefbhb8_n3ek",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "9b4e457242ba59a373a25688da2ff0978909f2fe"
+      }
+    ]
+  },
+  {
+    "node_id": "AEnemyCombatCharacter::OnDamageTaken",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_w58g",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "1f9550a24755d1aa36cbd0d2460c95e94e5b9648"
+      },
+      {
+        "id": "ann_msefbhb8_0rbg",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "1f9550a24755d1aa36cbd0d2460c95e94e5b9648"
+      }
+    ]
+  },
+  {
+    "node_id": "UComboComponent::AddComboPoints",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_6d7f",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "3998294c4bad61491d4a61e744e86e7974c535d7"
+      },
+      {
+        "id": "ann_msefbhb8_cf0c",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "3998294c4bad61491d4a61e744e86e7974c535d7"
+      }
+    ]
+  },
+  {
+    "node_id": "UComboComponent::ResetCombo",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_ljzs",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "01be1ccb3d19ca7e684072bb3a1176eb3591cc3f"
+      },
+      {
+        "id": "ann_msefbhb8_ctyc",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "01be1ccb3d19ca7e684072bb3a1176eb3591cc3f"
+      }
+    ]
+  },
+  {
+    "node_id": "UComboComponent::CanTriggerFinisher",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_gvz6",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "bc2a76d867fbd99cfb4881b91a092c595f1a1a2b"
+      },
+      {
+        "id": "ann_msefbhb8_eu9l",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "bc2a76d867fbd99cfb4881b91a092c595f1a1a2b"
+      }
+    ]
+  },
+  {
+    "node_id": "UComboComponent::GetComboDecayTime",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_mork",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "dfd8b052ec9abd7cf7e359d99698ea0898f52b6a"
+      },
+      {
+        "id": "ann_msefbhb8_4cso",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "dfd8b052ec9abd7cf7e359d99698ea0898f52b6a"
+      }
+    ]
+  },
+  {
+    "node_id": "UGA_MeleeAttack::ActivateAbility",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_wrfd",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "f70557d053d2a237f2d1033aa05f52540d45bca6"
+      },
+      {
+        "id": "ann_msefbhb8_pmpc",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "f70557d053d2a237f2d1033aa05f52540d45bca6"
+      }
+    ]
+  },
+  {
+    "node_id": "UGA_Finisher::ActivateAbility",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_wmqx",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "962b8302e016b8a3a2c26a3c3245ad89466dfd22"
+      },
+      {
+        "id": "ann_msefbhb8_owx8",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "962b8302e016b8a3a2c26a3c3245ad89466dfd22"
+      }
+    ]
+  },
+  {
+    "node_id": "UGA_Dodge::ActivateAbility",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_51z0",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "aea7c67a0da0ffeaaf7846fc273de62666f1833d"
+      },
+      {
+        "id": "ann_msefbhb8_4nt6",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "aea7c67a0da0ffeaaf7846fc273de62666f1833d"
+      }
+    ]
+  },
+  {
+    "node_id": "UExecCalc_CombatDamage::Execute_Implementation",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_rrmy",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "c36bb48cff8ab409aad28fbfe00ed18a6d4ce556"
+      },
+      {
+        "id": "ann_msefbhb8_taof",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "c36bb48cff8ab409aad28fbfe00ed18a6d4ce556"
+      }
+    ]
+  },
+  {
+    "node_id": "UAnimNotify_DoAttackTrace::Notify",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_d4v0",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "fee55aacd015391c45454b516cd2c4a75c0b2911"
+      },
+      {
+        "id": "ann_msefbhb8_g2fl",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "fee55aacd015391c45454b516cd2c4a75c0b2911"
+      }
+    ]
+  },
+  {
+    "node_id": "UAnimNotify_CheckCombo::Notify",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_a5lz",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "65a22febab1340605a525bcbd44351826a3aefeb"
+      },
+      {
+        "id": "ann_msefbhb8_khdv",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "65a22febab1340605a525bcbd44351826a3aefeb"
+      }
+    ]
+  },
+  {
+    "node_id": "UAnimNotify_EndDash::Notify",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_vez3",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "3142424b2350009985cc35ba45863c84f4b8f1ad"
+      },
+      {
+        "id": "ann_msefbhb8_korh",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "3142424b2350009985cc35ba45863c84f4b8f1ad"
+      }
+    ]
+  },
+  {
+    "node_id": "UObject",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_p7i6",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "02f7eee5db74b2e9800d357c86fcfe90af204b29"
+      },
+      {
+        "id": "ann_msefbhb8_rzai",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "02f7eee5db74b2e9800d357c86fcfe90af204b29"
+      }
+    ]
+  },
+  {
+    "node_id": "AActor",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_ue4t",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "4f692ab46d18e07b68baa86e024290a355df2ceb"
+      },
+      {
+        "id": "ann_msefbhb8_rpkm",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "4f692ab46d18e07b68baa86e024290a355df2ceb"
+      }
+    ]
+  },
+  {
+    "node_id": "APawn",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_1d5e",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "a4fd16cb20fef710873dc210d3bc993c87c51b8a"
+      },
+      {
+        "id": "ann_msefbhb8_f3ix",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "a4fd16cb20fef710873dc210d3bc993c87c51b8a"
+      }
+    ]
+  },
+  {
+    "node_id": "AController",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_ctbz",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "64ffabf00c3209b4ef4da59a88b3c18ec8a4a781"
+      },
+      {
+        "id": "ann_msefbhb8_teob",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "64ffabf00c3209b4ef4da59a88b3c18ec8a4a781"
+      }
+    ]
+  },
+  {
+    "node_id": "UGameplayEffectCalculation",
+    "domain": "ue5_planned",
+    "annotations": [
+      {
+        "id": "ann_msefbhb8_xy8u",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/boss-ai（stale，sha256 e596e0a9c2b9）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "d7cb072b2069452d55d074a2e435b94067838b90"
+      },
+      {
+        "id": "ann_msefbhb8_qafh",
+        "type": "impact",
+        "content": "GDD 变更影响：源文档 design/gdd/combat-system-demo（stale，sha256 1948fa66e7ea）— 本节点待复核更新",
+        "created_at": "2026-08-04T08:56:11.876Z",
+        "source_hash": "d7cb072b2069452d55d074a2e435b94067838b90"
+      }
+    ]
+  }
+]

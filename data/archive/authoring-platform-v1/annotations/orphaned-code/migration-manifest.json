@@ -1,0 +1,14 @@
+{
+  "schema": "graphbrain.orphan-code-annotations-migration/1",
+  "migrated_at": "2026-08-08T09:59:31.076Z",
+  "policy": "Preserved byte-for-byte because no active ue5_code graph owns the subsystem identity.",
+  "files": [
+    {
+      "from": "data/annotations/ue5_code_modules_annotations.json",
+      "to": "data/archive/authoring-platform-v1/annotations/orphaned-code/ue5_code_modules_annotations.json",
+      "subsystem": "modules",
+      "bytes": 448,
+      "sha256": "d0488ca3eafbf4a56ee10cb5c8788c56bb7faf2f3025916db88ed251667eedfc"
+    }
+  ]
+}

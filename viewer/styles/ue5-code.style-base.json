@@ -1,0 +1,429 @@
+[
+	{
+		"selector": "node",
+		"style": {
+			"label": "data(label)",
+			"width": "data(size)",
+			"height": "data(size)",
+			"font-size": 11,
+			"text-valign": "bottom",
+			"text-margin-y": 6,
+			"color": "#dbe5ee",
+			"text-outline-width": 2,
+			"text-outline-color": "#10161d",
+			"text-outline-opacity": 0.9,
+			"background-color": "#7f8c8d",
+			"border-width": 2,
+			"border-color": "#1f2d3a"
+		}
+	},
+	{ "selector": "::node-type::ucomponent", "style": {} },
+	{ "selector": "::node-type::uinterface", "style": {} },
+	{ "selector": "::node-type::ustruct", "style": {} },
+	{ "selector": "::node-type::uenum", "style": {} },
+	{ "selector": "::node-type::ufunction", "style": {} },
+	{ "selector": "::node-type::folder", "style": {} },
+	{ "selector": "::node-type::file", "style": {} },
+	{
+		"selector": "edge[relation = 'contains']",
+		"style": {
+			"curve-style": "taxi",
+			"taxi-direction": "downward",
+			"line-color": "#3a4a5a",
+			"target-arrow-shape": "none",
+			"width": 1.5
+		}
+	},
+	{
+		"selector": "edge[relation = 'uses_member']",
+		"style": {
+			"display": "none",
+			"line-color": "#3cb4a4",
+			"target-arrow-color": "#3cb4a4",
+			"line-style": "dashed",
+			"width": 2.2,
+			"z-index": 9
+		}
+	},
+	{
+		"selector": "edge.uses-visible",
+		"style": { "display": "element", "opacity": 1 }
+	},
+	{
+		"selector": "node[specRole = 'delegate']",
+		"style": {
+			"shape": "round-rectangle",
+			"width": "label",
+			"height": 22,
+			"padding": "6px",
+			"background-color": "#2d2245",
+			"border-color": "#9b72cf",
+			"color": "#d4c4ec",
+			"font-size": 10,
+			"text-valign": "center",
+			"text-margin-y": 0
+		}
+	},
+	{
+		"selector": "node[specRole = 'fog']",
+		"style": {
+			"shape": "ellipse",
+			"width": 34,
+			"height": 26,
+			"background-color": "#4a5a6a",
+			"background-opacity": 0.25,
+			"border-width": 1.5,
+			"border-style": "dotted",
+			"border-color": "#6b7c8c",
+			"color": "#6b7c8c",
+			"font-size": 9,
+			"text-valign": "center",
+			"text-margin-y": 0
+		}
+	},
+	{
+		"selector": "edge[relation = 'delegates']",
+		"style": {
+			"line-color": "#9b72cf",
+			"target-arrow-color": "#9b72cf",
+			"target-arrow-shape": "triangle-backcurve",
+			"target-arrow-fill": "hollow",
+			"line-style": "dashed",
+			"width": 1.8
+		}
+	},
+	{
+		"selector": "node[specRole = 'zone']",
+		"style": {
+			"shape": "round-rectangle",
+			"background-color": "#141b24",
+			"background-opacity": 0.4,
+			"border-width": 1.5,
+			"border-style": "dashed",
+			"border-color": "#4a5a6a",
+			"label": "data(label)",
+			"color": "#8899aa",
+			"font-size": 10,
+			"text-valign": "top",
+			"text-margin-y": -6,
+			"text-outline-width": 0,
+			"padding": "18px"
+		}
+	},
+	{
+		"selector": "edge[relation = 'member']",
+		"style": {
+			"line-color": "#3a4a5a",
+			"target-arrow-shape": "none",
+			"width": 1,
+			"opacity": 0.5
+		}
+	},
+	{
+		"selector": "node[?specCard]",
+		"style": {
+			"shape": "round-rectangle",
+			"width": "data(width)",
+			"height": "data(height)",
+			"label": ""
+		}
+	},
+	{ "selector": "::node-type::lifecycle_step", "style": {} },
+	{
+		"selector": "node:parent",
+		"style": {
+			"shape": "round-rectangle",
+			"background-opacity": 0.12,
+			"border-width": 1.5,
+			"text-valign": "top",
+			"text-margin-y": -6,
+			"font-size": 12,
+			"padding": "14px"
+		}
+	},
+	{
+		"selector": "node[?architectureNode]",
+		"style": {
+			"shape": "round-rectangle",
+			"label": "data(displayLabel)",
+			"width": "data(width)",
+			"height": "data(height)",
+			"background-color": "#182833",
+			"background-opacity": 0.96,
+			"border-color": "#6bc6d2",
+			"border-width": 2,
+			"color": "#e7f3f5",
+			"font-size": 12,
+			"font-weight": 600,
+			"text-valign": "center",
+			"text-halign": "center",
+			"text-margin-y": 0,
+			"text-wrap": "wrap",
+			"text-max-width": 180,
+			"text-outline-width": 0
+		}
+	},
+	{
+		"selector": "node[?architectureLayer]",
+		"style": {
+			"background-color": "#25243a",
+			"border-color": "#e0a64b",
+			"font-size": 14,
+			"text-max-width": 205
+		}
+	},
+	{
+		"selector": "edge[?architectureEdge]",
+		"style": {
+			"curve-style": "round-taxi",
+			"taxi-direction": "auto",
+			"taxi-turn": 28,
+			"line-color": "#547e89",
+			"target-arrow-color": "#6bc6d2",
+			"target-arrow-shape": "triangle",
+			"width": 2.2,
+			"label": "data(label)",
+			"font-size": 9,
+			"color": "#9eb7bd",
+			"text-background-color": "#111721",
+			"text-background-opacity": 0.92,
+			"text-background-padding": 3,
+			"text-rotation": "none",
+			"text-wrap": "wrap",
+			"text-max-width": 140,
+			"text-margin-y": -9
+		}
+	},
+	{
+		"selector": "node[?executionNode]",
+		"style": {
+			"background-color": "#152b36",
+			"border-color": "#6bc6d2",
+			"border-width": 2.5,
+			"font-size": 13,
+			"text-max-width": 205
+		}
+	},
+	{ "selector": "node[executionKind = 'worker_pool']", "style": { "shape": "hexagon", "background-color": "#24264a", "border-color": "#9c8de4" } },
+	{ "selector": "node[executionKind = 'subsystem_thread']", "style": { "background-color": "#17372f", "border-color": "#70c495" } },
+	{ "selector": "node[executionKind = 'solver_tasks']", "style": { "shape": "round-hexagon", "background-color": "#3b2b1d", "border-color": "#e0a64b" } },
+	{ "selector": "node[executionKind = 'device_queue']", "style": { "shape": "cut-rectangle", "background-color": "#36213b", "border-color": "#d58bd0" } },
+	{ "selector": "edge[?executionEdge]", "style": { "line-color": "#648e98", "target-arrow-color": "#86d6df", "width": 2.6 } },
+	{ "selector": "edge[relation = 'enqueues_to']", "style": { "line-style": "dashed", "line-color": "#65bfa9", "target-arrow-color": "#65bfa9" } },
+	{ "selector": "edge[relation = 'synchronizes_with']", "style": { "line-style": "dotted", "line-color": "#e0a64b", "target-arrow-color": "#e0a64b" } },
+	{ "selector": "edge[relation = 'completes_on']", "style": { "line-style": "dashed", "line-color": "#9c8de4", "target-arrow-color": "#9c8de4" } },
+	{ "selector": "edge[relation = 'submits_to']", "style": { "line-color": "#d58bd0", "target-arrow-color": "#d58bd0", "width": 3 } },
+	{ "selector": "node[layer = 'project']", "style": { "background-color": "#e8834a" } },
+	{ "selector": "node[layer = 'engine']", "style": { "background-color": "#4a90d9" } },
+	{ "selector": "node[layer = 'plugin']", "style": { "background-color": "#8e63c5" } },
+	{
+		"selector": "node[visibility = 'silhouette']",
+		"style": { "border-style": "dashed", "background-opacity": 0.75 }
+	},
+	{
+		"selector": "node[visibility = 'fog']",
+		"style": { "border-style": "dotted", "background-opacity": 0.35 }
+	},
+	{
+		"selector": "node:selected",
+		"style": { "border-color": "#f1c40f", "border-width": 4 }
+	},
+	{
+		"selector": "edge",
+		"style": {
+			"curve-style": "bezier",
+			"width": 1.5,
+			"opacity": 0.75,
+			"line-color": "#5d6d7c",
+			"target-arrow-shape": "triangle",
+			"target-arrow-color": "#5d6d7c",
+			"arrow-scale": 0.9
+		}
+	},
+	{
+		"selector": "edge[weight]",
+		"style": { "width": "mapData(weight, 1, 5, 1.5, 5)" }
+	},
+	{
+		"selector": "edge[relation = 'lifecycle_sequence']",
+		"style": {
+			"line-color": "#5b8def",
+			"target-arrow-color": "#5b8def",
+			"width": 2.5,
+			"curve-style": "straight",
+			"label": "data(order)",
+			"font-size": 9,
+			"color": "#8890a8",
+			"text-background-color": "#10161d",
+			"text-background-opacity": 0.85
+		}
+	},
+	{
+		"selector": "edge[relation = 'overrides']",
+		"style": {
+			"line-color": "#e6b450",
+			"target-arrow-color": "#e6b450",
+			"line-style": "dashed",
+			"width": 2
+		}
+	},
+	{ "selector": "edge[relation = 'owns']", "style": { "line-color": "#4aa3e8", "target-arrow-color": "#4aa3e8", "width": 2.2 } },
+	{ "selector": "edge[relation = 'creates']", "style": { "line-color": "#e6b450", "target-arrow-color": "#e6b450", "width": 2.2 } },
+	{ "selector": "edge[relation = 'possesses']", "style": { "line-color": "#f08a5d", "target-arrow-color": "#f08a5d", "width": 3 } },
+	{ "selector": "edge[relation = 'configures']", "style": { "line-color": "#35b8a5", "target-arrow-color": "#35b8a5", "line-style": "dashed" } },
+	{ "selector": "edge[relation = 'loads']", "style": { "line-color": "#8e63c5", "target-arrow-color": "#8e63c5", "line-style": "dashed", "width": 2 } },
+	{ "selector": "edge[relation = 'activates']", "style": { "line-color": "#b96ad9", "target-arrow-color": "#b96ad9", "width": 3 } },
+	{ "selector": "edge[relation = 'injects']", "style": { "line-color": "#67c7d8", "target-arrow-color": "#67c7d8", "line-style": "dotted", "width": 2.4 } },
+	{ "selector": "edge[relation = 'grants']", "style": { "line-color": "#d7c34f", "target-arrow-color": "#d7c34f", "width": 2.5 } },
+	{ "selector": "edge[relation = 'replicates_to']", "style": { "line-color": "#e06b73", "target-arrow-color": "#e06b73", "line-style": "dashed", "width": 2.3 } },
+	{ "selector": "edge[relation = 'binds_as_owner']", "style": { "line-color": "#e3a44c", "target-arrow-color": "#e3a44c", "width": 2.6 } },
+	{ "selector": "edge[relation = 'binds_as_avatar']", "style": { "line-color": "#59c9a5", "target-arrow-color": "#59c9a5", "width": 2.6 } },
+	{ "selector": "edge[relation = 'observes']", "style": { "line-color": "#7e9fb7", "target-arrow-color": "#7e9fb7", "line-style": "dashed" } },
+	{ "selector": "edge[relation = 'publishes']", "style": { "line-color": "#65b87a", "target-arrow-color": "#65b87a", "width": 2.2 } },
+	{
+		"selector": "node[?collapsed]",
+		"style": {
+			"shape": "round-rectangle",
+			"border-style": "dashed",
+			"border-width": 2,
+			"background-color": "#1c2733",
+			"background-opacity": 0.7,
+			"color": "#8fa8c0",
+			"font-size": 12,
+			"height": 34,
+			"padding": "10px"
+		}
+	},
+	{
+		"selector": "node[file_kind = 'module_entry']",
+		"style": {
+			"background-color": "#3d3524",
+			"border-color": "#e6b450",
+			"color": "#e8d9b0"
+		}
+	},
+	{
+		"selector": "node[file_kind = 'build_rules']",
+		"style": {
+			"background-color": "#26303a",
+			"border-color": "#7f8c8d",
+			"border-style": "dashed",
+			"color": "#93a4b3",
+			"font-size": 10,
+			"height": 22
+		}
+	},
+	{
+		"selector": "node[?provenance]",
+		"style": {
+			"border-style": "dashed",
+			"border-color": "#e6b450",
+			"border-width": 2.5
+		}
+	},
+	{ "selector": "::node-type::system", "style": {} },
+	{
+		"selector": "edge[relation = 'feeds']",
+		"style": {
+			"line-color": "#e6b450",
+			"target-arrow-color": "#e6b450",
+			"width": 2,
+			"label": "data(description)",
+			"font-size": 9,
+			"color": "#c9a24f",
+			"text-background-color": "#10161d",
+			"text-background-opacity": 0.85,
+			"text-wrap": "wrap",
+			"text-max-width": "140px"
+		}
+	},
+
+	{
+		"selector": "node.bp-node",
+		"style": {
+			"shape": "round-rectangle",
+			"background-image": "data(bpSvg)",
+			"background-fit": "cover",
+			"background-opacity": 0,
+			"border-width": 1.5,
+			"border-color": "#05070b",
+			"width": "data(width)",
+			"height": "data(height)",
+			"label": "",
+			"text-opacity": 0,
+			"padding": 0
+		}
+	},
+	{ "selector": "node.bp-node[specRole = 'hub']", "style": { "border-width": 2, "border-color": "#6b4711" } },
+	{ "selector": "node.bp-node:selected", "style": { "border-width": 2.5, "border-color": "#f1c40f" } },
+
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'ifaces']",
+		"style": { "border-style": "solid", "border-color": "#58c7d8", "background-color": "#0e2a31", "background-opacity": 0.16, "color": "#9fd9e4", "font-weight": "bold", "text-background-color": "#58c7d8", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'cpp']",
+		"style": { "border-style": "solid", "border-color": "#7a97e0", "background-color": "#182039", "background-opacity": 0.16, "color": "#b8c7ef", "font-weight": "bold", "text-background-color": "#7a97e0", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'held']",
+		"style": { "border-style": "solid", "border-color": "#4aa3e8", "background-color": "#102436", "background-opacity": 0.16, "color": "#a9cdec", "font-weight": "bold", "text-background-color": "#4aa3e8", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'assets']",
+		"style": { "border-style": "solid", "border-color": "#35b8a5", "background-color": "#0d2823", "background-opacity": 0.16, "color": "#9fd8cc", "font-weight": "bold", "text-background-color": "#35b8a5", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'enum-values']",
+		"style": { "border-style": "solid", "border-color": "#6fbf5f", "background-color": "#122a12", "background-opacity": 0.16, "color": "#b4dfab", "font-weight": "bold", "text-background-color": "#6fbf5f", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'fns']",
+		"style": { "border-style": "solid", "border-color": "#4a7fd0", "background-color": "#131f36", "background-opacity": 0.16, "color": "#b0c4ea", "font-weight": "bold", "text-background-color": "#4a7fd0", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'accessors']",
+		"style": { "border-style": "solid", "border-color": "#6da8c7", "background-color": "#102633", "background-opacity": 0.16, "color": "#acd2e5", "font-weight": "bold", "text-background-color": "#6da8c7", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'statics']",
+		"style": { "border-style": "solid", "border-color": "#b58bd2", "background-color": "#281a35", "background-opacity": 0.16, "color": "#d7b9eb", "font-weight": "bold", "text-background-color": "#b58bd2", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'subscriptions']",
+		"style": { "border-style": "solid", "border-color": "#d28a72", "background-color": "#321c18", "background-opacity": 0.16, "color": "#e9b6a3", "font-weight": "bold", "text-background-color": "#d28a72", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'interface-fns']",
+		"style": { "border-style": "solid", "border-color": "#58c7d8", "background-color": "#0e2a31", "background-opacity": 0.16, "color": "#9fd9e4", "font-weight": "bold", "text-background-color": "#58c7d8", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'delegate-responses']",
+		"style": { "border-style": "solid", "border-color": "#e0566e", "background-color": "#2a1119", "background-opacity": 0.16, "color": "#eaa9b6", "font-weight": "bold", "text-background-color": "#e0566e", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+	{
+		"selector": "node[specRole = 'zone'][zoneKind = 'delegates']",
+		"style": { "border-style": "solid", "border-color": "#e0566e", "background-color": "#2a1119", "background-opacity": 0.16, "color": "#eaa9b6", "font-weight": "bold", "text-background-color": "#e0566e", "text-background-opacity": 0.14, "text-background-padding": "3px" }
+	},
+
+	{
+		"selector": "edge.spec-wire",
+		"style": { "width": 2.2, "opacity": 0.9, "curve-style": "bezier", "target-arrow-shape": "none", "line-cap": "round" }
+	},
+	{ "selector": "edge.spec-wire.spec-straight", "style": { "curve-style": "straight" } },
+	{ "selector": "edge.spec-wire[relation = 'inherits']", "style": { "line-color": "#c7d3e0", "width": 2.6, "target-arrow-shape": "triangle", "target-arrow-color": "#c7d3e0", "target-arrow-fill": "filled" } },
+	{ "selector": "edge.spec-wire[relation = 'implements']", "style": { "line-color": "#58c7d8", "line-style": "dashed" } },
+	{ "selector": "edge.spec-wire[relation = 'composes']", "style": { "line-color": "#4aa3e8" } },
+	{ "selector": "edge.spec-wire[relation = 'depends_on']", "style": { "line-color": "#35b8a5" } },
+	{ "selector": "edge.spec-wire[relation = 'binds_event']", "style": { "line-color": "#d28a72", "target-arrow-shape": "triangle", "target-arrow-color": "#d28a72" } },
+	{ "selector": "edge.spec-wire[relation = 'member']", "style": { "line-color": "#3a4a5a", "opacity": 0.55, "width": 1.2 } },
+	{
+		"selector": "edge.spec-wire[relation = 'delegates']",
+		"style": { "line-color": "#e0566e", "target-arrow-shape": "triangle-backcurve", "target-arrow-color": "#e0566e", "target-arrow-fill": "hollow" }
+	},
+	{ "selector": "edge.spec-wire[relation = 'overrides']", "style": { "line-color": "#e6b450", "line-style": "dashed", "width": 2 } },
+	{
+		"selector": "edge.spec-wire[relation = 'lifecycle_sequence']",
+		"style": { "line-color": "#e8edf3", "width": 2.8, "curve-style": "straight", "line-style": "dashed", "line-dash-pattern": [7, 4] }
+	}
+]

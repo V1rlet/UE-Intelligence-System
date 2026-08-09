@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://graph-brain.local/schema/edge.schema.json",
   "title": "Graph Brain Edge",
-  "description": "图谱边（Cytoscape.js 兼容）。relation 在核心层为自由字符串，ue5_code 领域通过条件子模式收紧为枚举。",
+  "description": "GraphBrain 的 ue5_code 关系边（Cytoscape.js 兼容）。",
   "type": "object",
   "required": ["data"],
   "properties": {
@@ -13,30 +13,24 @@
         "id": { "type": "string", "minLength": 1 },
         "source": { "type": "string", "minLength": 1 },
         "target": { "type": "string", "minLength": 1 },
-        "relation": { "type": "string", "minLength": 1 },
-        "domain": { "type": "string", "minLength": 1 },
+        "relation": {
+          "enum": [
+            "inherits", "implements", "composes", "aggregates",
+            "depends_on", "delegates", "calls", "overrides",
+            "binds_event", "lifecycle_sequence", "contains", "uses_member",
+            "owns", "creates", "possesses", "configures", "loads",
+            "activates", "injects", "grants", "replicates_to",
+            "binds_as_owner", "binds_as_avatar", "observes", "publishes",
+            "dispatches_to", "enqueues_to", "submits_to",
+            "synchronizes_with", "completes_on", "feeds"
+          ]
+        },
+        "domain": { "const": "ue5_code" },
         "weight": { "type": "number", "minimum": 1, "maximum": 5 },
         "description": { "type": "string" },
         "order": { "type": "integer", "minimum": 0 }
       },
       "allOf": [
-        {
-          "if": {
-            "properties": { "domain": { "const": "ue5_code" } },
-            "required": ["domain"]
-          },
-          "then": {
-            "properties": {
-              "relation": {
-                "enum": [
-                  "inherits", "implements", "composes", "aggregates",
-                  "depends_on", "delegates", "calls", "overrides",
-                  "binds_event", "lifecycle_sequence", "cross_domain"
-                ]
-              }
-            }
-          }
-        },
         {
           "if": {
             "properties": { "relation": { "const": "lifecycle_sequence" } },

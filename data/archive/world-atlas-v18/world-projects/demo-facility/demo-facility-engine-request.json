@@ -1,0 +1,102 @@
+{
+  "schema": "graphbrain-player-metrics/1",
+  "project_id": "demo-facility",
+  "atlas_id": "atlas_river_valley",
+  "profile": {
+    "capsule_radius_m": 0.34,
+    "capsule_half_height_m": 0.88,
+    "eye_height_m": 1.6,
+    "walk_speed_mps": 1.5,
+    "sprint_speed_mps": 6,
+    "jump_height_m": 1.2,
+    "step_height_m": 0.45,
+    "max_slope_deg": 45,
+    "crouch_half_height_m": 0.6,
+    "door_width_m": 0.9,
+    "door_height_m": 2
+  },
+  "spawn_points": [
+    {
+      "id": "site_entry",
+      "label": "西侧山脊",
+      "x": 106,
+      "y": 538,
+      "z": 58
+    },
+    {
+      "id": "site_courtyard",
+      "label": "前院",
+      "x": 302,
+      "y": 340,
+      "z": 22
+    },
+    {
+      "id": "site_lobby",
+      "label": "主楼大厅",
+      "x": 508,
+      "y": 306,
+      "z": 34
+    },
+    {
+      "id": "site_guardroom",
+      "label": "警卫室",
+      "x": 578,
+      "y": 196,
+      "z": 40
+    },
+    {
+      "id": "site_maintenance",
+      "label": "维修通道",
+      "x": 646,
+      "y": 382,
+      "z": 30
+    },
+    {
+      "id": "site_roof",
+      "label": "屋顶制高点",
+      "x": 680,
+      "y": 208,
+      "z": 74
+    },
+    {
+      "id": "site_generator",
+      "label": "发电机房",
+      "x": 530,
+      "y": 526,
+      "z": -28
+    },
+    {
+      "id": "site_vent",
+      "label": "通风管入口",
+      "x": 326,
+      "y": 486,
+      "z": 6
+    },
+    {
+      "id": "site_server",
+      "label": "服务器核心",
+      "x": 824,
+      "y": 324,
+      "z": 50
+    },
+    {
+      "id": "site_extract",
+      "label": "后坡撤离点",
+      "x": 886,
+      "y": 558,
+      "z": 36
+    }
+  ],
+  "probes": [
+    {
+      "id": "wb_entry_arch",
+      "primitive": "arch",
+      "reason": "门洞净空验证"
+    },
+    {
+      "id": "wb_server_ramp",
+      "primitive": "ramp",
+      "reason": "坡角/行走验证"
+    }
+  ]
+}

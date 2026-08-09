@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "format_version": 2,
+    "program_id": "quest_program_world_baf56900",
+    "project_id": "world-baf56900",
+    "title": "河谷仓库渗透 Quest 编排",
+    "version": 1,
+    "updated_at": "2026-08-06T18:50:59.526Z"
+  },
+  "quests": [],
+  "nodes": [],
+  "edges": []
+}

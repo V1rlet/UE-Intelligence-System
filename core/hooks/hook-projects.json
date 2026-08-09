@@ -1,0 +1,19 @@
+{
+  "//": "GraphBrain 只注册 UE 代码事实源；hook 仅执行代码提取与标注陈旧度扫描。",
+  "lore_exe": "C:/Users/win10/bin/lore.exe",
+  "projects": [
+    {
+      "name": "Sabotage",
+      "root": "G:/UnrealProject/Sabotage",
+      "vcs": "lore",
+      "domain": "ue5_code",
+      "subsystem": "project",
+      "trigger_extensions": [".h", ".cpp"],
+      "extract": {
+        "roots": ["G:/UnrealProject/Sabotage/Source"],
+        "out": "data/graphs"
+      },
+      "scan_annotations": true
+    }
+  ]
+}

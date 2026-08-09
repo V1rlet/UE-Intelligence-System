@@ -1,0 +1,10 @@
+{
+  "format_version": 2,
+  "project_id": "world-baf56900",
+  "label": "河谷仓库渗透",
+  "description": "全链验证项目：刻意含窄门洞与陡坡，验证工具在新项目上的暴露能力",
+  "atlas": "world-atlas.json",
+  "quest_program": "quest-program.json",
+  "default_scenario": "draft",
+  "sources": []
+}

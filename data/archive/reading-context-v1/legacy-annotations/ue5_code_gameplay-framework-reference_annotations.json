@@ -1,0 +1,38 @@
+[
+  {
+    "node_id": "AGameModeBase",
+    "domain": "ue5_code",
+    "annotations": [
+      {
+        "id": "ann_gf_gamemode",
+        "type": "gotcha",
+        "content": "GameMode 只存在于服务器；客户端规则展示必须读取 GameState。",
+        "created_at": "2026-07-12T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "node_id": "APlayerController",
+    "domain": "ue5_code",
+    "annotations": [
+      {
+        "id": "ann_gf_pc",
+        "type": "best_practice",
+        "content": "PlayerController 只存在于服务器和拥有端；不要把所有玩家都要看到的数据放在这里。",
+        "created_at": "2026-07-12T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "node_id": "APawn",
+    "domain": "ue5_code",
+    "annotations": [
+      {
+        "id": "ann_gf_pawn",
+        "type": "gotcha",
+        "content": "Pawn 是可替换身体；跨重生数据应进入 PlayerState 或其他更长生命周期作用域。",
+        "created_at": "2026-07-12T00:00:00.000Z"
+      }
+    ]
+  }
+]

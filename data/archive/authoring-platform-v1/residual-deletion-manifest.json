@@ -1,0 +1,63 @@
+{
+  "schema": "graphbrain.authoring-residual-deletion/1",
+  "deleted_at": "2026-08-08",
+  "recoverable_from_graphbrain": false,
+  "user_approved_destructive_deletion": true,
+  "reason": "Remove standalone authoring prototypes and design cards after capability migration.",
+  "deleted_targets": [
+    "docs/design-system-cards",
+    "prototypes"
+  ],
+  "files": [
+    {
+      "path": "docs/design-system-cards/README.md",
+      "bytes": 981,
+      "sha256": "2c886b87f4100485eaedb853e1a944c67acc739bb25bc0b1983b6c4899fd7971"
+    },
+    {
+      "path": "docs/design-system-cards/components/buttons.html",
+      "bytes": 3434,
+      "sha256": "d3891ac450400478fb6fb74f00c3c8175cc898bb03dc04501f1831445c19bbef"
+    },
+    {
+      "path": "docs/design-system-cards/components/cards-headers.html",
+      "bytes": 3966,
+      "sha256": "c2c3468699878d579e171d539c08ba10924fb00a551405fa6f5ec72e72479af4"
+    },
+    {
+      "path": "docs/design-system-cards/components/chips-badges.html",
+      "bytes": 5085,
+      "sha256": "6400a989e425cfc2ce0f6a71c0cb392d72ddf7a312ff585c10eae9d8b5214193"
+    },
+    {
+      "path": "docs/design-system-cards/components/instruments.html",
+      "bytes": 3754,
+      "sha256": "ae483f3e16b70fd6c3f4932e5422ab98b280c912422a9e0ae4feeed6636981dd"
+    },
+    {
+      "path": "docs/design-system-cards/foundations/colors.html",
+      "bytes": 4289,
+      "sha256": "1672d2129e7afabda7e0d199723215abe52173e1fb132ac85a555a528837b38d"
+    },
+    {
+      "path": "docs/design-system-cards/foundations/surfaces.html",
+      "bytes": 2502,
+      "sha256": "8c56a835d675c11a346156f1c2b49afc869598dd980e814e99a85c0a5c018338"
+    },
+    {
+      "path": "docs/design-system-cards/foundations/typography.html",
+      "bytes": 2500,
+      "sha256": "ec6418df571ec748a9cff6313699c01d0f86719e44f5717bb4b939319994483c"
+    },
+    {
+      "path": "docs/design-system-cards/graph/node-semantics.html",
+      "bytes": 3727,
+      "sha256": "bf8ea8fd2d2dfe4311ebd2d419c8b3cdaf73410de083b37eba1db3e5611b27f9"
+    },
+    {
+      "path": "prototypes/beat-gauge-combat.html",
+      "bytes": 31575,
+      "sha256": "5ab2586375f7d31f32824764abb974254632b726d68d0aa70349fae2614904ed"
+    }
+  ]
+}

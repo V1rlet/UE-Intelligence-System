@@ -1,29 +1,14 @@
-// Graph Brain / core/annotation - 标注读写模块：与 graph JSON 分离存储于 data/annotations/
-//
-// DECISION: 标注文件按 {domain}_{subsystem}_annotations.json 分片，与图谱文件同粒度
-// REASON: Adapter 重新生成图谱不触碰标注文件（分离存储原则）；同粒度分片让
-//         查看器加载某张图时只需读一份标注文件，也便于 P4U3 按文件做陈旧检测。
-// DATE: 2026-07-02
-//
-// 写入前用 core/schema/annotation.schema.json 做结构校验，坏数据直接抛错拒写，
-// 保证 data/annotations/ 下的文件永远可通过 validate.ts。
+// Thin annotation projection over the canonical versioned reading-context document.
+import { randomUUID } from "node:crypto";
+import {
+	loadReadingContext,
+	mutateReadingContext,
+	type AnnotationType,
+	type ReadingAnnotation as Annotation,
+	type ReadingContextDocument,
+} from "../reading-context/store.js";
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import { Ajv, type ValidateFunction } from "ajv";
-import addFormats from "ajv-formats";
-
-export type AnnotationType = "gotcha" | "best_practice" | "design_decision" | "performance" | "reference";
-
-export interface Annotation {
-	id: string;
-	type: AnnotationType;
-	content: string;
-	created_at: string;
-	source_hash?: string;
-	stale?: boolean;
-}
+export type { Annotation, AnnotationType };
 
 export interface AnnotationEntry {
 	node_id: string;
@@ -31,51 +16,62 @@ export interface AnnotationEntry {
 	annotations: Annotation[];
 }
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const ANNOTATION_DIR = join(ROOT, "data", "annotations");
-const SCHEMA_PATH = join(ROOT, "core", "schema", "annotation.schema.json");
+export interface AnnotationDocument {
+	revision: number;
+	updated_at: string;
+	entries: AnnotationEntry[];
+}
 
-// ████████████████████████████████████████████████████████████████████████████
-//  内部辅助：schema 校验器（懒加载）、id 生成、读写
-// ████████████████████████████████████████████████████████████████████████████
+export interface AnnotationWriteResult extends AnnotationDocument {
+	document: ReadingContextDocument;
+}
 
-let validator: ValidateFunction | null = null;
+function assertCodeDomain(domain: string): void {
+	if (domain !== "ue5_code") throw new Error(`GraphBrain 标注只接受 ue5_code，实际为 ${domain}`);
+}
 
-function getValidator(): ValidateFunction {
-	if (!validator) {
-		const ajv = new Ajv({ allErrors: true });
-		(addFormats.default ?? (addFormats as unknown as (a: Ajv) => void))(ajv);
-		validator = ajv.compile(JSON.parse(readFileSync(SCHEMA_PATH, "utf-8")));
-	}
-	return validator;
+function project(document: ReadingContextDocument, subsystem: string): AnnotationDocument {
+	return {
+		revision: document.revision,
+		updated_at: document.updated_at,
+		entries: document.annotations
+			.filter((entry) => entry.subsystem === subsystem)
+			.map((entry) => ({ node_id: entry.node_id, domain: document.domain, annotations: structuredClone(entry.annotations) })),
+	};
+}
+
+function result(document: ReadingContextDocument, subsystem: string): AnnotationWriteResult {
+	return { ...project(document, subsystem), document };
 }
 
 function newAnnotationId(): string {
-	return `ann_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+	return `ann_${randomUUID().slice(0, 12)}`;
 }
 
-export function annotationFilePath(domain: string, subsystem: string): string {
-	return join(ANNOTATION_DIR, `${domain}_${subsystem}_annotations.json`);
+export function loadAnnotationDocument(domain: string, subsystem: string): AnnotationDocument {
+	assertCodeDomain(domain);
+	return project(loadReadingContext(domain), subsystem);
 }
-
-function save(domain: string, subsystem: string, entries: AnnotationEntry[]): void {
-	const validate = getValidator();
-	if (!validate(entries)) {
-		const msgs = (validate.errors ?? []).map((e) => `${e.instancePath} ${e.message}`).join("; ");
-		throw new Error(`标注数据不符合 schema，拒绝写入: ${msgs}`);
-	}
-	mkdirSync(ANNOTATION_DIR, { recursive: true });
-	writeFileSync(annotationFilePath(domain, subsystem), JSON.stringify(entries, null, 2) + "\n", "utf-8");
-}
-
-// ████████████████████████████████████████████████████████████████████████████
-//  公共接口：加载 / 新增 / 更新 / 删除（均返回该文件的完整条目数组）
-// ████████████████████████████████████████████████████████████████████████████
 
 export function loadAnnotations(domain: string, subsystem: string): AnnotationEntry[] {
-	const path = annotationFilePath(domain, subsystem);
-	if (!existsSync(path)) return [];
-	return JSON.parse(readFileSync(path, "utf-8").replace(/^﻿/, "")) as AnnotationEntry[];
+	return loadAnnotationDocument(domain, subsystem).entries;
+}
+
+/** Whole-subsystem replacement for staleness scans. A caller must supply the revision it read. */
+export function saveAnnotations(
+	domain: string,
+	subsystem: string,
+	entries: AnnotationEntry[],
+	expectedRevision: number,
+): AnnotationWriteResult {
+	const document = mutateReadingContext(domain, expectedRevision, (draft) => {
+		draft.annotations = draft.annotations.filter((entry) => entry.subsystem !== subsystem);
+		for (const entry of entries) {
+			if (entry.annotations.length === 0) continue;
+			draft.annotations.push({ subsystem, node_id: entry.node_id, annotations: structuredClone(entry.annotations) });
+		}
+	});
+	return result(document, subsystem);
 }
 
 export function addAnnotation(
@@ -83,23 +79,24 @@ export function addAnnotation(
 	subsystem: string,
 	nodeId: string,
 	input: { type: AnnotationType; content: string; source_hash?: string },
-): AnnotationEntry[] {
+	expectedRevision: number,
+): AnnotationWriteResult {
 	if (!input.content?.trim()) throw new Error("标注内容不能为空");
-	const entries = loadAnnotations(domain, subsystem);
-	let entry = entries.find((e) => e.node_id === nodeId);
-	if (!entry) {
-		entry = { node_id: nodeId, domain, annotations: [] };
-		entries.push(entry);
-	}
-	entry.annotations.push({
-		id: newAnnotationId(),
-		type: input.type,
-		content: input.content.trim(),
-		created_at: new Date().toISOString(),
-		...(input.source_hash ? { source_hash: input.source_hash } : {}),
+	const document = mutateReadingContext(domain, expectedRevision, (draft) => {
+		let entry = draft.annotations.find((item) => item.subsystem === subsystem && item.node_id === nodeId);
+		if (!entry) {
+			entry = { subsystem, node_id: nodeId, annotations: [] };
+			draft.annotations.push(entry);
+		}
+		entry.annotations.push({
+			id: newAnnotationId(),
+			type: input.type,
+			content: input.content.trim(),
+			created_at: new Date().toISOString(),
+			...(input.source_hash ? { source_hash: input.source_hash } : {}),
+		});
 	});
-	save(domain, subsystem, entries);
-	return entries;
+	return result(document, subsystem);
 }
 
 export function updateAnnotation(
@@ -107,18 +104,27 @@ export function updateAnnotation(
 	subsystem: string,
 	nodeId: string,
 	annId: string,
-	patch: { type?: AnnotationType; content?: string },
-): AnnotationEntry[] {
-	const entries = loadAnnotations(domain, subsystem);
-	const ann = entries.find((e) => e.node_id === nodeId)?.annotations.find((a) => a.id === annId);
-	if (!ann) throw new Error(`标注不存在: ${nodeId} / ${annId}`);
-	if (patch.type) ann.type = patch.type;
-	if (patch.content !== undefined) {
-		if (!patch.content.trim()) throw new Error("标注内容不能为空");
-		ann.content = patch.content.trim();
-	}
-	save(domain, subsystem, entries);
-	return entries;
+	patch: { type?: AnnotationType; content?: string; source_hash?: string; stale?: boolean },
+	expectedRevision: number,
+): AnnotationWriteResult {
+	const document = mutateReadingContext(domain, expectedRevision, (draft) => {
+		const annotation = draft.annotations
+			.find((entry) => entry.subsystem === subsystem && entry.node_id === nodeId)
+			?.annotations.find((item) => item.id === annId);
+		if (!annotation) throw new Error(`标注不存在: ${nodeId} / ${annId}`);
+		if (patch.type) annotation.type = patch.type;
+		if (patch.content !== undefined) {
+			if (!patch.content.trim()) throw new Error("标注内容不能为空");
+			annotation.content = patch.content.trim();
+		}
+		if (patch.source_hash !== undefined) annotation.source_hash = patch.source_hash;
+		if (patch.stale !== undefined) {
+			if (patch.stale) annotation.stale = true;
+			else delete annotation.stale;
+		}
+		annotation.updated_at = new Date().toISOString();
+	});
+	return result(document, subsystem);
 }
 
 export function deleteAnnotation(
@@ -126,13 +132,14 @@ export function deleteAnnotation(
 	subsystem: string,
 	nodeId: string,
 	annId: string,
-): AnnotationEntry[] {
-	const entries = loadAnnotations(domain, subsystem);
-	const entry = entries.find((e) => e.node_id === nodeId);
-	if (!entry) throw new Error(`节点无标注: ${nodeId}`);
-	entry.annotations = entry.annotations.filter((a) => a.id !== annId);
-	// 节点最后一条标注删掉后，整个条目一并移除，避免文件里堆空壳
-	const remaining = entry.annotations.length > 0 ? entries : entries.filter((e) => e.node_id !== nodeId);
-	save(domain, subsystem, remaining);
-	return remaining;
+	expectedRevision: number,
+): AnnotationWriteResult {
+	const document = mutateReadingContext(domain, expectedRevision, (draft) => {
+		const entry = draft.annotations.find((item) => item.subsystem === subsystem && item.node_id === nodeId);
+		if (!entry) throw new Error(`节点无标注: ${nodeId}`);
+		const remaining = entry.annotations.filter((annotation) => annotation.id !== annId);
+		if (remaining.length === entry.annotations.length) throw new Error(`标注不存在: ${nodeId} / ${annId}`);
+		entry.annotations = remaining;
+	});
+	return result(document, subsystem);
 }

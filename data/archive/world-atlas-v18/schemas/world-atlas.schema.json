@@ -1,0 +1,380 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-brain.local/schema/world-atlas.schema.json",
+  "title": "Graph Brain World Atlas",
+  "type": "object",
+  "required": ["meta", "canvas", "spaces", "routes", "beats", "scenarios"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["atlas_id", "project_id", "title", "version"],
+      "properties": {
+        "atlas_id": { "type": "string", "minLength": 1 },
+        "project_id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "format_version": { "type": "integer", "minimum": 1 },
+        "version": { "type": "integer", "minimum": 1 },
+        "generated_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "canvas": {
+      "type": "object",
+      "required": ["width", "height", "default_tilt", "default_rotation", "min_zoom", "max_zoom"],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "default_tilt": { "type": "number", "minimum": 0, "maximum": 70 },
+        "default_rotation": { "type": "number", "minimum": -180, "maximum": 180 },
+        "min_zoom": { "type": "number", "exclusiveMinimum": 0 },
+        "max_zoom": { "type": "number", "exclusiveMinimum": 0 },
+        "default_vertical_scale": { "type": "number", "minimum": 0.25, "maximum": 8 },
+        "elevation_unit": { "enum": ["m", "cm", "uu"] }
+      },
+      "additionalProperties": false
+    },
+    "spaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "kind", "summary", "geometry"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["region", "site", "landmark", "level_entry"] },
+          "parent": { "type": "string", "minLength": 1 },
+          "summary": { "type": "string" },
+          "elevation": { "type": "number", "minimum": -5000, "maximum": 10000 },
+          "tone": { "enum": ["slate", "cyan", "amber", "violet", "green", "red"] },
+          "feature": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": {
+              "kind": { "enum": ["spawn", "encounter", "traversal", "poi", "vista", "resource"] },
+              "radius": { "type": "number", "minimum": 0, "maximum": 2000 },
+              "note": { "type": "string", "maxLength": 1000 }
+            },
+            "additionalProperties": false
+          },
+          "refs": { "type": "array", "items": { "$ref": "#/definitions/ref" } },
+          "geometry": { "$ref": "#/definitions/geometry" },
+          "visible_when": { "$ref": "#/definitions/predicate" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "from", "to", "mode"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "from": { "type": "string", "minLength": 1 },
+          "to": { "type": "string", "minLength": 1 },
+          "mode": { "enum": ["road", "trail", "vent", "one_way", "travel"] },
+          "via": { "type": "array", "items": { "$ref": "#/definitions/routePoint" } },
+          "visible_when": { "$ref": "#/definitions/predicate" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "beats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "kind", "summary", "participants"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["quest", "main_quest", "side_quest", "story", "character", "lore", "world_change"] },
+          "at": { "type": "string", "minLength": 1 },
+          "duration_seconds": { "type": "number", "minimum": 0.1 },
+          "summary": { "type": "string" },
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["role", "ref"],
+              "properties": {
+                "role": { "enum": ["quest", "objective", "event", "character", "location", "level", "item", "reward"] },
+                "ref": { "$ref": "#/definitions/ref" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "when": { "$ref": "#/definitions/predicate" },
+          "transitions": {
+            "type": "array",
+            "maxItems": 80,
+            "items": {
+              "type": "object",
+              "required": ["target_beat_id", "trigger"],
+              "properties": {
+                "target_beat_id": { "type": "string", "maxLength": 80 },
+                "trigger": { "enum": ["unresolved", "advance", "success", "failure", "choice", "discovery"] },
+                "condition": { "type": "string", "maxLength": 500 },
+                "cut": { "enum": ["hard", "fade", "dissolve", "wipe"] }
+              },
+              "additionalProperties": false
+            }
+          },
+          "influences": {
+            "type": "array",
+            "maxItems": 80,
+            "items": {
+              "type": "object",
+              "required": ["target_beat_id", "relation"],
+              "properties": {
+                "target_beat_id": { "type": "string", "maxLength": 80 },
+                "relation": { "enum": ["unresolved", "triggers", "unlocks", "reveals", "changes", "responds_to"] },
+                "note": { "type": "string", "maxLength": 500 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "effects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "target"],
+              "properties": {
+                "type": { "enum": ["unresolved", "reveal", "activate", "complete", "set_flag", "open_route", "close_route"] },
+                "target": { "type": "string" },
+                "value": { "type": ["string", "number", "boolean"] }
+              },
+              "additionalProperties": false
+            }
+          },
+          "presentation": {
+            "type": "object",
+            "properties": {
+              "priority": { "type": "number" },
+              "badge": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          "delivery": {
+            "type": "object",
+            "required": ["format_version"],
+            "properties": {
+              "format_version": { "const": 2 },
+              "readiness": { "enum": ["idea", "reviewable", "implementable"] },
+              "implementation_kind": { "type": "string", "minLength": 1 },
+              "target_asset": { "type": "string", "minLength": 1 },
+              "owner": { "type": "string", "minLength": 1 },
+              "acceptance": {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1 },
+                "uniqueItems": true
+              },
+              "test_obligations": {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1 },
+                "uniqueItems": true
+              }
+            },
+            "additionalProperties": false
+          },
+          "organization": {
+            "type": "object",
+            "properties": {
+              "track": { "type": "string", "maxLength": 100 },
+              "branch": { "type": "string", "maxLength": 100 },
+              "sequence": { "type": "number", "minimum": 0, "maximum": 10000 },
+              "intensity": { "type": "number", "minimum": 0, "maximum": 100 },
+              "review_status": { "enum": ["unreviewed_legacy", "confirmed"] }
+            },
+            "additionalProperties": false
+          },
+          "diagram_position": {
+            "type": "object",
+            "required": ["x", "y"],
+            "properties": {
+              "x": { "type": "number", "minimum": 0, "maximum": 10000 },
+              "y": { "type": "number", "minimum": 0, "maximum": 10000 }
+            },
+            "additionalProperties": false
+          },
+          "quest": {
+            "type": "object",
+            "required": ["function", "goal", "completion", "failure", "feedback"],
+            "properties": {
+              "function": { "enum": ["unresolved", "offer", "objective", "choice", "gate", "reward", "failure", "recovery"] },
+              "method": { "enum": ["unresolved", "any", "combat", "stealth", "exploration", "dialogue", "collection", "escort", "puzzle"] },
+              "failure_mode": { "enum": ["unresolved", "retry", "reset", "alternate", "persistent"] },
+              "goal": { "type": "string", "maxLength": 2000 },
+              "completion": { "type": "string", "maxLength": 2000 },
+              "failure": { "type": "string", "maxLength": 2000 },
+              "feedback": { "type": "string", "maxLength": 2000 },
+              "stakes": { "type": "string", "maxLength": 2000 },
+              "reward": { "type": "string", "maxLength": 2000 },
+              "optional": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          },
+          "narrative": {
+            "type": "object",
+            "required": ["function", "delivery", "information", "viewpoint"],
+            "properties": {
+              "function": { "enum": ["unresolved", "setup", "foreshadow", "reveal", "character", "choice", "consequence", "lore", "payoff"] },
+              "delivery": { "enum": ["unresolved", "gameplay", "dialogue", "environment", "cinematic", "text", "ambient"] },
+              "pacing": { "enum": ["unresolved", "setup", "build", "turn", "climax", "release"] },
+              "audience": { "enum": ["unresolved", "player", "character", "party", "world"] },
+              "information": { "type": "string", "maxLength": 2000 },
+              "viewpoint": { "type": "string", "maxLength": 200 },
+              "emotional_tone": { "type": "string", "maxLength": 200 },
+              "player_takeaway": { "type": "string", "maxLength": 2000 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "chapter", "summary", "quest_states", "flags"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "minLength": 1 },
+          "chapter": { "type": "integer", "minimum": 0 },
+          "summary": { "type": "string" },
+          "quest_states": { "type": "object", "additionalProperties": { "enum": ["locked", "available", "active", "completed", "failed"] } },
+          "flags": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean"] } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "blockout": {
+      "type": "object",
+      "required": ["grid_size", "snap_enabled", "objects"],
+      "properties": {
+        "grid_size": { "type": "number", "minimum": 0.1, "maximum": 1000 },
+        "snap_enabled": { "type": "boolean" },
+        "objects": {
+          "type": "array",
+          "maxItems": 2000,
+          "items": { "$ref": "#/definitions/blockoutObject" }
+        },
+        "terrain": { "$ref": "#/definitions/blockoutTerrain" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ref": {
+      "type": "object",
+      "required": ["domain", "subsystem", "node_id"],
+      "properties": {
+        "domain": { "type": "string", "minLength": 1 },
+        "subsystem": { "type": "string", "minLength": 1 },
+        "node_id": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "point": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "routePoint": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 3
+    },
+    "geometry": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["type", "x", "y"],
+          "properties": { "type": { "const": "point" }, "x": { "type": "number" }, "y": { "type": "number" } },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "points"],
+          "properties": { "type": { "const": "polygon" }, "points": { "type": "array", "minItems": 3, "items": { "$ref": "#/definitions/point" } } },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "blockoutObject": {
+      "type": "object",
+      "required": ["id", "label", "primitive", "role", "position", "size", "rotation"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,79}$" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "primitive": { "enum": ["box", "ramp", "cylinder", "arch", "volume"] },
+        "role": { "enum": ["space", "cover", "traversal", "hazard", "objective", "annotation"] },
+        "position": {
+          "type": "object",
+          "required": ["x", "y", "z"],
+          "properties": {
+            "x": { "type": "number", "minimum": 0 },
+            "y": { "type": "number", "minimum": 0 },
+            "z": { "type": "number", "minimum": -5000, "maximum": 10000 }
+          },
+          "additionalProperties": false
+        },
+        "size": {
+          "type": "object",
+          "required": ["x", "y", "z"],
+          "properties": {
+            "x": { "type": "number", "exclusiveMinimum": 0, "maximum": 5000 },
+            "y": { "type": "number", "exclusiveMinimum": 0, "maximum": 5000 },
+            "z": { "type": "number", "exclusiveMinimum": 0, "maximum": 5000 }
+          },
+          "additionalProperties": false
+        },
+        "rotation": { "type": "number", "minimum": -36000, "maximum": 36000 },
+        "tone": { "enum": ["slate", "cyan", "amber", "violet", "green", "red"] },
+        "note": { "type": "string", "maxLength": 1000 },
+        "locked": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "blockoutTerrain": {
+      "type": "object",
+      "required": ["base_elevation", "control_points"],
+      "properties": {
+        "base_elevation": { "type": "number", "minimum": -5000, "maximum": 10000 },
+        "control_points": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "type": "object",
+            "required": ["id", "label", "x", "y", "elevation", "radius"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$" },
+              "label": { "type": "string", "minLength": 1, "maxLength": 100 },
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "elevation": { "type": "number", "minimum": -5000, "maximum": 10000 },
+              "radius": { "type": "number", "exclusiveMinimum": 0, "maximum": 10000 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "predicate": {
+      "oneOf": [
+        { "type": "object", "required": ["op"], "properties": { "op": { "const": "always" } }, "additionalProperties": false },
+        { "type": "object", "required": ["op", "conditions"], "properties": { "op": { "enum": ["all", "any"] }, "conditions": { "type": "array", "items": { "$ref": "#/definitions/predicate" } } }, "additionalProperties": false },
+        { "type": "object", "required": ["op", "condition"], "properties": { "op": { "const": "not" }, "condition": { "$ref": "#/definitions/predicate" } }, "additionalProperties": false },
+        { "type": "object", "required": ["op", "value"], "properties": { "op": { "enum": ["chapter_at_least", "chapter_at_most"] }, "value": { "type": "number" } }, "additionalProperties": false },
+        { "type": "object", "required": ["op", "quest", "state"], "properties": { "op": { "const": "quest_state" }, "quest": { "$ref": "#/definitions/ref" }, "state": { "oneOf": [{ "enum": ["locked", "available", "active", "completed", "failed"] }, { "type": "array", "items": { "enum": ["locked", "available", "active", "completed", "failed"] } }] } }, "additionalProperties": false },
+        { "type": "object", "required": ["op", "flag", "value"], "properties": { "op": { "const": "flag_equals" }, "flag": { "type": "string", "minLength": 1 }, "value": { "type": ["string", "number", "boolean"] } }, "additionalProperties": false }
+      ]
+    }
+  }
+}

@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"jsx": "react-jsx",
     "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["core/**/*.ts", "adapters/**/*.ts"]
+	"include": ["core/**/*.ts", "adapters/**/*.ts", "viewer/**/*.ts", "viewer/**/*.tsx", "tests/**/*.ts", "vite.config.ts"]
 }

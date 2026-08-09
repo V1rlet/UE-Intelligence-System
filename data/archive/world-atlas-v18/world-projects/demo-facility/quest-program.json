@@ -1,0 +1,269 @@
+{
+  "meta": {
+    "format_version": 2,
+    "version": 1,
+    "program_id": "demo-facility-quests",
+    "project_id": "demo-facility",
+    "title": "熄灯行动任务图"
+  },
+  "quests": [
+    {
+      "id": "quest_main",
+      "kind": "journey",
+      "title": "熄灯行动",
+      "summary": "从行动简报出发，经由两条渗透路线（钥匙卡/通风管）汇入断电与销毁，最后撤离。"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "quest_briefing",
+      "quest_id": "quest_main",
+      "primitive": "event",
+      "spec": {
+        "preset_id": "event.interaction",
+        "name": "行动简报",
+        "parameters": {}
+      },
+      "layout": {
+        "x": 160,
+        "y": 140
+      }
+    },
+    {
+      "id": "quest_entry_keycard",
+      "quest_id": "quest_main",
+      "primitive": "event",
+      "spec": {
+        "preset_id": "event.interaction",
+        "name": "取得万能钥匙卡",
+        "parameters": {}
+      },
+      "layout": {
+        "x": 400,
+        "y": 140
+      }
+    },
+    {
+      "id": "quest_entry_vent",
+      "quest_id": "quest_main",
+      "primitive": "event",
+      "spec": {
+        "preset_id": "event.interaction",
+        "name": "通风管潜入",
+        "parameters": {}
+      },
+      "layout": {
+        "x": 640,
+        "y": 140
+      }
+    },
+    {
+      "id": "quest_blackout",
+      "quest_id": "quest_main",
+      "primitive": "event",
+      "spec": {
+        "preset_id": "event.interaction",
+        "name": "切断供电",
+        "parameters": {}
+      },
+      "layout": {
+        "x": 160,
+        "y": 320
+      }
+    },
+    {
+      "id": "quest_destroy",
+      "quest_id": "quest_main",
+      "primitive": "event",
+      "spec": {
+        "preset_id": "event.interaction",
+        "name": "销毁服务器阵列",
+        "parameters": {}
+      },
+      "layout": {
+        "x": 400,
+        "y": 320
+      }
+    },
+    {
+      "id": "quest_escape",
+      "quest_id": "quest_main",
+      "primitive": "event",
+      "spec": {
+        "preset_id": "event.interaction",
+        "name": "沿后坡撤离",
+        "parameters": {}
+      },
+      "layout": {
+        "x": 640,
+        "y": 320
+      }
+    },
+    {
+      "id": "outcome_destroy",
+      "quest_id": "quest_main",
+      "primitive": "outcome",
+      "spec": {
+        "preset_id": "outcome.complete",
+        "name": "服务器销毁完成",
+        "parameters": {}
+      },
+      "layout": {
+        "x": 880,
+        "y": 140
+      }
+    },
+    {
+      "id": "outcome_escape",
+      "quest_id": "quest_main",
+      "primitive": "outcome",
+      "spec": {
+        "preset_id": "outcome.complete",
+        "name": "撤离完成",
+        "parameters": {}
+      },
+      "layout": {
+        "x": 880,
+        "y": 320
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "quest_id": "quest_main",
+      "kind": "flow",
+      "source": {
+        "kind": "node",
+        "node_id": "quest_briefing"
+      },
+      "target": {
+        "kind": "node",
+        "node_id": "quest_entry_keycard"
+      },
+      "spec": {
+        "preset_id": "flow.next",
+        "parameters": {}
+      }
+    },
+    {
+      "id": "e2",
+      "quest_id": "quest_main",
+      "kind": "flow",
+      "source": {
+        "kind": "node",
+        "node_id": "quest_briefing"
+      },
+      "target": {
+        "kind": "node",
+        "node_id": "quest_entry_vent"
+      },
+      "spec": {
+        "preset_id": "flow.next",
+        "parameters": {}
+      }
+    },
+    {
+      "id": "e3",
+      "quest_id": "quest_main",
+      "kind": "flow",
+      "source": {
+        "kind": "node",
+        "node_id": "quest_entry_keycard"
+      },
+      "target": {
+        "kind": "node",
+        "node_id": "quest_blackout"
+      },
+      "spec": {
+        "preset_id": "flow.next",
+        "parameters": {}
+      }
+    },
+    {
+      "id": "e4",
+      "quest_id": "quest_main",
+      "kind": "flow",
+      "source": {
+        "kind": "node",
+        "node_id": "quest_entry_vent"
+      },
+      "target": {
+        "kind": "node",
+        "node_id": "quest_blackout"
+      },
+      "spec": {
+        "preset_id": "flow.next",
+        "parameters": {}
+      }
+    },
+    {
+      "id": "e5",
+      "quest_id": "quest_main",
+      "kind": "flow",
+      "source": {
+        "kind": "node",
+        "node_id": "quest_blackout"
+      },
+      "target": {
+        "kind": "node",
+        "node_id": "quest_destroy"
+      },
+      "spec": {
+        "preset_id": "flow.next",
+        "parameters": {}
+      }
+    },
+    {
+      "id": "e6",
+      "quest_id": "quest_main",
+      "kind": "flow",
+      "source": {
+        "kind": "node",
+        "node_id": "quest_destroy"
+      },
+      "target": {
+        "kind": "node",
+        "node_id": "outcome_destroy"
+      },
+      "spec": {
+        "preset_id": "flow.next",
+        "parameters": {}
+      }
+    },
+    {
+      "id": "e7",
+      "quest_id": "quest_main",
+      "kind": "flow",
+      "source": {
+        "kind": "node",
+        "node_id": "quest_escape"
+      },
+      "target": {
+        "kind": "node",
+        "node_id": "outcome_escape"
+      },
+      "spec": {
+        "preset_id": "flow.next",
+        "parameters": {}
+      }
+    },
+    {
+      "id": "e8",
+      "quest_id": "quest_main",
+      "kind": "flow",
+      "source": {
+        "kind": "node",
+        "node_id": "quest_destroy"
+      },
+      "target": {
+        "kind": "node",
+        "node_id": "quest_escape"
+      },
+      "spec": {
+        "preset_id": "flow.next",
+        "parameters": {}
+      }
+    }
+  ]
+}

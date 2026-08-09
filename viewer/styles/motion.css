@@ -1,0 +1,70 @@
+/* Graph Brain / motion.css - 动效标准库(F41-B 收敛产物)
+   时长/缓动令牌: --motion-* 与 --ease-*(design-tokens.ts 注入)。距离/强度参数:
+   --enter-d(位移,默认6px)、--enter-s(缩放,默认.96)、--breathe-min(呼吸低谷,默认.55)、
+   --pulse-color/--pulse-r(脉冲环)、--dash-from/--dash-to(虚线流动)。
+   复杂编排(home-card/ambient/liquid 等页面级特效)保留在各自样式表, 不在本库。
+   出口库: gb-exit-* 六向 keyframes + .gb-exiting 默认类(scale 出, var(--motion-fast,160ms)),
+   由 useExitGate(延迟卸载门控) 或组件自管理 closing state 挂载; reduced-motion 下被全局归零,
+   卸载窗口保留但不可见。 */
+
+@keyframes gb-enter-up    { from { opacity: 0; transform: translateY(var(--enter-d, 6px)); } to { opacity: 1; transform: none; } }
+@keyframes gb-enter-down  { from { opacity: 0; transform: translateY(calc(var(--enter-d, 6px) * -1)); } to { opacity: 1; transform: none; } }
+@keyframes gb-enter-left  { from { opacity: 0; transform: translateX(calc(var(--enter-d, 8px) * -1)); } to { opacity: 1; transform: none; } }
+@keyframes gb-enter-right { from { opacity: 0; transform: translateX(var(--enter-d, 8px)); } to { opacity: 1; transform: none; } }
+@keyframes gb-enter-scale { from { opacity: 0; transform: scale(var(--enter-s, .96)); } to { opacity: 1; transform: none; } }
+@keyframes gb-enter-fade  { from { opacity: 0; } to { opacity: 1; } }
+
+/* spring 微过冲入口：模态/浮层质感。scale .97 → 1.02 → 1，位移 6px 同步衰减。
+   克制专业档：过冲 2%，不可用 --ease-spring 做位移（会拖出明显 overshoot 抖动）。 */
+@keyframes gb-enter-spring {
+	0%   { opacity: 0; transform: translateY(var(--enter-d, 6px)) scale(.97); }
+	60%  { opacity: 1; transform: translateY(-1px) scale(1.02); }
+	100% { opacity: 1; transform: none; }
+}
+
+/* 出口动画库（G1, 2026-08-07）：与入口六向对称。时长走 --motion-fast/base，
+   曲线走 --ease-exit（先快后慢离场）。调用方在关闭时给元素挂 .gb-exiting 触发。 */
+@keyframes gb-exit-fade  { from { opacity: 1; } to { opacity: 0; } }
+@keyframes gb-exit-up    { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(calc(var(--enter-d, 6px) * -1)); } }
+@keyframes gb-exit-down  { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(var(--enter-d, 6px)); } }
+@keyframes gb-exit-left  { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(var(--enter-d, 8px)); } }
+@keyframes gb-exit-right { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(calc(var(--enter-d, 8px) * -1)); } }
+@keyframes gb-exit-scale { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(.97); } }
+
+/* 出口挂载类：可叠加在浮层根元素上（.gb-exiting），动画结束后由 useExitGate 卸载 DOM。
+   默认 scale+fade 组合；需要定向出口的浮层在自身样式表覆盖 animation-name。 */
+.gb-exiting {
+	animation: gb-exit-scale var(--motion-fast, 160ms) var(--ease-exit, cubic-bezier(.4, 0, 1, 1)) both;
+}
+
+@keyframes gb-breathe { 0%, 100% { opacity: 1; } 50% { opacity: var(--breathe-min, .55); } }
+@keyframes gb-pulse-ring {
+	0% { box-shadow: 0 0 0 0 var(--pulse-color, color-mix(in srgb, var(--gb-cyan-75) 40%, transparent)); }
+	70% { box-shadow: 0 0 0 var(--pulse-r, 8px) transparent; }
+	100% { box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes gb-dash-flow { from { stroke-dashoffset: var(--dash-from, 0); } to { stroke-dashoffset: var(--dash-to, -24); } }
+@keyframes gb-spin { to { transform: rotate(360deg); } }
+
+/* 编排: 列表/卡片级联入场。容器挂 .gb-stagger, 子项按 --stagger-step(默认 28ms) 递进。 */
+.gb-stagger > * { animation: gb-enter-up var(--motion-base, 220ms) var(--ease-enter, cubic-bezier(.16,1,.3,1)) both; }
+.gb-stagger > *:nth-child(1)  { animation-delay: 0ms; }
+.gb-stagger > *:nth-child(2)  { animation-delay: calc(var(--stagger-step, 28ms) * 1); }
+.gb-stagger > *:nth-child(3)  { animation-delay: calc(var(--stagger-step, 28ms) * 2); }
+.gb-stagger > *:nth-child(4)  { animation-delay: calc(var(--stagger-step, 28ms) * 3); }
+.gb-stagger > *:nth-child(5)  { animation-delay: calc(var(--stagger-step, 28ms) * 4); }
+.gb-stagger > *:nth-child(6)  { animation-delay: calc(var(--stagger-step, 28ms) * 5); }
+.gb-stagger > *:nth-child(7)  { animation-delay: calc(var(--stagger-step, 28ms) * 6); }
+.gb-stagger > *:nth-child(8)  { animation-delay: calc(var(--stagger-step, 28ms) * 7); }
+.gb-stagger > *:nth-child(n+9) { animation-delay: calc(var(--stagger-step, 28ms) * 8); }
+
+/* 无障碍一票否决: 系统偏好减少动画时, 全场动画/过渡归零(含本库与各页面级编排)。
+   各样式表中的局部 reduced-motion 规则保留做布局微调, 但动效零化以此为准。 */
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

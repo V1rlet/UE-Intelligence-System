@@ -1,0 +1,71 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "GraphBrain Engine Verification Request",
+	"description": "玩家可游玩引擎验证请求（player-metrics --out 产物），<project>-engine-request.json，供 UE PIE 执行器消费",
+	"type": "object",
+	"required": ["schema", "project_id", "atlas_id", "profile", "spawn_points", "probes"],
+	"properties": {
+		"schema": { "const": "graphbrain-player-metrics/1" },
+		"project_id": { "type": "string", "minLength": 1 },
+		"atlas_id": { "type": "string", "minLength": 1 },
+		"profile": {
+			"type": "object",
+			"required": [
+				"capsule_radius_m",
+				"capsule_half_height_m",
+				"eye_height_m",
+				"walk_speed_mps",
+				"sprint_speed_mps",
+				"jump_height_m",
+				"step_height_m",
+				"max_slope_deg",
+				"crouch_half_height_m",
+				"door_width_m",
+				"door_height_m"
+			],
+			"properties": {
+				"capsule_radius_m": { "type": "number", "exclusiveMinimum": 0 },
+				"capsule_half_height_m": { "type": "number", "exclusiveMinimum": 0 },
+				"eye_height_m": { "type": "number", "exclusiveMinimum": 0 },
+				"walk_speed_mps": { "type": "number", "minimum": 0 },
+				"sprint_speed_mps": { "type": "number", "minimum": 0 },
+				"jump_height_m": { "type": "number", "minimum": 0 },
+				"step_height_m": { "type": "number", "minimum": 0 },
+				"max_slope_deg": { "type": "number", "minimum": 0, "maximum": 90 },
+				"crouch_half_height_m": { "type": "number", "exclusiveMinimum": 0 },
+				"door_width_m": { "type": "number", "exclusiveMinimum": 0 },
+				"door_height_m": { "type": "number", "exclusiveMinimum": 0 }
+			},
+			"additionalProperties": false
+		},
+		"spawn_points": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": ["id", "label", "x", "y", "z"],
+				"properties": {
+					"id": { "type": "string", "minLength": 1 },
+					"label": { "type": "string" },
+					"x": { "type": "number" },
+					"y": { "type": "number" },
+					"z": { "type": "number" }
+				},
+				"additionalProperties": false
+			}
+		},
+		"probes": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": ["id", "primitive", "reason"],
+				"properties": {
+					"id": { "type": "string", "minLength": 1 },
+					"primitive": { "type": "string", "minLength": 1 },
+					"reason": { "type": "string", "minLength": 1 }
+				},
+				"additionalProperties": false
+			}
+		}
+	},
+	"additionalProperties": false
+}

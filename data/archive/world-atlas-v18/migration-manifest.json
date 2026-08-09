@@ -1,0 +1,56 @@
+{
+  "schema": "graphbrain.world-atlas-retirement/1",
+  "archived_at": "2026-08-08",
+  "source_formats": {
+    "world_atlas": 18,
+    "world_project": 2,
+    "quest_program": 2
+  },
+  "runtime_status": "retired",
+  "active_data_path": null,
+  "projects": [
+    {
+      "project_id": "demo-facility",
+      "disposition": "engine_assets_require_review",
+      "unreal_targets": [
+        "/Game/Levels/DemoFacility",
+        "/Game/Levels/DemoFacility_Alt",
+        "/Game/Cinematics/DemoFacility_Beats",
+        "/Game/Cinematics/DemoFacility_Beats_Anchored"
+      ],
+      "diagnostics": [
+        "UE assets exist, but actor transform parity has not been inferred.",
+        "Sequence assets exist, but beat and camera-cut parity has not been inferred.",
+        "Quest Program has no implemented runtime owner and remains a design reference."
+      ],
+      "files": [
+        { "path": "world-projects/demo-facility/project.json", "sha256": "f179a003757f1ab565f5958e8ca058206672e444d2b2d1a0cc7be049e9884fa0" },
+        { "path": "world-projects/demo-facility/world-atlas.json", "sha256": "c247417342bf80010c005fb3cb489e42bb98c3a1c7e5c3d8e47a3ff377ed223e" },
+        { "path": "world-projects/demo-facility/quest-program.json", "sha256": "28f2984a278815597d94e2960d12dc6c2ac494ea86e84331deacd2b5b49afb81" },
+        { "path": "world-projects/demo-facility/demo-facility-engine-request.json", "sha256": "d8b4ccf717296d32ecf434259c2a717898b31a1a112d63bf37e4ae900eca9c94" },
+        { "path": "world-projects/demo-facility/previews.json", "sha256": "3da0cf37dd0ae214856ca23d102f27cdaa76b7caf320e21761f82e3c42fc69cd" },
+        { "path": "world-projects/demo-facility/geometry/atlas_river_valley-greybox.gltf", "sha256": "3262e67020c29269b665a627d372a1c11c9ddc5e4f310ea0a26ae7a84938a18a" },
+        { "path": "world-projects/demo-facility/geometry/atlas_river_valley-greybox.obj", "sha256": "382d357167cbbe46ecda119f4aadfdf9842366e64fe16f9c853cb4f8ac0f6701" },
+        { "path": "world-projects/demo-facility/geometry/atlas_river_valley-manifest.json", "sha256": "ff0838fa0d36196f5f4016d7dbb3046219d97069cfe3d1c6e6d7a3ec3c03f1c5" }
+      ]
+    },
+    {
+      "project_id": "world-baf56900",
+      "disposition": "archive_only",
+      "unreal_targets": [],
+      "diagnostics": [
+        "No matching Unreal Level or Sequence was observed.",
+        "No product semantics were inferred and no UE content was created."
+      ],
+      "files": [
+        { "path": "world-projects/world-baf56900/project.json", "sha256": "b55787c950b763f5c47c93dc8ebb09ff5599d7634e999b5c799c9e0a36df2fd6" },
+        { "path": "world-projects/world-baf56900/world-atlas.json", "sha256": "643681520559134cd826d78dc81b0890182061c6399920931238b7bbfce9d992" },
+        { "path": "world-projects/world-baf56900/quest-program.json", "sha256": "5d03cbe5ffae691139aff4de37ad0b201c3b383a99376e7a674bed95ef256f37" },
+        { "path": "world-projects/world-baf56900/world-baf56900-engine-request.json", "sha256": "5a908258f93b819adb5f018a85ef3624f1685488289a23d1c578c7c921aba8d5" },
+        { "path": "world-projects/world-baf56900/geometry/atlas_river_depot-greybox.gltf", "sha256": "7478f6950de834b429f14a493c8d4a8e6af0945b0a54acd7826c57481c1ca7f4" },
+        { "path": "world-projects/world-baf56900/geometry/atlas_river_depot-greybox.obj", "sha256": "04ec1bfbfda6d478fb9ea49df87d865917b09fe553d7e89fc95c4a1f628e5269" },
+        { "path": "world-projects/world-baf56900/geometry/atlas_river_depot-manifest.json", "sha256": "19e4bc5ddcf5824c0d7d733b0332ca252cbd2a45400a54bdcb13d90e4f3a9350" }
+      ]
+    }
+  ]
+}

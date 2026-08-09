@@ -1,0 +1,70 @@
+{
+  "project_id": "demo-facility",
+  "entries": [
+    {
+      "id": "ue-greybox-demo-facility-20260805",
+      "domain": "ue",
+      "title": "demo-facility 灰盒验证（§8.1 UE 最小闭环）",
+      "asset": {
+        "dir": "design/assets/level-builder/",
+        "files": [
+          "greybox_demo-facility_topdown.png",
+          "placement_demo-facility_20260805T165915Z.json"
+        ],
+        "meta": {
+          "producer": "level-builder",
+          "source_atlas": "atlas_river_valley",
+          "placements": 8,
+          "beats": 9,
+          "engine": "5.8.1"
+        }
+      },
+      "links": [
+        {
+          "kind": "space",
+          "target": "atlas_river_valley"
+        },
+        {
+          "kind": "beat",
+          "target": "wb_lobby_floor"
+        }
+      ],
+      "prompt": "demo-facility 世界 Atlas 白盒原语 → UE 灰盒放置（8 项：底板/南北墙/入口 arch/服务器 ramp/双掩体/遭遇 volume），正交俯视出图验证布局可读性",
+      "created_at": "2026-08-05T16:10:00Z"
+    },
+    {
+      "id": "ue-greybox-demo-facility-alt-20260806",
+      "domain": "ue",
+      "title": "DemoFacility_Alt 灰盒俯视（重截修复：坏产物全黑图 → 补光照 + 窗口置顶后重截，识图验证非黑）",
+      "asset": {
+        "dir": "design/assets/level-builder/",
+        "files": [
+          "greybox_demo-facility-alt_topdown.png"
+        ],
+        "meta": {
+          "producer": "level-builder",
+          "source_atlas": "atlas_river_valley",
+          "level": "DemoFacility_Alt",
+          "placements": 8,
+          "beats": 9,
+          "transitions": 8,
+          "engine": "5.8.1",
+          "recapture": true,
+          "validation": "gemini-api non-black mean=78.3"
+        }
+      },
+      "links": [
+        {
+          "kind": "space",
+          "target": "site_lobby"
+        },
+        {
+          "kind": "beat",
+          "target": "beat_briefing"
+        }
+      ],
+      "prompt": "demo-facility Atlas → 全链循环复验：fetch(8原语/9beat带transitions) → translate(placement带beats_plan) → 新建 UE level DemoFacility_Alt 放置 8 灰盒 → 俯视出图（重截修复）",
+      "created_at": "2026-08-06T09:15:00Z"
+    }
+  ]
+}

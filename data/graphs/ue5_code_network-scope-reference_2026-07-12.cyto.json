@@ -1,0 +1,592 @@
+{
+  "meta": {
+    "domain": "ue5_code",
+    "subsystem": "network-scope-reference",
+    "title": "UE5 / Lyra · 网络存在范围与复制边界",
+    "kind": "reference",
+    "viewpoint": "network-scope",
+    "generated_at": "2026-07-16T14:16:45.090Z",
+    "generator": "build-architecture-references.ts / UE5 Lyra Cytoscape brief",
+    "format_version": 2,
+    "provenance": {
+      "schema_version": 1,
+      "status": "unknown",
+      "source_kind": "unknown",
+      "source_roots": []
+    },
+    "coverage": {
+      "status": "unknown",
+      "discovered_files": null,
+      "consumed_files": null,
+      "skipped_files": null,
+      "failed_files": null,
+      "diagnostics": [
+        {
+          "code": "legacy-v1-no-provenance-or-coverage"
+        }
+      ]
+    }
+  },
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "net:server",
+          "label": "Server Only",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "只存在于权威服务器",
+          "visibility": "explored",
+          "children_count": 3,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "net:all",
+          "label": "Server + All Clients",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "服务器存在并复制到所有相关客户端",
+          "visibility": "explored",
+          "children_count": 6,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 4,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "net:owner",
+          "label": "Server + Owning Client",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "服务器与拥有该玩家的客户端",
+          "visibility": "explored",
+          "children_count": 3,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "net:local",
+          "label": "Local Only",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "仅本机进程/本地玩家",
+          "visibility": "explored",
+          "children_count": 4,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "AGameModeBase",
+          "label": "AGameModeBase",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "服务器规则与 Spawn 权威。",
+          "visibility": "explored",
+          "parent": "net:server",
+          "origin": "UE",
+          "network_scope": "server-only",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ALyraGameMode",
+          "label": "ALyraGameMode",
+          "type": "uactor",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "Lyra Experience 选择与重生权威。",
+          "visibility": "explored",
+          "parent": "net:server",
+          "origin": "Lyra",
+          "network_scope": "server-only",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "concept:AuthoritySpawn",
+          "label": "Authority Spawn（概念）",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "服务器权威生成与重生逻辑。",
+          "visibility": "explored",
+          "children_count": 0,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "AGameStateBase",
+          "label": "AGameStateBase",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "公共比赛状态。",
+          "visibility": "explored",
+          "parent": "net:all",
+          "origin": "UE",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "APlayerState",
+          "label": "APlayerState",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "公共玩家身份。",
+          "visibility": "explored",
+          "parent": "net:all",
+          "origin": "UE",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "APawn",
+          "label": "APawn",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "可复制 Pawn。",
+          "visibility": "explored",
+          "parent": "net:all",
+          "origin": "UE",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ALyraGameState",
+          "label": "ALyraGameState",
+          "type": "uactor",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "复制 Experience 状态。",
+          "visibility": "explored",
+          "parent": "net:all",
+          "origin": "Lyra",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ALyraPlayerState",
+          "label": "ALyraPlayerState",
+          "type": "uactor",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "持有可复制 Lyra ASC。",
+          "visibility": "explored",
+          "parent": "net:all",
+          "origin": "Lyra",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "ULyraAbilitySystemComponent",
+          "label": "ULyraAbilitySystemComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "ASC 的复制模式决定公开/owner-only 数据范围。",
+          "visibility": "explored",
+          "parent": "net:all",
+          "origin": "Lyra",
+          "network_scope": "server-all-clients",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "APlayerController",
+          "label": "APlayerController",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "服务器与拥有端存在。",
+          "visibility": "explored",
+          "parent": "net:owner",
+          "origin": "UE",
+          "network_scope": "server-owning-client",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ALyraPlayerController",
+          "label": "ALyraPlayerController",
+          "type": "uactor",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "Lyra 拥有端控制器。",
+          "visibility": "explored",
+          "parent": "net:owner",
+          "origin": "Lyra",
+          "network_scope": "server-owning-client",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "concept:OwnerOnlyRPC",
+          "label": "Owner-only RPC（概念）",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "只发往拥有客户端的 RPC/复制数据。",
+          "visibility": "explored",
+          "children_count": 0,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ULocalPlayer",
+          "label": "ULocalPlayer",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "仅本机 LocalPlayer。",
+          "visibility": "explored",
+          "parent": "net:local",
+          "origin": "UE",
+          "network_scope": "local-only",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ULocalPlayerSubsystem",
+          "label": "ULocalPlayerSubsystem",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "仅本地玩家的 Subsystem。",
+          "visibility": "explored",
+          "parent": "net:local",
+          "origin": "UE",
+          "network_scope": "local-only",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ULyraHeroComponent",
+          "label": "ULyraHeroComponent",
+          "type": "ucomponent",
+          "layer": "project",
+          "module": "LyraGame",
+          "domain": "ue5_code",
+          "description": "本地输入与相机初始化。",
+          "visibility": "explored",
+          "parent": "net:local",
+          "origin": "Lyra",
+          "network_scope": "local-only",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-lyra"
+      },
+      {
+        "data": {
+          "id": "concept:LocalUI",
+          "label": "Local UI（概念）",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "本地 HUD、CommonUI Layer 与设置界面。",
+          "visibility": "explored",
+          "children_count": 0,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "AGameModeBase--publishes-->AGameStateBase",
+          "source": "AGameModeBase",
+          "target": "AGameStateBase",
+          "relation": "publishes",
+          "domain": "ue5_code",
+          "description": "权威规则写入公共状态。"
+        },
+        "classes": "edge-publishes"
+      },
+      {
+        "data": {
+          "id": "AGameStateBase--owns-->APlayerState",
+          "source": "AGameStateBase",
+          "target": "APlayerState",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "维护 PlayerArray。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "AGameStateBase--replicates_to-->net:all",
+          "source": "AGameStateBase",
+          "target": "net:all",
+          "relation": "replicates_to",
+          "domain": "ue5_code",
+          "description": "公共比赛状态复制至所有端。"
+        },
+        "classes": "edge-replicates-to"
+      },
+      {
+        "data": {
+          "id": "APlayerState--replicates_to-->net:all",
+          "source": "APlayerState",
+          "target": "net:all",
+          "relation": "replicates_to",
+          "domain": "ue5_code",
+          "description": "公共玩家状态复制至所有端。"
+        },
+        "classes": "edge-replicates-to"
+      },
+      {
+        "data": {
+          "id": "APawn--replicates_to-->net:all",
+          "source": "APawn",
+          "target": "net:all",
+          "relation": "replicates_to",
+          "domain": "ue5_code",
+          "description": "Replicated Pawn 复制至相关客户端。"
+        },
+        "classes": "edge-replicates-to"
+      },
+      {
+        "data": {
+          "id": "APlayerController--replicates_to-->net:owner",
+          "source": "APlayerController",
+          "target": "net:owner",
+          "relation": "replicates_to",
+          "domain": "ue5_code",
+          "description": "只存在于服务器与拥有端。"
+        },
+        "classes": "edge-replicates-to"
+      },
+      {
+        "data": {
+          "id": "APlayerController--owns-->concept:OwnerOnlyRPC",
+          "source": "APlayerController",
+          "target": "concept:OwnerOnlyRPC",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "承载 Client/Server owner RPC。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ULocalPlayer--owns-->ULocalPlayerSubsystem",
+          "source": "ULocalPlayer",
+          "target": "ULocalPlayerSubsystem",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "本地玩家服务。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ULocalPlayer--configures-->ULyraHeroComponent",
+          "source": "ULocalPlayer",
+          "target": "ULyraHeroComponent",
+          "relation": "configures",
+          "domain": "ue5_code",
+          "description": "本地输入配置驱动 HeroComponent。"
+        },
+        "classes": "edge-configures"
+      },
+      {
+        "data": {
+          "id": "ULyraHeroComponent--injects-->concept:LocalUI",
+          "source": "ULyraHeroComponent",
+          "target": "concept:LocalUI",
+          "relation": "injects",
+          "domain": "ue5_code",
+          "description": "本地体验注入输入与 UI。"
+        },
+        "classes": "edge-injects"
+      },
+      {
+        "data": {
+          "id": "ALyraGameMode--owns-->concept:AuthoritySpawn",
+          "source": "ALyraGameMode",
+          "target": "concept:AuthoritySpawn",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "服务器执行 Pawn 生成与重生。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ALyraGameState--replicates_to-->net:all",
+          "source": "ALyraGameState",
+          "target": "net:all",
+          "relation": "replicates_to",
+          "domain": "ue5_code",
+          "description": "Experience 状态复制到客户端。"
+        },
+        "classes": "edge-replicates-to"
+      },
+      {
+        "data": {
+          "id": "ALyraPlayerState--owns-->ULyraAbilitySystemComponent",
+          "source": "ALyraPlayerState",
+          "target": "ULyraAbilitySystemComponent",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "ASC 随 PlayerState 存续。"
+        },
+        "classes": "edge-owns"
+      }
+    ]
+  }
+}

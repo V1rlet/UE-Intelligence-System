@@ -2,12 +2,144 @@
   "meta": {
     "domain": "ue5_code",
     "subsystem": "classes",
-    "generated_at": "2026-07-02T06:20:12.559Z",
+    "generated_at": "2026-07-02T09:04:41.440Z",
     "generator": "ue5-code-adapter/extract-classes@0.1.0",
-    "source_root": "G:/UnrealProject/Sabotage/Source"
+    "format_version": 2,
+    "provenance": {
+      "schema_version": 1,
+      "status": "unknown",
+      "source_kind": "unknown",
+      "source_roots": [
+        "G:/UnrealProject/Sabotage/Source"
+      ]
+    },
+    "coverage": {
+      "status": "unknown",
+      "discovered_files": null,
+      "consumed_files": null,
+      "skipped_files": null,
+      "failed_files": null,
+      "diagnostics": [
+        {
+          "code": "legacy-v1-no-provenance-or-coverage"
+        }
+      ]
+    }
   },
   "elements": {
     "nodes": [
+      {
+        "data": {
+          "id": "lifecycle:PostInitProperties",
+          "label": "PostInitProperties",
+          "type": "lifecycle_step",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "属性初始化完成后调用；CDO 构造阶段也会触发，此时 World 可能尚未就绪",
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:OnConstruction",
+          "label": "OnConstruction",
+          "type": "lifecycle_step",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "构造脚本执行点；编辑器中拖动/修改属性会反复触发",
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:PreInitializeComponents",
+          "label": "PreInitializeComponents",
+          "type": "lifecycle_step",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "组件 InitializeComponent 之前的准备点",
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:PostInitializeComponents",
+          "label": "PostInitializeComponents",
+          "type": "lifecycle_step",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "全部组件初始化完毕；访问组件的最早安全时机",
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:BeginPlay",
+          "label": "BeginPlay",
+          "type": "lifecycle_step",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "游戏开始/Actor 生成完成；gameplay 逻辑的常规起点",
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 1
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:Tick",
+          "label": "Tick",
+          "type": "lifecycle_step",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "每帧调用（bCanEverTick）；可事件化的逻辑不要放这里",
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:EndPlay",
+          "label": "EndPlay",
+          "type": "lifecycle_step",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "Actor 移除/关卡卸载/游戏结束时调用，做清理",
+          "visibility": "explored",
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        }
+      },
       {
         "data": {
           "id": "ASabotageCharacter",
@@ -477,7 +609,7 @@
           },
           "metrics": {
             "in_degree": 0,
-            "out_degree": 0
+            "out_degree": 1
           }
         }
       },
@@ -536,6 +668,66 @@
       }
     ],
     "edges": [
+      {
+        "data": {
+          "id": "lifecycle:PostInitProperties--lifecycle_sequence-->lifecycle:OnConstruction",
+          "source": "lifecycle:PostInitProperties",
+          "target": "lifecycle:OnConstruction",
+          "relation": "lifecycle_sequence",
+          "domain": "ue5_code",
+          "order": 0
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:OnConstruction--lifecycle_sequence-->lifecycle:PreInitializeComponents",
+          "source": "lifecycle:OnConstruction",
+          "target": "lifecycle:PreInitializeComponents",
+          "relation": "lifecycle_sequence",
+          "domain": "ue5_code",
+          "order": 1
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:PreInitializeComponents--lifecycle_sequence-->lifecycle:PostInitializeComponents",
+          "source": "lifecycle:PreInitializeComponents",
+          "target": "lifecycle:PostInitializeComponents",
+          "relation": "lifecycle_sequence",
+          "domain": "ue5_code",
+          "order": 2
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:PostInitializeComponents--lifecycle_sequence-->lifecycle:BeginPlay",
+          "source": "lifecycle:PostInitializeComponents",
+          "target": "lifecycle:BeginPlay",
+          "relation": "lifecycle_sequence",
+          "domain": "ue5_code",
+          "order": 3
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:BeginPlay--lifecycle_sequence-->lifecycle:Tick",
+          "source": "lifecycle:BeginPlay",
+          "target": "lifecycle:Tick",
+          "relation": "lifecycle_sequence",
+          "domain": "ue5_code",
+          "order": 4
+        }
+      },
+      {
+        "data": {
+          "id": "lifecycle:Tick--lifecycle_sequence-->lifecycle:EndPlay",
+          "source": "lifecycle:Tick",
+          "target": "lifecycle:EndPlay",
+          "relation": "lifecycle_sequence",
+          "domain": "ue5_code",
+          "order": 5
+        }
+      },
       {
         "data": {
           "id": "ASabotageCharacter--inherits-->ACharacter",
@@ -621,6 +813,15 @@
           "relation": "composes",
           "domain": "ue5_code",
           "description": "MobileControlsWidget"
+        }
+      },
+      {
+        "data": {
+          "id": "ASabotagePlayerController::BeginPlay--overrides-->lifecycle:BeginPlay",
+          "source": "ASabotagePlayerController::BeginPlay",
+          "target": "lifecycle:BeginPlay",
+          "relation": "overrides",
+          "domain": "ue5_code"
         }
       }
     ]

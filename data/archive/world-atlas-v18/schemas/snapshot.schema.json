@@ -1,0 +1,24 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "GraphBrain Atlas Snapshot",
+	"description": "命名快照（world-atlas 深拷贝 + meta），data/world-projects/<project>/snapshots/",
+	"type": "object",
+	"required": ["meta", "atlas"],
+	"properties": {
+		"meta": {
+			"type": "object",
+			"required": ["format_version", "name", "created_at", "base_version", "atlas_id", "project_id"],
+			"properties": {
+				"format_version": { "const": 1 },
+				"name": { "type": "string", "minLength": 1 },
+				"created_at": { "type": "string" },
+				"base_version": { "type": "integer" },
+				"atlas_id": { "type": "string" },
+				"project_id": { "type": "string" }
+			},
+			"additionalProperties": false
+		},
+		"atlas": { "type": "object" }
+	},
+	"additionalProperties": false
+}

@@ -1,130 +1,152 @@
-// Graph Brain / core/schema - JSON Schema 验证 CLI：对 graph / annotation 文件做结构校验
-//
-// 用法：
-//   npx tsx core/schema/validate.ts <file...>        显式指定文件
-//   npm run validate:examples                        验证 core/schema/examples/ 下的示例
-//
-// 文件类型判定：*.cyto.json → graph schema；*_annotations.json → annotation schema；
-// 其余按内容嗅探（含 elements 键 → graph；顶层数组 → annotation）。
-//
-// DECISION: 图谱文件采用 { meta, elements: { nodes, edges } } 包装，而非裸元素数组
-// REASON: elements 子对象可直接传给 cytoscape({ elements })，meta 携带 domain/生成时间
-//         等溯源信息，供增量更新（P4U2）和陈旧检测（P4U3）使用，不污染节点数据。
-// DATE: 2026-07-02
-//
-// DECISION: 全项目统一 TypeScript 技术栈（schema 验证用 ajv，Adapter 解析也用 TS/Node）
-// REASON: 查看器已定 React+TS，统一后只维护一套工具链与类型定义；.Build.cs/.h 的
-//         解析靠正则与词法扫描即可，无需 Python 生态。
-// DATE: 2026-07-02
+// Validate active ue5_code graphs and canonical reading-context. Archives are intentionally excluded.
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { basename, join, resolve } from "node:path";
+import {
+	checkAnnotationReferences,
+	checkAnnotationSchema,
+	checkChangeReportSchema,
+	checkGraphReferences,
+	checkGraphSchema,
+	checkReadingContextSchema,
+	type AnnotationShape,
+	type ChangeReportShape,
+	type GraphShape,
+	type ReadingContextShape,
+} from "./graph-checks.js";
+import { checkChangeReportConsistency, type ChangeReport } from "../query/change-report.js";
+import {
+	publicationDirectories,
+	validatePublishedArtifacts,
+	visiblePublishedFiles,
+} from "../store/data-publication.js";
 
-import { readFileSync } from "node:fs";
-import { basename, dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { Ajv } from "ajv";
-import addFormats from "ajv-formats";
+type Kind = "graph" | "annotation" | "reading_context" | "change_report";
 
-const SCHEMA_DIR = dirname(fileURLToPath(import.meta.url));
-
-// ████████████████████████████████████████████████████████████████████████████
-//  Ajv 初始化：注册 node / edge / annotation / graph 四个 schema
-// ████████████████████████████████████████████████████████████████████████████
-
-function loadSchema(name: string): object {
-	return JSON.parse(readFileSync(join(SCHEMA_DIR, name), "utf-8"));
+function detectKind(path: string, content: unknown): Kind {
+	if (basename(path).endsWith(".change.json")) return "change_report";
+	if (basename(path).endsWith(".cyto.json")) return "graph";
+	if (basename(path) === "ue5_code.json" && !Array.isArray(content)) return "reading_context";
+	if (basename(path).endsWith("_annotations.json") || Array.isArray(content)) return "annotation";
+	throw new Error(`无法判定活动文件类型: ${path}`);
 }
 
-const ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
-addFormats.default ? addFormats.default(ajv) : (addFormats as unknown as (a: Ajv) => void)(ajv);
-
-ajv.addSchema(loadSchema("node.schema.json"));
-ajv.addSchema(loadSchema("edge.schema.json"));
-
-const validateGraph = ajv.compile(loadSchema("graph.schema.json"));
-const validateAnnotation = ajv.compile(loadSchema("annotation.schema.json"));
-
-// ████████████████████████████████████████████████████████████████████████████
-//  文件类型判定 + 单文件验证
-// ████████████████████████████████████████████████████████████████████████████
-
-type FileKind = "graph" | "annotation";
-
-function detectKind(filePath: string, content: unknown): FileKind {
-	const name = basename(filePath);
-	if (name.endsWith(".cyto.json")) return "graph";
-	if (name.endsWith("_annotations.json")) return "annotation";
-	if (Array.isArray(content)) return "annotation";
-	if (content && typeof content === "object" && "elements" in content) return "graph";
-	throw new Error(`无法判定文件类型（既不像 graph 也不像 annotation）: ${filePath}`);
+function parse(path: string): unknown {
+	return JSON.parse(readFileSync(path, "utf8").replace(/^\uFEFF/, ""));
 }
 
-/** 除 schema 结构校验外的图内引用一致性检查：边端点必须指向存在的节点 */
-function checkGraphReferences(graph: {
-	elements: {
-		nodes: { data: { id: string; parent?: string } }[];
-		edges: { data: { id: string; source: string; target: string } }[];
-	};
-}): string[] {
-	const errors: string[] = [];
-	const nodeIds = new Set(graph.elements.nodes.map((n) => n.data.id));
-
-	const dupCheck = new Set<string>();
-	for (const n of graph.elements.nodes) {
-		if (dupCheck.has(n.data.id)) errors.push(`重复的节点 id: ${n.data.id}`);
-		dupCheck.add(n.data.id);
-		if (n.data.parent && !nodeIds.has(n.data.parent)) {
-			errors.push(`节点 ${n.data.id} 的 parent 不存在: ${n.data.parent}`);
-		}
-	}
-	for (const e of graph.elements.edges) {
-		if (!nodeIds.has(e.data.source)) errors.push(`边 ${e.data.id} 的 source 不存在: ${e.data.source}`);
-		if (!nodeIds.has(e.data.target)) errors.push(`边 ${e.data.id} 的 target 不存在: ${e.data.target}`);
-	}
-	return errors;
+function collectDefaultFiles(): string[] {
+	const directories = publicationDirectories(resolve("data"));
+	const graphs = visiblePublishedFiles(directories.graphs, directories.publications, "graph")
+		.map((name) => join(directories.graphs, name));
+	const changes = visiblePublishedFiles(directories.changes, directories.publications, "change_report")
+		.map((name) => join(directories.changes, name));
+	const readingDirectory = resolve("data/reading-context");
+	const reading = existsSync(readingDirectory)
+		? readdirSync(readingDirectory).filter((name) => name === "ue5_code.json").map((name) => join(readingDirectory, name))
+		: [];
+	return [...graphs, ...changes, ...reading].sort();
 }
 
-function validateFile(filePath: string): boolean {
-	let content: unknown;
-	try {
-		// Windows 编辑器/PowerShell 写出的 UTF-8 常带 BOM，JSON.parse 不接受，先剥离
-		content = JSON.parse(readFileSync(filePath, "utf-8").replace(/^﻿/, ""));
-	} catch (err) {
-		console.error(`✗ ${filePath}\n  读取/解析失败: ${(err as Error).message}`);
-		return false;
-	}
-
-	const kind = detectKind(filePath, content);
-	const validator = kind === "graph" ? validateGraph : validateAnnotation;
-
-	const errors: string[] = [];
-	if (!validator(content)) {
-		for (const e of validator.errors ?? []) {
-			errors.push(`${e.instancePath || "(root)"} ${e.message ?? ""}`);
-		}
-	} else if (kind === "graph") {
-		errors.push(...checkGraphReferences(content as Parameters<typeof checkGraphReferences>[0]));
-	}
-
-	if (errors.length > 0) {
-		console.error(`✗ ${filePath}  [${kind}]`);
-		for (const msg of errors) console.error(`    - ${msg}`);
-		return false;
-	}
-	console.log(`✓ ${filePath}  [${kind}]`);
-	return true;
-}
-
-// ████████████████████████████████████████████████████████████████████████████
-//  入口
-// ████████████████████████████████████████████████████████████████████████████
-
-const files = process.argv.slice(2);
-if (files.length === 0) {
-	console.error("用法: npx tsx core/schema/validate.ts <file.json...>");
+const requested = process.argv.slice(2);
+const fullRepository = requested.length === 0;
+const targets = fullRepository ? collectDefaultFiles() : requested;
+if (targets.length === 0) {
+	console.error("未找到活动 ue5_code 图或 reading-context 文件");
 	process.exit(2);
 }
 
-let allOk = true;
-for (const f of files) {
-	allOk = validateFile(f) && allOk;
+let ok = true;
+if (fullRepository) {
+	const publicationErrors = validatePublishedArtifacts(publicationDirectories(resolve("data")));
+	if (publicationErrors.length > 0) {
+		ok = false;
+		console.error("✗ data/publications/ue5_code.json [publication_state]");
+		for (const error of publicationErrors) console.error(`  - ${error}`);
+	} else if (existsSync(resolve("data/publications/ue5_code.json"))) {
+		console.log("✓ data/publications/ue5_code.json [publication_state]");
+	}
 }
-process.exit(allOk ? 0 : 1);
+const graphsBySubsystem = new Map<string, GraphShape[]>();
+const graphsByFile = new Map<string, GraphShape>();
+const changeReports: Array<{ path: string; report: ChangeReportShape }> = [];
+for (const path of targets) {
+	try {
+		const content = parse(path);
+		const kind = detectKind(path, content);
+		const schemaErrors = kind === "graph"
+			? checkGraphSchema(content)
+			: kind === "reading_context"
+				? checkReadingContextSchema(content)
+				: kind === "change_report"
+					? checkChangeReportSchema(content)
+					: checkAnnotationSchema(content);
+		const errors = kind === "graph" && schemaErrors.length === 0
+			? checkGraphReferences(content as GraphShape)
+			: kind === "change_report" && schemaErrors.length === 0
+				? checkChangeReportConsistency(content as ChangeReport)
+				: schemaErrors;
+		if (errors.length) {
+			ok = false;
+			console.error(`✗ ${path} [${kind}]`);
+			for (const error of errors) console.error(`  - ${error}`);
+		} else {
+			console.log(`✓ ${path} [${kind}]`);
+			if (kind === "graph") {
+				const graph = content as GraphShape;
+				const subsystem = String(graph.meta.subsystem ?? "");
+				graphsBySubsystem.set(subsystem, [...(graphsBySubsystem.get(subsystem) ?? []), graph]);
+				graphsByFile.set(basename(path), graph);
+			}
+			if (kind === "change_report") changeReports.push({ path, report: content as ChangeReportShape });
+		}
+	} catch (error) {
+		ok = false;
+		console.error(`✗ ${path}\n  ${(error as Error).message}`);
+	}
+}
+
+if (fullRepository && ok) {
+	for (const { path, report } of changeReports) {
+		const current = graphsByFile.get(report.current.file);
+		const errors: string[] = [];
+		if (!current) errors.push(`当前快照不在活动图目录中: ${report.current.file}`);
+		else {
+			const graphFingerprint = current.meta.provenance?.fingerprint?.value ?? null;
+			if (report.current.fingerprint !== graphFingerprint) {
+				errors.push(`当前快照指纹不一致: report=${report.current.fingerprint ?? "null"}, graph=${graphFingerprint ?? "null"}`);
+			}
+			if (String(current.meta.subsystem ?? "") !== report.subsystem) {
+				errors.push(`当前快照 subsystem 不一致: report=${report.subsystem}, graph=${String(current.meta.subsystem ?? "")}`);
+			}
+		}
+		if (errors.length) {
+			ok = false;
+			console.error(`✗ ${path} [change_report_references]`);
+			for (const error of errors) console.error(`  - ${error}`);
+		} else console.log(`✓ ${path} [change_report_references]`);
+	}
+
+	for (const path of targets.filter((item) => basename(item) === "ue5_code.json")) {
+		const context = parse(path) as ReadingContextShape;
+		for (const subsystem of [...new Set(context.annotations.map((entry) => entry.subsystem))].sort()) {
+		const graphs = graphsBySubsystem.get(subsystem) ?? [];
+		if (graphs.length === 0) {
+			ok = false;
+			console.error(`✗ ${path} [annotation_references:${subsystem}]\n  - 没有 ue5_code/${subsystem} 图；应迁入孤立标注归档`);
+			continue;
+		}
+		const merged: GraphShape = { ...graphs[0], elements: { nodes: graphs.flatMap((graph) => graph.elements.nodes), edges: graphs.flatMap((graph) => graph.elements.edges) } };
+		const entries: AnnotationShape[] = context.annotations
+			.filter((entry) => entry.subsystem === subsystem)
+			.map((entry) => ({ node_id: entry.node_id, domain: context.domain, annotations: entry.annotations }));
+		const errors = checkAnnotationReferences(entries, merged);
+		if (errors.length) {
+			ok = false;
+			console.error(`✗ ${path} [annotation_references:${subsystem}]`);
+			for (const error of errors) console.error(`  - ${error}`);
+		} else console.log(`✓ ${path} [annotation_references:${subsystem}]`);
+		}
+	}
+}
+
+process.exit(ok ? 0 : 1);

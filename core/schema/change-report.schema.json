@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-brain.local/schema/change-report.schema.json",
+  "title": "GraphBrain UE Code Change Report",
+  "type": "object",
+  "required": ["format_version", "domain", "subsystem", "generated_at", "generator", "baseline", "current", "summary", "changes", "impact"],
+  "properties": {
+    "format_version": { "const": 1 },
+    "domain": { "const": "ue5_code" },
+    "subsystem": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "generator": { "type": "string", "minLength": 1 },
+    "baseline": { "$ref": "#/definitions/snapshot" },
+    "current": { "$ref": "#/definitions/snapshot" },
+    "summary": {
+      "type": "object",
+      "required": ["nodes", "edges", "direct_nodes", "affected_nodes", "affected_modules"],
+      "properties": {
+        "nodes": { "$ref": "#/definitions/counts" },
+        "edges": { "$ref": "#/definitions/counts" },
+        "direct_nodes": { "type": "integer", "minimum": 0 },
+        "affected_nodes": { "type": "integer", "minimum": 0 },
+        "affected_modules": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "changes": {
+      "type": "object",
+      "required": ["added_nodes", "removed_nodes", "changed_nodes", "added_edges", "removed_edges", "changed_edges"],
+      "properties": {
+        "added_nodes": { "type": "array", "items": { "$ref": "#/definitions/node" } },
+        "removed_nodes": { "type": "array", "items": { "$ref": "#/definitions/node" } },
+        "changed_nodes": { "type": "array", "items": { "$ref": "#/definitions/node" } },
+        "added_edges": { "type": "array", "items": { "$ref": "#/definitions/edge" } },
+        "removed_edges": { "type": "array", "items": { "$ref": "#/definitions/edge" } },
+        "changed_edges": { "type": "array", "items": { "$ref": "#/definitions/edge" } }
+      },
+      "additionalProperties": false
+    },
+    "impact": {
+      "type": "object",
+      "required": ["direct_node_ids", "affected_node_ids", "modules"],
+      "properties": {
+        "direct_node_ids": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "affected_node_ids": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["module", "direct", "affected"],
+            "properties": {
+              "module": { "type": "string" },
+              "direct": { "type": "integer", "minimum": 0 },
+              "affected": { "type": "integer", "minimum": 0 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "snapshot": {
+      "type": "object",
+      "required": ["file", "generated_at", "fingerprint"],
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "generated_at": { "type": ["string", "null"], "format": "date-time" },
+        "fingerprint": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "counts": {
+      "type": "object",
+      "required": ["added", "removed", "changed"],
+      "properties": {
+        "added": { "type": "integer", "minimum": 0 },
+        "removed": { "type": "integer", "minimum": 0 },
+        "changed": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "label", "type", "module", "source_path"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "type": { "type": "string" },
+        "module": { "type": ["string", "null"] },
+        "source_path": { "type": ["string", "null"] },
+        "changed_fields": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "edge": {
+      "type": "object",
+      "required": ["id", "source", "target", "relation"],
+      "properties": {
+        "id": { "type": "string" },
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "relation": { "type": "string" },
+        "changed_fields": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

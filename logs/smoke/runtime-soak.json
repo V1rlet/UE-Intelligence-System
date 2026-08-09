@@ -1,0 +1,111 @@
+{
+  "format_version": 1,
+  "kind": "graphbrain_runtime_stability",
+  "base_url": "http://127.0.0.1:3130",
+  "started_at": "2026-08-09T13:51:08.303Z",
+  "completed_at": "2026-08-09T13:51:34.995Z",
+  "cycles": 12,
+  "warmup_cycles": 3,
+  "budgets": {
+    "heap_slope_mib_per_cycle": 0.5,
+    "heap_growth_mib": 12,
+    "dom_nodes_slope_per_cycle": 30,
+    "event_listeners_slope_per_cycle": 8,
+    "max_documents": 1
+  },
+  "samples": [
+    {
+      "cycle": 1,
+      "js_heap_used_bytes": 7588252,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 2,
+      "js_heap_used_bytes": 8022132,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 3,
+      "js_heap_used_bytes": 8316052,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 4,
+      "js_heap_used_bytes": 8468668,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 5,
+      "js_heap_used_bytes": 8748812,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 6,
+      "js_heap_used_bytes": 8832488,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 7,
+      "js_heap_used_bytes": 9058188,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 8,
+      "js_heap_used_bytes": 8875096,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 9,
+      "js_heap_used_bytes": 8940232,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 10,
+      "js_heap_used_bytes": 8960012,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 11,
+      "js_heap_used_bytes": 9171820,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    },
+    {
+      "cycle": 12,
+      "js_heap_used_bytes": 8981036,
+      "dom_nodes": 2410,
+      "event_listeners": 413,
+      "documents": 1
+    }
+  ],
+  "trend": {
+    "heap_slope_mib_per_cycle": 0.055,
+    "heap_growth_mib": 0.489,
+    "dom_nodes_slope_per_cycle": 0,
+    "event_listeners_slope_per_cycle": 0,
+    "max_documents": 1
+  },
+  "runtime_diagnostics": [],
+  "passed": true
+}

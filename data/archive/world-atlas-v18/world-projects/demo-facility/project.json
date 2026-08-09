@@ -1,0 +1,21 @@
+{
+  "project_id": "demo-facility",
+  "label": "河谷数据设施",
+  "description": "把关卡拓扑、熄灯行动任务线与设施世界观投影到同一张可切换阶段的行动地图。",
+  "atlas": "world-atlas.json",
+  "quest_program": "quest-program.json",
+  "default_scenario": "infiltration",
+  "sources": [
+    { "domain": "level_design", "subsystem": "demo-facility", "revision_policy": "latest" },
+    { "domain": "narrative", "subsystem": "demo-facility", "revision_policy": "latest" },
+    { "domain": "quest", "subsystem": "demo-facility", "revision_policy": "latest" }
+  ],
+  "views": {
+    "world_relations": {
+      "kind": "graph",
+      "domain": "design_workspace",
+      "subsystem": "level-narrative-mindmap",
+      "revision_policy": "latest"
+    }
+  }
+}

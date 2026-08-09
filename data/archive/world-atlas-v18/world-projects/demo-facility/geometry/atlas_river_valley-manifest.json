@@ -1,0 +1,448 @@
+{
+  "schema": "graphbrain-geometry-manifest/1",
+  "atlas_id": "atlas_river_valley",
+  "project_id": "demo-facility",
+  "generated_at": "2026-08-06T07:26:35.571Z",
+  "unit": "meter",
+  "spaces": [
+    {
+      "id": "region_valley",
+      "label": "雾岭河谷",
+      "kind": "region"
+    },
+    {
+      "id": "region_perimeter",
+      "label": "外围警戒带",
+      "kind": "region"
+    },
+    {
+      "id": "region_main",
+      "label": "主楼作业区",
+      "kind": "region"
+    },
+    {
+      "id": "region_underground",
+      "label": "地下动力层",
+      "kind": "region"
+    },
+    {
+      "id": "region_core",
+      "label": "数据核心区",
+      "kind": "region"
+    },
+    {
+      "id": "site_entry",
+      "label": "西侧山脊",
+      "kind": "level_entry",
+      "x": 106,
+      "y": 538,
+      "elevation_m": 58,
+      "feature": {
+        "kind": "spawn",
+        "radius_m": 18
+      }
+    },
+    {
+      "id": "site_courtyard",
+      "label": "前院",
+      "kind": "site",
+      "x": 302,
+      "y": 340,
+      "elevation_m": 22,
+      "feature": {
+        "kind": "encounter",
+        "radius_m": 58
+      }
+    },
+    {
+      "id": "site_lobby",
+      "label": "主楼大厅",
+      "kind": "site",
+      "x": 508,
+      "y": 306,
+      "elevation_m": 34,
+      "feature": {
+        "kind": "traversal",
+        "radius_m": 24
+      }
+    },
+    {
+      "id": "site_guardroom",
+      "label": "警卫室",
+      "kind": "site",
+      "x": 578,
+      "y": 196,
+      "elevation_m": 40,
+      "feature": {
+        "kind": "resource",
+        "radius_m": 20
+      }
+    },
+    {
+      "id": "site_maintenance",
+      "label": "维修通道",
+      "kind": "site",
+      "x": 646,
+      "y": 382,
+      "elevation_m": 30,
+      "feature": {
+        "kind": "traversal",
+        "radius_m": 32
+      }
+    },
+    {
+      "id": "site_roof",
+      "label": "屋顶制高点",
+      "kind": "landmark",
+      "x": 680,
+      "y": 208,
+      "elevation_m": 74,
+      "feature": {
+        "kind": "vista",
+        "radius_m": 72
+      }
+    },
+    {
+      "id": "site_generator",
+      "label": "发电机房",
+      "kind": "site",
+      "x": 530,
+      "y": 526,
+      "elevation_m": -28,
+      "feature": {
+        "kind": "resource",
+        "radius_m": 36
+      }
+    },
+    {
+      "id": "site_vent",
+      "label": "通风管入口",
+      "kind": "level_entry",
+      "x": 326,
+      "y": 486,
+      "elevation_m": 6,
+      "feature": {
+        "kind": "traversal",
+        "radius_m": 12
+      }
+    },
+    {
+      "id": "site_server",
+      "label": "服务器核心",
+      "kind": "site",
+      "x": 824,
+      "y": 324,
+      "elevation_m": 50,
+      "feature": {
+        "kind": "encounter",
+        "radius_m": 44
+      }
+    },
+    {
+      "id": "site_extract",
+      "label": "后坡撤离点",
+      "kind": "level_entry",
+      "x": 886,
+      "y": 558,
+      "elevation_m": 36,
+      "feature": {
+        "kind": "spawn",
+        "radius_m": 26
+      }
+    }
+  ],
+  "routes": [
+    {
+      "id": "route_entry_yard",
+      "label": "山脊潜入线",
+      "from": "site_entry",
+      "to": "site_courtyard",
+      "points": [
+        {
+          "x": 160,
+          "y": 452,
+          "elevation_m": 48
+        },
+        {
+          "x": 232,
+          "y": 402,
+          "elevation_m": 31
+        }
+      ]
+    },
+    {
+      "id": "route_yard_lobby",
+      "label": "正门通道",
+      "from": "site_courtyard",
+      "to": "site_lobby",
+      "points": [
+        {
+          "x": 390,
+          "y": 324,
+          "elevation_m": 27
+        }
+      ]
+    },
+    {
+      "id": "route_lobby_guard",
+      "label": "警卫室走廊",
+      "from": "site_lobby",
+      "to": "site_guardroom",
+      "points": [
+        {
+          "x": 544,
+          "y": 252,
+          "elevation_m": 37
+        }
+      ]
+    },
+    {
+      "id": "route_lobby_maintenance",
+      "label": "维修走廊",
+      "from": "site_lobby",
+      "to": "site_maintenance",
+      "points": [
+        {
+          "x": 568,
+          "y": 342,
+          "elevation_m": 32
+        }
+      ]
+    },
+    {
+      "id": "route_yard_vent",
+      "label": "格栅捷径",
+      "from": "site_courtyard",
+      "to": "site_vent",
+      "points": [
+        {
+          "x": 304,
+          "y": 412,
+          "elevation_m": 15
+        }
+      ]
+    },
+    {
+      "id": "route_vent_server",
+      "label": "管网坠入路线",
+      "from": "site_vent",
+      "to": "site_server",
+      "points": [
+        {
+          "x": 450,
+          "y": 544,
+          "elevation_m": -8
+        },
+        {
+          "x": 650,
+          "y": 502,
+          "elevation_m": -22
+        },
+        {
+          "x": 760,
+          "y": 410,
+          "elevation_m": 18
+        }
+      ]
+    },
+    {
+      "id": "route_maintenance_generator",
+      "label": "动力层楼梯",
+      "from": "site_maintenance",
+      "to": "site_generator",
+      "points": [
+        {
+          "x": 618,
+          "y": 458,
+          "elevation_m": 4
+        }
+      ]
+    },
+    {
+      "id": "route_maintenance_server",
+      "label": "机房门禁",
+      "from": "site_maintenance",
+      "to": "site_server",
+      "points": [
+        {
+          "x": 730,
+          "y": 366,
+          "elevation_m": 39
+        }
+      ]
+    },
+    {
+      "id": "route_server_extract",
+      "label": "警报撤离线",
+      "from": "site_server",
+      "to": "site_extract",
+      "points": [
+        {
+          "x": 902,
+          "y": 402,
+          "elevation_m": 44
+        },
+        {
+          "x": 920,
+          "y": 490,
+          "elevation_m": 39
+        }
+      ]
+    }
+  ],
+  "volumes": [
+    {
+      "id": "wb_encounter_volume",
+      "label": "大厅遭遇体积",
+      "x": 520,
+      "y": 330,
+      "z": 12,
+      "size": {
+        "x": 240,
+        "y": 170,
+        "z": 75
+      },
+      "rotation": 0
+    }
+  ],
+  "beats": [
+    {
+      "id": "beat_briefing",
+      "label": "行动简报",
+      "kind": "story",
+      "anchor_space": "site_entry",
+      "x": 106,
+      "y": 538,
+      "duration_seconds": 4,
+      "transitions": [
+        {
+          "target_beat_id": "beat_patrol",
+          "trigger": "advance",
+          "cut": "hard"
+        }
+      ]
+    },
+    {
+      "id": "beat_patrol",
+      "label": "绕过巡逻",
+      "kind": "character",
+      "anchor_space": "site_courtyard",
+      "x": 302,
+      "y": 340,
+      "duration_seconds": 3,
+      "transitions": [
+        {
+          "target_beat_id": "beat_keycard",
+          "trigger": "advance",
+          "cut": "hard"
+        }
+      ]
+    },
+    {
+      "id": "beat_keycard",
+      "label": "正门路线：钥匙卡",
+      "kind": "side_quest",
+      "anchor_space": "site_guardroom",
+      "x": 578,
+      "y": 196,
+      "duration_seconds": 3,
+      "transitions": [
+        {
+          "target_beat_id": "beat_vent",
+          "trigger": "advance",
+          "cut": "hard"
+        }
+      ]
+    },
+    {
+      "id": "beat_vent",
+      "label": "通风管潜入路线",
+      "kind": "side_quest",
+      "anchor_space": "site_vent",
+      "x": 326,
+      "y": 486,
+      "duration_seconds": 4,
+      "transitions": [
+        {
+          "target_beat_id": "beat_blackout",
+          "trigger": "advance",
+          "cut": "hard"
+        }
+      ]
+    },
+    {
+      "id": "beat_blackout",
+      "label": "切断设施供电",
+      "kind": "side_quest",
+      "anchor_space": "site_generator",
+      "x": 530,
+      "y": 526,
+      "duration_seconds": 3,
+      "transitions": [
+        {
+          "target_beat_id": "beat_sabotage",
+          "trigger": "advance",
+          "cut": "hard"
+        }
+      ]
+    },
+    {
+      "id": "beat_sabotage",
+      "label": "销毁服务器阵列",
+      "kind": "main_quest",
+      "anchor_space": "site_server",
+      "x": 824,
+      "y": 324,
+      "duration_seconds": 4,
+      "transitions": [
+        {
+          "target_beat_id": "beat_alarm",
+          "trigger": "advance",
+          "cut": "fade"
+        }
+      ]
+    },
+    {
+      "id": "beat_alarm",
+      "label": "设施进入警报状态",
+      "kind": "world_change",
+      "anchor_space": "site_server",
+      "x": 824,
+      "y": 324,
+      "duration_seconds": 3,
+      "transitions": [
+        {
+          "target_beat_id": "beat_escape",
+          "trigger": "advance",
+          "cut": "hard"
+        }
+      ]
+    },
+    {
+      "id": "beat_escape",
+      "label": "沿后坡撤离",
+      "kind": "main_quest",
+      "anchor_space": "site_extract",
+      "x": 886,
+      "y": 558,
+      "duration_seconds": 4,
+      "transitions": [
+        {
+          "target_beat_id": "beat_facility_lore",
+          "trigger": "advance",
+          "cut": "fade"
+        }
+      ]
+    },
+    {
+      "id": "beat_facility_lore",
+      "label": "河谷设施档案",
+      "kind": "lore",
+      "anchor_space": "site_lobby",
+      "x": 508,
+      "y": 306,
+      "duration_seconds": 3,
+      "transitions": []
+    }
+  ]
+}

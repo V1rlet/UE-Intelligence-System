@@ -1,0 +1,45 @@
+{
+  "format_version": 1,
+  "domain": "ue5_code",
+  "subsystem": "project",
+  "generated_at": "2026-08-09T14:31:05.092Z",
+  "generator": "graphbrain/change-report@1",
+  "baseline": {
+    "file": "ue5_code_project_2026-08-09.cyto.json",
+    "generated_at": "2026-08-09T06:50:39.983Z",
+    "fingerprint": "4f842c7f0931d646bb534af0c18a250d28190addc83903e34dec6c52e8da5838"
+  },
+  "current": {
+    "file": "ue5_code_project__gbtx-5a8d5ccef3162a85.cyto.json",
+    "generated_at": "2026-08-09T14:31:04.888Z",
+    "fingerprint": "4f842c7f0931d646bb534af0c18a250d28190addc83903e34dec6c52e8da5838"
+  },
+  "summary": {
+    "nodes": {
+      "added": 0,
+      "removed": 0,
+      "changed": 0
+    },
+    "edges": {
+      "added": 0,
+      "removed": 0,
+      "changed": 0
+    },
+    "direct_nodes": 0,
+    "affected_nodes": 0,
+    "affected_modules": 0
+  },
+  "changes": {
+    "added_nodes": [],
+    "removed_nodes": [],
+    "changed_nodes": [],
+    "added_edges": [],
+    "removed_edges": [],
+    "changed_edges": []
+  },
+  "impact": {
+    "direct_node_ids": [],
+    "affected_node_ids": [],
+    "modules": []
+  }
+}

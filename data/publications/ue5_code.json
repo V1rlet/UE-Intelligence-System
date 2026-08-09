@@ -1,0 +1,46 @@
+{
+  "format_version": 1,
+  "domain": "ue5_code",
+  "revision": 5,
+  "updated_at": "2026-08-09T18:43:07.656Z",
+  "publications": [
+    {
+      "subsystem": "project",
+      "generations": [
+        {
+          "id": "generation-954a32c26ff8fd14a47063a8fda49659b1e0d5631b048815163c207d03eedb52",
+          "published_at": "2026-08-09T18:43:07.656Z",
+          "graph": {
+            "file": "ue5_code_project__gbtx-fd3a75730751bbce.cyto.json",
+            "sha256": "fd3a75730751bbceb5c074e0704c6e4295e33ef3534afed412f0926993060dfc"
+          },
+          "change_report": null
+        },
+        {
+          "id": "generation-ce69cf6153787f36bfdcf647b8e5ac10ccf3cb209cac37784a5ae2649b7b1f31",
+          "published_at": "2026-08-09T14:32:56.891Z",
+          "graph": {
+            "file": "ue5_code_project__gbtx-67ab71ff6944dbbc.cyto.json",
+            "sha256": "67ab71ff6944dbbcb73fbb9843c64206cbd387cdb11880da3283680fa47d8c67"
+          },
+          "change_report": {
+            "file": "ue5_code_project__gbtx-ab618bd86ee8e52d.change.json",
+            "sha256": "ab618bd86ee8e52d21944bba9952c31d29c14f2c3fd01c3c99f0fbad8595b25e"
+          }
+        },
+        {
+          "id": "generation-6b2ca1211276dd1feedcb8a1b37faca40c27ff966ac6dc93ab67d68efb51b51b",
+          "published_at": "2026-08-09T14:31:05.109Z",
+          "graph": {
+            "file": "ue5_code_project__gbtx-5a8d5ccef3162a85.cyto.json",
+            "sha256": "5a8d5ccef3162a85960349eafe7f21f904a25afffd699131d4fec572dce5f773"
+          },
+          "change_report": {
+            "file": "ue5_code_project__gbtx-8f1053edda9e88da.change.json",
+            "sha256": "8f1053edda9e88daf1830d1dce2264ce3b76d7403a1f1827a2c5abc97fefa7ee"
+          }
+        }
+      ]
+    }
+  ]
+}

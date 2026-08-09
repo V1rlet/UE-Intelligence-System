@@ -1,0 +1,4197 @@
+{
+  "meta": {
+    "domain": "ue5_code",
+    "subsystem": "architecture-mindmap",
+    "title": "代码架构脑图 · 分层职责树",
+    "kind": "mindmap",
+    "generated_at": "2026-07-19T21:12:50.245Z",
+    "generator": "build-architecture-mindmap@scope-v3-thread-model",
+    "rootScope": "root",
+    "scopes": {
+      "engine/runtime": {
+        "id": "engine/runtime",
+        "title": "引擎运行时",
+        "description": "进程启动、Engine 实例与 WorldContext 的最高层运行时。",
+        "parentScope": "engine",
+        "sourceDocuments": [
+          "ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+          "ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+          "ue5_code_network-scope-reference_2026-07-12.cyto.json",
+          "ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+          "ue5_code_framework-reference_2026-07-11.cyto.json"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "FEngineLoop",
+                "label": "FEngineLoop",
+                "type": "ustruct",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "引擎主循环入口，驱动 PreInit、Init、Tick 与退出。",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "engine-runtime",
+                "lifetime_scope": "process",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 1
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UEngine",
+                "label": "UEngine",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "引擎运行时根对象，管理 GameInstance 与 WorldContext。",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "engine-runtime",
+                "lifetime_scope": "process",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 2
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "creates",
+                    "peerScope": "engine/session",
+                    "peerNode": "UGameInstance",
+                    "peerLabel": "UGameInstance"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "UGameEngine",
+                "label": "UGameEngine",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "游戏运行时 UEngine 实现，创建 GameInstance 和视口。",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "engine-runtime",
+                "lifetime_scope": "process",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 2
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "creates",
+                    "peerScope": "engine/session",
+                    "peerNode": "UGameInstance",
+                    "peerLabel": "UGameInstance"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "creates",
+                    "peerScope": "engine/session",
+                    "peerNode": "UGameViewportClient",
+                    "peerLabel": "UGameViewportClient"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "FWorldContext",
+                "label": "FWorldContext",
+                "type": "ustruct",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "引擎管理 World 的上下文记录；不是 UObject Outer 层级。",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "engine-runtime",
+                "lifetime_scope": "process",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "owns",
+                    "peerScope": "engine/world",
+                    "peerNode": "UWorld",
+                    "peerLabel": "UWorld"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "UEngineSubsystem",
+                "label": "UEngineSubsystem",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "进程级 Subsystem。",
+                "visibility": "explored",
+                "origin": "UE",
+                "lifetime_scope": "process",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            }
+          ],
+          "edges": [
+            {
+              "data": {
+                "id": "FEngineLoop|creates|UEngine",
+                "source": "FEngineLoop",
+                "target": "UEngine",
+                "relation": "creates",
+                "domain": "ue5_code",
+                "description": "Init 阶段创建并初始化 Engine。"
+              }
+            },
+            {
+              "data": {
+                "id": "UEngine|owns|UGameEngine",
+                "source": "UEngine",
+                "target": "UGameEngine",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "游戏进程使用 UGameEngine 实现。"
+              }
+            },
+            {
+              "data": {
+                "id": "UEngine|owns|FWorldContext",
+                "source": "UEngine",
+                "target": "FWorldContext",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "维护一个或多个 WorldContext。"
+              }
+            },
+            {
+              "data": {
+                "id": "UEngine|owns|UEngineSubsystem",
+                "source": "UEngine",
+                "target": "UEngineSubsystem",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "进程级作用域。"
+              }
+            }
+          ]
+        }
+      },
+      "engine/execution": {
+        "id": "engine/execution",
+        "title": "线程与任务执行",
+        "description": "UE5.8 命名线程、任务池、子系统线程、Chaos 求解阶段与 GPU 队列的移交模型。",
+        "parentScope": "engine",
+        "sourceDocuments": [
+          "UE 5.8 local source evidence"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "thread:game",
+                "domain": "ue5_code",
+                "type": "execution_lane",
+                "label": "Game Thread",
+                "displayLabel": "Game Thread\nNamed thread · frame owner",
+                "description": "帧循环与 UObject/World 玩法状态的主所有者；FEngineLoop::Tick 在此推进一帧。",
+                "layer": "engine",
+                "module": "Launch",
+                "architectureNode": true,
+                "executionNode": true,
+                "executionKind": "named_thread",
+                "affinity": "ENamedThreads::GameThread",
+                "optional": false,
+                "safetyBoundary": "跨线程结果必须在明确同步点或投递回 Game Thread 后再触碰仅限 GT 的对象状态。",
+                "sourceEvidence": [
+                  {
+                    "path": "Runtime/Launch/Private/LaunchEngineLoop.cpp",
+                    "symbol": "FEngineLoop::Tick",
+                    "line": 5575,
+                    "claim": "主帧循环入口"
+                  },
+                  {
+                    "path": "Runtime/Launch/Private/LaunchEngineLoop.cpp",
+                    "symbol": "FTaskGraphInterface::AttachToThread",
+                    "line": 2593,
+                    "claim": "将启动线程附着为 GameThread"
+                  }
+                ],
+                "source_path": "Runtime/Launch/Private/LaunchEngineLoop.cpp",
+                "width": 230,
+                "height": 92
+              },
+              "position": {
+                "x": 450,
+                "y": 105
+              }
+            },
+            {
+              "data": {
+                "id": "scheduler:task-workers",
+                "domain": "ue5_code",
+                "type": "scheduler",
+                "label": "TaskGraph / LowLevelTasks",
+                "displayLabel": "TaskGraph / LowLevelTasks\nWorker pool",
+                "description": "命名线程之外的通用任务调度层；工作线程数量与调度器生命周期由 TaskGraph/LowLevelTasks 管理。",
+                "layer": "engine",
+                "module": "Core",
+                "architectureNode": true,
+                "executionNode": true,
+                "executionKind": "worker_pool",
+                "affinity": "Worker pool",
+                "optional": false,
+                "safetyBoundary": "任务必须显式声明先决条件和完成事件；等待链不能反向阻塞持有资源的命名线程。",
+                "sourceEvidence": [
+                  {
+                    "path": "Runtime/Core/Private/Async/TaskGraph.cpp",
+                    "symbol": "FTaskGraphCompatibilityImplementation::Startup",
+                    "line": 1776,
+                    "claim": "TaskGraph 启动"
+                  },
+                  {
+                    "path": "Runtime/Core/Private/Async/TaskGraph.cpp",
+                    "symbol": "LowLevelTasks::FScheduler::StartWorkers",
+                    "line": 1359,
+                    "claim": "工作线程池启动"
+                  }
+                ],
+                "source_path": "Runtime/Core/Private/Async/TaskGraph.cpp",
+                "width": 230,
+                "height": 92
+              },
+              "position": {
+                "x": 780,
+                "y": 105
+              }
+            },
+            {
+              "data": {
+                "id": "thread:render",
+                "domain": "ue5_code",
+                "type": "execution_lane",
+                "label": "Render Thread",
+                "displayLabel": "Render Thread\nNamed thread · optional",
+                "description": "消费 Game Thread 入队的渲染命令与帧快照；未启用线程化渲染时可折叠回 Game Thread。",
+                "layer": "engine",
+                "module": "RenderCore",
+                "architectureNode": true,
+                "executionNode": true,
+                "executionKind": "named_thread",
+                "affinity": "ENamedThreads::ActualRenderingThread",
+                "optional": true,
+                "safetyBoundary": "GT 只提交稳定的帧数据；等待 Render Thread 时禁止形成 Render→Game 的循环等待。",
+                "sourceEvidence": [
+                  {
+                    "path": "Runtime/RenderCore/Public/RenderingThread.h",
+                    "symbol": "GUseThreadedRendering",
+                    "line": 69,
+                    "claim": "线程化渲染为运行配置"
+                  },
+                  {
+                    "path": "Runtime/Core/Public/Async/TaskGraphInterfaces.h",
+                    "symbol": "ActualRenderingThread",
+                    "line": 63,
+                    "claim": "渲染命名线程枚举"
+                  }
+                ],
+                "source_path": "Runtime/RenderCore/Public/RenderingThread.h",
+                "width": 230,
+                "height": 92
+              },
+              "position": {
+                "x": 875,
+                "y": 330
+              }
+            },
+            {
+              "data": {
+                "id": "thread:rhi",
+                "domain": "ue5_code",
+                "type": "execution_lane",
+                "label": "RHI Thread",
+                "displayLabel": "RHI Thread\nNamed thread · optional",
+                "description": "从渲染命令流进一步派发 RHI 工作；是否独立运行由平台与运行配置决定。",
+                "layer": "engine",
+                "module": "Core",
+                "architectureNode": true,
+                "executionNode": true,
+                "executionKind": "named_thread",
+                "affinity": "ENamedThreads::RHIThread",
+                "optional": true,
+                "safetyBoundary": "CPU 资源生命周期必须覆盖 RHI 命令消费；需要完成语义时使用 fence/flush，而非隐式假定已提交。",
+                "sourceEvidence": [
+                  {
+                    "path": "Runtime/Core/Public/Async/TaskGraphInterfaces.h",
+                    "symbol": "RHIThread",
+                    "line": 59,
+                    "claim": "RHI 命名线程枚举"
+                  },
+                  {
+                    "path": "Runtime/RHI/Public/RHICommandList.h",
+                    "symbol": "FRHICommandListExecutor",
+                    "line": 5047,
+                    "claim": "RHI 命令执行与同步入口"
+                  }
+                ],
+                "source_path": "Runtime/Core/Public/Async/TaskGraphInterfaces.h",
+                "width": 230,
+                "height": 92
+              },
+              "position": {
+                "x": 1170,
+                "y": 330
+              }
+            },
+            {
+              "data": {
+                "id": "thread:async-loading",
+                "domain": "ue5_code",
+                "type": "execution_lane",
+                "label": "Async Loading Thread 2",
+                "displayLabel": "Async Loading Thread 2\nSubsystem thread",
+                "description": "异步解析包、导入与依赖；已加载包在 Game Thread 阶段归并并触发完成回调。",
+                "layer": "engine",
+                "module": "CoreUObject",
+                "architectureNode": true,
+                "executionNode": true,
+                "executionKind": "subsystem_thread",
+                "affinity": "FAsyncLoadingThread2",
+                "optional": false,
+                "safetyBoundary": "后台加载不能越过 UObject 发布边界；完成回调与可见状态在 Game Thread 处理路径收束。",
+                "sourceEvidence": [
+                  {
+                    "path": "Runtime/CoreUObject/Private/Serialization/AsyncLoading2.cpp",
+                    "symbol": "FAsyncLoadingThread2::Run",
+                    "line": 11356,
+                    "claim": "异步加载线程主循环"
+                  },
+                  {
+                    "path": "Runtime/CoreUObject/Private/Serialization/AsyncLoading2.cpp",
+                    "symbol": "ProcessLoadedPackagesFromGameThread",
+                    "line": 10728,
+                    "claim": "已加载包回归 Game Thread"
+                  }
+                ],
+                "source_path": "Runtime/CoreUObject/Private/Serialization/AsyncLoading2.cpp",
+                "width": 230,
+                "height": 92
+              },
+              "position": {
+                "x": 120,
+                "y": 105
+              }
+            },
+            {
+              "data": {
+                "id": "tasks:chaos",
+                "domain": "ue5_code",
+                "type": "execution_lane",
+                "label": "Chaos Physics Tasks",
+                "displayLabel": "Chaos Physics Tasks\nSolver phase / task events",
+                "description": "物理场景通过任务事件推进求解、派发与回收；它是可并行的阶段管线，不等同于一个永久 Physics Thread。",
+                "layer": "engine",
+                "module": "PhysicsCore",
+                "architectureNode": true,
+                "executionNode": true,
+                "executionKind": "solver_tasks",
+                "affinity": "Solver phase / task events",
+                "optional": false,
+                "safetyBoundary": "外部线程写入经命令/代理进入求解器；玩法读取结果前必须等待 pending task 或经过同步阶段。",
+                "sourceEvidence": [
+                  {
+                    "path": "Runtime/PhysicsCore/Private/ChaosScene.cpp",
+                    "symbol": "FChaosScene::AdvanceAndDispatch_External",
+                    "line": 379,
+                    "claim": "推进并派发求解任务"
+                  },
+                  {
+                    "path": "Runtime/PhysicsCore/Private/ChaosScene.cpp",
+                    "symbol": "FChaosScene::WaitOnPendingTasks_External",
+                    "line": 174,
+                    "claim": "等待物理待定任务"
+                  }
+                ],
+                "source_path": "Runtime/PhysicsCore/Private/ChaosScene.cpp",
+                "width": 230,
+                "height": 92
+              },
+              "position": {
+                "x": 285,
+                "y": 330
+              }
+            },
+            {
+              "data": {
+                "id": "thread:audio",
+                "domain": "ue5_code",
+                "type": "execution_lane",
+                "label": "Audio Thread",
+                "displayLabel": "Audio Thread\nSubsystem thread · optional",
+                "description": "消费音频命令并维护音频子系统状态；可按运行配置启停，并提供回投 Game Thread 的命令路径。",
+                "layer": "engine",
+                "module": "Engine",
+                "architectureNode": true,
+                "executionNode": true,
+                "executionKind": "subsystem_thread",
+                "affinity": "Audio command thread",
+                "optional": true,
+                "safetyBoundary": "UObject/GC 边界需要暂停或回归 Game Thread；音频命令不能捕获生命周期不受控的对象引用。",
+                "sourceEvidence": [
+                  {
+                    "path": "Runtime/Engine/Private/AudioThread.cpp",
+                    "symbol": "RunCommandOnAudioThread",
+                    "line": 494,
+                    "claim": "投递到音频线程"
+                  },
+                  {
+                    "path": "Runtime/Engine/Private/AudioThread.cpp",
+                    "symbol": "StartAudioThread",
+                    "line": 629,
+                    "claim": "按配置启动音频线程"
+                  }
+                ],
+                "source_path": "Runtime/Engine/Private/AudioThread.cpp",
+                "width": 230,
+                "height": 92
+              },
+              "position": {
+                "x": 580,
+                "y": 330
+              }
+            },
+            {
+              "data": {
+                "id": "device:gpu-queues",
+                "domain": "ue5_code",
+                "type": "execution_lane",
+                "label": "GPU Queues",
+                "displayLabel": "GPU Queues\nGraphics / Compute / Copy",
+                "description": "RHI 命令最终到达设备队列执行；这是 CPU 线程之外的异步执行目标。",
+                "layer": "engine",
+                "module": "RHI",
+                "architectureNode": true,
+                "executionNode": true,
+                "executionKind": "device_queue",
+                "affinity": "Graphics / Compute / Copy",
+                "optional": false,
+                "safetyBoundary": "资源转换、队列依赖和 fence 决定可见性；CPU 提交完成不代表 GPU 已执行完成。",
+                "sourceEvidence": [
+                  {
+                    "path": "Runtime/RHI/Public/RHICommandList.h",
+                    "symbol": "ImmediateFlush(DispatchToRHIThread)",
+                    "line": 4780,
+                    "claim": "命令派发语义"
+                  }
+                ],
+                "source_path": "Runtime/RHI/Public/RHICommandList.h",
+                "width": 230,
+                "height": 92
+              },
+              "position": {
+                "x": 1170,
+                "y": 555
+              }
+            }
+          ],
+          "edges": [
+            {
+              "data": {
+                "id": "gt-dispatch-workers",
+                "domain": "ue5_code",
+                "source": "thread:game",
+                "target": "scheduler:task-workers",
+                "relation": "dispatches_to",
+                "label": "派发并行任务",
+                "architectureEdge": true,
+                "executionEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "workers-sync-gt",
+                "domain": "ue5_code",
+                "source": "scheduler:task-workers",
+                "target": "thread:game",
+                "relation": "synchronizes_with",
+                "label": "先决条件 / 完成事件",
+                "architectureEdge": true,
+                "executionEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "gt-enqueue-render",
+                "domain": "ue5_code",
+                "source": "thread:game",
+                "target": "thread:render",
+                "relation": "enqueues_to",
+                "label": "入队渲染命令",
+                "architectureEdge": true,
+                "executionEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "render-dispatch-rhi",
+                "domain": "ue5_code",
+                "source": "thread:render",
+                "target": "thread:rhi",
+                "relation": "dispatches_to",
+                "label": "派发 RHI 命令",
+                "architectureEdge": true,
+                "executionEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "rhi-submit-gpu",
+                "domain": "ue5_code",
+                "source": "thread:rhi",
+                "target": "device:gpu-queues",
+                "relation": "submits_to",
+                "label": "提交设备队列",
+                "architectureEdge": true,
+                "executionEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "loading-complete-gt",
+                "domain": "ue5_code",
+                "source": "thread:async-loading",
+                "target": "thread:game",
+                "relation": "completes_on",
+                "label": "归并包与完成回调",
+                "architectureEdge": true,
+                "executionEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "gt-dispatch-chaos",
+                "domain": "ue5_code",
+                "source": "thread:game",
+                "target": "tasks:chaos",
+                "relation": "dispatches_to",
+                "label": "推进物理阶段",
+                "architectureEdge": true,
+                "executionEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "chaos-sync-gt",
+                "domain": "ue5_code",
+                "source": "tasks:chaos",
+                "target": "thread:game",
+                "relation": "synchronizes_with",
+                "label": "等待 / 回收结果",
+                "architectureEdge": true,
+                "executionEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "gt-enqueue-audio",
+                "domain": "ue5_code",
+                "source": "thread:game",
+                "target": "thread:audio",
+                "relation": "enqueues_to",
+                "label": "投递音频命令",
+                "architectureEdge": true,
+                "executionEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "audio-complete-gt",
+                "domain": "ue5_code",
+                "source": "thread:audio",
+                "target": "thread:game",
+                "relation": "completes_on",
+                "label": "回投游戏线程",
+                "architectureEdge": true,
+                "executionEdge": true
+              }
+            }
+          ]
+        }
+      },
+      "engine/session": {
+        "id": "engine/session",
+        "title": "应用会话",
+        "description": "跨地图 GameInstance、本地玩家、视口与会话级服务。",
+        "parentScope": "engine",
+        "sourceDocuments": [
+          "ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+          "ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+          "ue5_code_network-scope-reference_2026-07-12.cyto.json",
+          "ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+          "ue5_code_framework-reference_2026-07-11.cyto.json"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "UGameInstance",
+                "label": "UGameInstance",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "进程级单例：随游戏进程启动/退出，跨关卡切换存活。会话级数据与服务的唯一正确归宿",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "session",
+                "lifetime_scope": "game-instance",
+                "responsibilities": [
+                  "保存跨图会话数据",
+                  "管理 LocalPlayer",
+                  "承载 GameInstanceSubsystem"
+                ],
+                "tags": [
+                  "persistent",
+                  "override_point"
+                ],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 3
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "creates",
+                    "peerScope": "engine/runtime",
+                    "peerNode": "UGameEngine",
+                    "peerLabel": "UGameEngine"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "loads",
+                    "peerScope": "engine/world",
+                    "peerNode": "UWorld",
+                    "peerLabel": "UWorld"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "creates",
+                    "peerScope": "engine/runtime",
+                    "peerNode": "UEngine",
+                    "peerLabel": "UEngine"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "UGameInstanceSubsystem",
+                "label": "UGameInstanceSubsystem",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "随 GameInstance 自动实例化的服务单元：引擎规定的\"替代手写单例\"方案",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "subsystem",
+                "lifetime_scope": "game-instance",
+                "tags": [
+                  "subsystem",
+                  "override_point"
+                ],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "ULocalPlayer",
+                "label": "ULocalPlayer",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "本地玩家：屏幕/视口/输入设备的所有者，仅存在于客户端；分屏=多个 LocalPlayer",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "player",
+                "network_scope": "local-only",
+                "lifetime_scope": "game-instance",
+                "tags": [
+                  "client_only"
+                ],
+                "metrics": {
+                  "in_degree": 2,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "configures",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraHeroComponent",
+                    "peerLabel": "ULyraHeroComponent"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ULocalPlayerSubsystem",
+                "label": "ULocalPlayerSubsystem",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "随 LocalPlayer 创建的本地玩家服务。",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "subsystem",
+                "network_scope": "local-only",
+                "lifetime_scope": "local-player",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UGameViewportClient",
+                "label": "UGameViewportClient",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "连接窗口、视口、LocalPlayer 与 UWorld。",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "ui",
+                "network_scope": "local-only",
+                "lifetime_scope": "game-instance",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "creates",
+                    "peerScope": "engine/runtime",
+                    "peerNode": "UGameEngine",
+                    "peerLabel": "UGameEngine"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "concept:LocalUI",
+                "label": "Local UI（概念）",
+                "type": "meta_group",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "本地 HUD、CommonUI Layer 与设置界面。",
+                "visibility": "explored",
+                "children_count": 0,
+                "category": "conceptual-group",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "injects",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraHeroComponent",
+                    "peerLabel": "ULyraHeroComponent"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:GameInstanceInit",
+                "label": "GameInstance::Init",
+                "type": "lifecycle_step",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "进程启动：GameInstance 与其 Subsystem 就绪，早于任何 World",
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "lifecycle_sequence",
+                    "peerScope": "engine/world",
+                    "peerNode": "lifecycle:LoadMap",
+                    "peerLabel": "Engine::LoadMap"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "UUserWidget",
+                "label": "UUserWidget",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "UMG",
+                "domain": "ue5_code",
+                "description": "UMG 界面单元：客户端 UI 的标准形态，Owner 应为 PlayerController",
+                "source_path": "Engine/Source/Runtime/UMG/Public/Blueprint/UserWidget.h",
+                "tags": [
+                  "client_only",
+                  "blueprintable"
+                ],
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "UInputMappingContext",
+                "label": "UInputMappingContext",
+                "type": "uclass",
+                "layer": "plugin",
+                "module": "EnhancedInput",
+                "domain": "ue5_code",
+                "description": "输入映射上下文（数据资产）：按情境（步行/驾驶/菜单）成组启停输入",
+                "source_path": "Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/InputMappingContext.h",
+                "tags": [
+                  "data_asset"
+                ],
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  }
+                ]
+              }
+            }
+          ],
+          "edges": [
+            {
+              "data": {
+                "id": "UGameInstance|owns|UGameInstanceSubsystem",
+                "source": "UGameInstance",
+                "target": "UGameInstanceSubsystem",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "会话级作用域。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameInstance|owns|ULocalPlayer",
+                "source": "UGameInstance",
+                "target": "ULocalPlayer",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "本地玩家生命周期。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULocalPlayer|owns|ULocalPlayerSubsystem",
+                "source": "ULocalPlayer",
+                "target": "ULocalPlayerSubsystem",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "本地玩家服务作用域。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameViewportClient|owns|ULocalPlayer",
+                "source": "UGameViewportClient",
+                "target": "ULocalPlayer",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "视口承载一个或多个 LocalPlayer。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameInstance|composes|ULocalPlayer",
+                "source": "UGameInstance",
+                "target": "ULocalPlayer",
+                "relation": "composes",
+                "domain": "ue5_code",
+                "description": "持有本地玩家（分屏时多个）"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameInstance|composes|UGameInstanceSubsystem",
+                "source": "UGameInstance",
+                "target": "UGameInstanceSubsystem",
+                "relation": "composes",
+                "domain": "ue5_code",
+                "description": "自动实例化：进程级服务收纳点"
+              }
+            }
+          ]
+        }
+      },
+      "engine/world": {
+        "id": "engine/world",
+        "title": "世界运行时",
+        "description": "随地图创建和销毁的 World 与世界级服务。",
+        "parentScope": "engine",
+        "sourceDocuments": [
+          "ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+          "ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+          "ue5_code_network-scope-reference_2026-07-12.cyto.json",
+          "ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+          "ue5_code_framework-reference_2026-07-11.cyto.json"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "UWorld",
+                "label": "UWorld",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "地图运行时容器，持有 Actor 和 WorldSubsystem。",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "world",
+                "lifetime_scope": "world",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 2,
+                  "out_degree": 2
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "owns",
+                    "peerScope": "engine/runtime",
+                    "peerNode": "FWorldContext",
+                    "peerLabel": "FWorldContext"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "loads",
+                    "peerScope": "engine/session",
+                    "peerNode": "UGameInstance",
+                    "peerLabel": "UGameInstance"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "creates",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameModeBase",
+                    "peerLabel": "AGameModeBase"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "owns",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraExperienceManagerComponent",
+                    "peerLabel": "ULyraExperienceManagerComponent"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "composes",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameModeBase",
+                    "peerLabel": "AGameModeBase"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "UWorldSubsystem",
+                "label": "UWorldSubsystem",
+                "type": "uclass",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "随 World 生命周期的服务单元：关卡级系统（生成管理、天气等）的规定挂点",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "subsystem",
+                "lifetime_scope": "world",
+                "tags": [
+                  "subsystem",
+                  "override_point"
+                ],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:LoadMap",
+                "label": "Engine::LoadMap",
+                "type": "lifecycle_step",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "世界加载：创建 UWorld 与 WorldSubsystem，随后生成 GameMode（仅服务器）",
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "lifecycle_sequence",
+                    "peerScope": "engine/session",
+                    "peerNode": "lifecycle:GameInstanceInit",
+                    "peerLabel": "GameInstance::Init"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "lifecycle_sequence",
+                    "peerScope": "engine/framework",
+                    "peerNode": "lifecycle:InitGame",
+                    "peerLabel": "GameMode::InitGame"
+                  }
+                ]
+              }
+            }
+          ],
+          "edges": [
+            {
+              "data": {
+                "id": "UWorld|owns|UWorldSubsystem",
+                "source": "UWorld",
+                "target": "UWorldSubsystem",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "World 级作用域。"
+              }
+            },
+            {
+              "data": {
+                "id": "UWorld|composes|UWorldSubsystem",
+                "source": "UWorld",
+                "target": "UWorldSubsystem",
+                "relation": "composes",
+                "domain": "ue5_code",
+                "description": "自动实例化：关卡级服务"
+              }
+            }
+          ]
+        }
+      },
+      "engine/framework": {
+        "id": "engine/framework",
+        "title": "Gameplay 框架职责",
+        "description": "规则、公共状态、玩家身份、控制器和可占据身体的职责树。",
+        "parentScope": "engine",
+        "sourceDocuments": [
+          "ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+          "ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+          "ue5_code_network-scope-reference_2026-07-12.cyto.json",
+          "ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+          "ue5_code_framework-reference_2026-07-11.cyto.json"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "AActor",
+                "label": "AActor",
+                "type": "uactor",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "可放入 World 的实体与组件容器；Pawn 的直接基类。",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "gameplay-framework",
+                "network_scope": "server-all-clients",
+                "lifetime_scope": "actor",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "AGameModeBase",
+                "label": "AGameModeBase",
+                "type": "uactor",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "规则仲裁者：登录、生成、胜负判定。只存在于服务器，客户端拿不到",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "gameplay-framework",
+                "network_scope": "server-only",
+                "lifetime_scope": "world",
+                "common_mistakes": [
+                  "客户端访问 GameMode",
+                  "把跨地图状态放入 GameMode"
+                ],
+                "tags": [
+                  "server_only",
+                  "override_point"
+                ],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 4
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "creates",
+                    "peerScope": "engine/world",
+                    "peerNode": "UWorld",
+                    "peerLabel": "UWorld"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "inherits",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraGameMode",
+                    "peerLabel": "ALyraGameMode"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "composes",
+                    "peerScope": "engine/world",
+                    "peerNode": "UWorld",
+                    "peerLabel": "UWorld"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "AGameStateBase",
+                "label": "AGameStateBase",
+                "type": "uactor",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "比赛状态：服务器生成、复制到所有端。\"所有人都该看到的比赛数据\"放这里",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "gameplay-framework",
+                "network_scope": "server-all-clients",
+                "lifetime_scope": "world",
+                "tags": [
+                  "replicated",
+                  "override_point"
+                ],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "inherits",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraGameState",
+                    "peerLabel": "ALyraGameState"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "APlayerController",
+                "label": "APlayerController",
+                "type": "uactor",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "玩家意志的代表：输入路由与 UI 的规定挂点。存在于服务器和拥有它的客户端，常驻（Pawn 死亡它不死）",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "player",
+                "network_scope": "server-owning-client",
+                "lifetime_scope": "world",
+                "tags": [
+                  "owner_client",
+                  "input_router",
+                  "override_point"
+                ],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 3
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraHeroComponent",
+                    "peerLabel": "ULyraHeroComponent"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/session",
+                    "peerNode": "UUserWidget",
+                    "peerLabel": "UUserWidget"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/session",
+                    "peerNode": "UInputMappingContext",
+                    "peerLabel": "UInputMappingContext"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/session",
+                    "peerNode": "ULocalPlayer",
+                    "peerLabel": "ULocalPlayer"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "APlayerState",
+                "label": "APlayerState",
+                "type": "uactor",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "单个玩家的可复制状态（名字/分数/队伍）：全端可见。PC 上的数据其他客户端看不到，这里的看得到",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "player",
+                "network_scope": "server-all-clients",
+                "lifetime_scope": "world",
+                "tags": [
+                  "replicated"
+                ],
+                "metrics": {
+                  "in_degree": 3,
+                  "out_degree": 0
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraPawnExtensionComponent",
+                    "peerLabel": "ULyraPawnExtensionComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "binds_as_owner",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "APawn",
+                "label": "APawn",
+                "type": "uactor",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "可被占据的\"身体\"：可销毁重生。持久玩家数据不放 Pawn",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "pawn",
+                "network_scope": "server-all-clients",
+                "lifetime_scope": "actor",
+                "tags": [
+                  "possessable",
+                  "override_point"
+                ],
+                "metrics": {
+                  "in_degree": 3,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "binds_as_avatar",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ACharacter",
+                "label": "ACharacter",
+                "type": "uactor",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "带 CharacterMovement 的人形 Pawn：行走/跳跃/网络移动预测开箱即用",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "pawn",
+                "network_scope": "server-all-clients",
+                "lifetime_scope": "actor",
+                "tags": [
+                  "override_point"
+                ],
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 1
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "AHUD",
+                "label": "AHUD",
+                "type": "uactor",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "画布式 HUD（即时绘制调试/准星）：客户端专有；常规 UI 用 UMG",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "ui",
+                "network_scope": "owning-client",
+                "lifetime_scope": "world",
+                "tags": [
+                  "client_only"
+                ],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "concept:AuthoritySpawn",
+                "label": "Authority Spawn（概念）",
+                "type": "meta_group",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "服务器权威生成与重生逻辑。",
+                "visibility": "explored",
+                "children_count": 0,
+                "category": "conceptual-group",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "owns",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraGameMode",
+                    "peerLabel": "ALyraGameMode"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "concept:OwnerOnlyRPC",
+                "label": "Owner-only RPC（概念）",
+                "type": "meta_group",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "只发往拥有客户端的 RPC/复制数据。",
+                "visibility": "explored",
+                "children_count": 0,
+                "category": "conceptual-group",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:InitGame",
+                "label": "GameMode::InitGame",
+                "type": "lifecycle_step",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "关卡规则初始化：早于关卡内所有 Actor 的 PreInitializeComponents",
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "lifecycle_sequence",
+                    "peerScope": "engine/world",
+                    "peerNode": "lifecycle:LoadMap",
+                    "peerLabel": "Engine::LoadMap"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:PostLogin",
+                "label": "GameMode::PostLogin",
+                "type": "lifecycle_step",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "玩家加入完成：PlayerController 已就绪，可安全下发初始化 RPC",
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:HandleStartingNewPlayer",
+                "label": "HandleStartingNewPlayer",
+                "type": "lifecycle_step",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "为新玩家生成默认 Pawn（RestartPlayer → SpawnDefaultPawnFor）",
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:Possess",
+                "label": "Controller::Possess",
+                "type": "lifecycle_step",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "占据 Pawn（服务器权威）：绑定输入与视角，OnPossess/OnRep_Pawn 触发",
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:BeginPlay",
+                "label": "BeginPlay",
+                "type": "lifecycle_step",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "世界开始运转：gameplay 逻辑的常规起点",
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UCharacterMovementComponent",
+                "label": "UCharacterMovementComponent",
+                "type": "ucomponent",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "移动权威组件：自带客户端预测/服务器校正。自定义移动优先扩展它",
+                "source_path": "Engine/Source/Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h",
+                "tags": [
+                  "networked"
+                ],
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UEnhancedInputComponent",
+                "label": "UEnhancedInputComponent",
+                "type": "ucomponent",
+                "layer": "plugin",
+                "module": "EnhancedInput",
+                "domain": "ue5_code",
+                "description": "输入绑定端点：SetupPlayerInputComponent 里把 InputAction 绑到处理函数",
+                "source_path": "Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h",
+                "tags": [],
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            }
+          ],
+          "edges": [
+            {
+              "data": {
+                "id": "AGameModeBase|creates|AGameStateBase",
+                "source": "AGameModeBase",
+                "target": "AGameStateBase",
+                "relation": "creates",
+                "domain": "ue5_code",
+                "description": "创建并维护公共比赛状态。"
+              }
+            },
+            {
+              "data": {
+                "id": "AGameModeBase|creates|APlayerController",
+                "source": "AGameModeBase",
+                "target": "APlayerController",
+                "relation": "creates",
+                "domain": "ue5_code",
+                "description": "登录成功后建立玩家控制器。"
+              }
+            },
+            {
+              "data": {
+                "id": "AGameModeBase|creates|APlayerState",
+                "source": "AGameModeBase",
+                "target": "APlayerState",
+                "relation": "creates",
+                "domain": "ue5_code",
+                "description": "为玩家建立可复制身份状态。"
+              }
+            },
+            {
+              "data": {
+                "id": "AGameModeBase|creates|APawn",
+                "source": "AGameModeBase",
+                "target": "APawn",
+                "relation": "creates",
+                "domain": "ue5_code",
+                "description": "RestartPlayer 流程生成默认 Pawn。"
+              }
+            },
+            {
+              "data": {
+                "id": "APlayerController|possesses|APawn",
+                "source": "APlayerController",
+                "target": "APawn",
+                "relation": "possesses",
+                "domain": "ue5_code",
+                "description": "服务器权威占据当前 Pawn。"
+              }
+            },
+            {
+              "data": {
+                "id": "APlayerController|owns|APlayerState",
+                "source": "APlayerController",
+                "target": "APlayerState",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "控制器关联自己的 PlayerState。"
+              }
+            },
+            {
+              "data": {
+                "id": "AGameStateBase|publishes|APlayerState",
+                "source": "AGameStateBase",
+                "target": "APlayerState",
+                "relation": "publishes",
+                "domain": "ue5_code",
+                "description": "PlayerArray 向所有端发布玩家集合。"
+              }
+            },
+            {
+              "data": {
+                "id": "APlayerController|creates|AHUD",
+                "source": "APlayerController",
+                "target": "AHUD",
+                "relation": "creates",
+                "domain": "ue5_code",
+                "description": "拥有端创建 HUD。"
+              }
+            },
+            {
+              "data": {
+                "id": "APawn|inherits|AActor",
+                "source": "APawn",
+                "target": "AActor",
+                "relation": "inherits",
+                "domain": "ue5_code",
+                "description": "Pawn 是可被 Controller 占据的 Actor。"
+              }
+            },
+            {
+              "data": {
+                "id": "ACharacter|inherits|APawn",
+                "source": "ACharacter",
+                "target": "APawn",
+                "relation": "inherits",
+                "domain": "ue5_code"
+              }
+            },
+            {
+              "data": {
+                "id": "AGameModeBase|publishes|AGameStateBase",
+                "source": "AGameModeBase",
+                "target": "AGameStateBase",
+                "relation": "publishes",
+                "domain": "ue5_code",
+                "description": "权威规则写入公共状态。"
+              }
+            },
+            {
+              "data": {
+                "id": "AGameStateBase|owns|APlayerState",
+                "source": "AGameStateBase",
+                "target": "APlayerState",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "维护 PlayerArray。"
+              }
+            },
+            {
+              "data": {
+                "id": "APlayerController|owns|concept:OwnerOnlyRPC",
+                "source": "APlayerController",
+                "target": "concept:OwnerOnlyRPC",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "承载 Client/Server owner RPC。"
+              }
+            },
+            {
+              "data": {
+                "id": "APawn|depends_on|APlayerController",
+                "source": "APawn",
+                "target": "APlayerController",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "Pawn 等待 Controller。"
+              }
+            },
+            {
+              "data": {
+                "id": "APawn|depends_on|APlayerState",
+                "source": "APawn",
+                "target": "APlayerState",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "Pawn 等待 PlayerState。"
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:InitGame|lifecycle_sequence|lifecycle:PostLogin",
+                "source": "lifecycle:InitGame",
+                "target": "lifecycle:PostLogin",
+                "relation": "lifecycle_sequence",
+                "domain": "ue5_code",
+                "order": 3
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:PostLogin|lifecycle_sequence|lifecycle:HandleStartingNewPlayer",
+                "source": "lifecycle:PostLogin",
+                "target": "lifecycle:HandleStartingNewPlayer",
+                "relation": "lifecycle_sequence",
+                "domain": "ue5_code",
+                "order": 4
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:HandleStartingNewPlayer|lifecycle_sequence|lifecycle:Possess",
+                "source": "lifecycle:HandleStartingNewPlayer",
+                "target": "lifecycle:Possess",
+                "relation": "lifecycle_sequence",
+                "domain": "ue5_code",
+                "order": 5
+              }
+            },
+            {
+              "data": {
+                "id": "lifecycle:Possess|lifecycle_sequence|lifecycle:BeginPlay",
+                "source": "lifecycle:Possess",
+                "target": "lifecycle:BeginPlay",
+                "relation": "lifecycle_sequence",
+                "domain": "ue5_code",
+                "order": 6
+              }
+            },
+            {
+              "data": {
+                "id": "AGameModeBase|composes|AGameStateBase",
+                "source": "AGameModeBase",
+                "target": "AGameStateBase",
+                "relation": "composes",
+                "domain": "ue5_code",
+                "description": "生成于服务器，复制到所有端"
+              }
+            },
+            {
+              "data": {
+                "id": "AGameModeBase|composes|APlayerController",
+                "source": "AGameModeBase",
+                "target": "APlayerController",
+                "relation": "composes",
+                "domain": "ue5_code",
+                "description": "PostLogin：每个加入的玩家生成一个"
+              }
+            },
+            {
+              "data": {
+                "id": "AGameModeBase|depends_on|APawn",
+                "source": "AGameModeBase",
+                "target": "APawn",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "SpawnDefaultPawnFor：按 DefaultPawnClass 生成"
+              }
+            },
+            {
+              "data": {
+                "id": "APlayerController|composes|APlayerState",
+                "source": "APlayerController",
+                "target": "APlayerState",
+                "relation": "composes",
+                "domain": "ue5_code",
+                "description": "InitPlayerState：随控制器生成，全端复制"
+              }
+            },
+            {
+              "data": {
+                "id": "APlayerController|depends_on|APawn",
+                "source": "APlayerController",
+                "target": "APawn",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "Possess / UnPossess：占据（服务器权威）"
+              }
+            },
+            {
+              "data": {
+                "id": "APlayerController|composes|AHUD",
+                "source": "APlayerController",
+                "target": "AHUD",
+                "relation": "composes",
+                "domain": "ue5_code",
+                "description": "ClientSetHUD：客户端专有"
+              }
+            },
+            {
+              "data": {
+                "id": "ACharacter|composes|UCharacterMovementComponent",
+                "source": "ACharacter",
+                "target": "UCharacterMovementComponent",
+                "relation": "composes",
+                "domain": "ue5_code",
+                "description": "移动权威组件（自带网络预测）"
+              }
+            },
+            {
+              "data": {
+                "id": "APawn|composes|UEnhancedInputComponent",
+                "source": "APawn",
+                "target": "UEnhancedInputComponent",
+                "relation": "composes",
+                "domain": "ue5_code",
+                "description": "SetupPlayerInputComponent 中绑定 InputAction"
+              }
+            },
+            {
+              "data": {
+                "id": "AGameStateBase|aggregates|APlayerState",
+                "source": "AGameStateBase",
+                "target": "APlayerState",
+                "relation": "aggregates",
+                "domain": "ue5_code",
+                "description": "PlayerArray：所有玩家的 PlayerState 列表"
+              }
+            }
+          ]
+        }
+      },
+      "engine/modular": {
+        "id": "engine/modular",
+        "title": "模块化 Gameplay",
+        "description": "Lyra Experience、Game Features 与 Pawn 初始化装配链。",
+        "parentScope": "engine",
+        "sourceDocuments": [
+          "ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+          "ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+          "ue5_code_network-scope-reference_2026-07-12.cyto.json",
+          "ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+          "ue5_code_framework-reference_2026-07-11.cyto.json"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "ALyraGameMode",
+                "label": "ALyraGameMode",
+                "type": "uactor",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "选择 Experience、PawnData 并驱动玩家重启。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "network_scope": "server-only",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 2
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameModeBase",
+                    "peerLabel": "AGameModeBase"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "owns",
+                    "peerScope": "engine/framework",
+                    "peerNode": "concept:AuthoritySpawn",
+                    "peerLabel": "Authority Spawn（概念）"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ALyraGameState",
+                "label": "ALyraGameState",
+                "type": "uactor",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "持有 ExperienceManagerComponent 并复制 Experience 状态。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "network_scope": "server-all-clients",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 2
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameStateBase",
+                    "peerLabel": "AGameStateBase"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraExperienceDefinition",
+                "label": "ULyraExperienceDefinition",
+                "type": "uclass",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "定义本局 Experience、默认 PawnData、ActionSets 与 GameFeature 插件。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "category": "data-asset",
+                "lifetime_scope": "asset",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 2,
+                  "out_degree": 2
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraExperienceActionSet",
+                "label": "ULyraExperienceActionSet",
+                "type": "uclass",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "可复用的一组 GameFeatureActions 与插件依赖。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "category": "data-asset",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraExperienceManagerComponent",
+                "label": "ULyraExperienceManagerComponent",
+                "type": "ucomponent",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "异步加载 Experience，并广播加载完成。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "network_scope": "server-all-clients",
+                "responsibilities": [
+                  "加载 ExperienceDefinition",
+                  "激活 GameFeaturePlugin",
+                  "通知 ExperienceLoaded"
+                ],
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 2
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "owns",
+                    "peerScope": "engine/world",
+                    "peerNode": "UWorld",
+                    "peerLabel": "UWorld"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraPawnData",
+                "label": "ULyraPawnData",
+                "type": "uclass",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "配置 Pawn 类、InputConfig、CameraMode 与 AbilitySets。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "category": "data-asset",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 2,
+                  "out_degree": 2
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "owns",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySet",
+                    "peerLabel": "ULyraAbilitySet"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeaturesSubsystem",
+                "label": "UGameFeaturesSubsystem",
+                "type": "uclass",
+                "layer": "plugin",
+                "module": "GameFeatures",
+                "domain": "ue5_code",
+                "description": "管理 GameFeaturePlugin 状态机与激活。",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "subsystem",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureData",
+                "label": "UGameFeatureData",
+                "type": "uclass",
+                "layer": "plugin",
+                "module": "GameFeatures",
+                "domain": "ue5_code",
+                "description": "插件的资产与 Actions 清单。",
+                "visibility": "explored",
+                "origin": "UE",
+                "category": "data-asset",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction",
+                "label": "UGameFeatureAction",
+                "type": "uclass",
+                "layer": "plugin",
+                "module": "GameFeatures",
+                "domain": "ue5_code",
+                "description": "Game Feature 激活时执行的注入动作基类。",
+                "visibility": "explored",
+                "origin": "UE",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 5,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction_AddComponents",
+                "label": "UGameFeatureAction_AddComponents",
+                "type": "uclass",
+                "layer": "plugin",
+                "module": "GameFeatures",
+                "domain": "ue5_code",
+                "description": "向目标 Actor 动态添加组件。",
+                "visibility": "explored",
+                "origin": "UE",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 2
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction_AddAbilities",
+                "label": "UGameFeatureAction_AddAbilities",
+                "type": "uclass",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "向目标 Actor 的 ASC 授予 AbilitySet。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 2
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "grants",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction_AddInputConfig",
+                "label": "UGameFeatureAction_AddInputConfig",
+                "type": "uclass",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "向本地英雄注入输入配置。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 2
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction_AddWidgets",
+                "label": "UGameFeatureAction_AddWidgets",
+                "type": "uclass",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "向 UI Layer 注入布局与 Widget。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 1
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "ALyraCharacter",
+                "label": "ALyraCharacter",
+                "type": "uactor",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "Lyra 的可复制玩家 Pawn。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "network_scope": "server-all-clients",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 3,
+                  "out_degree": 3
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "binds_as_avatar",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ALyraPlayerState",
+                "label": "ALyraPlayerState",
+                "type": "uactor",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "持有长期存续的 Lyra ASC。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "network_scope": "server-all-clients",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 2,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "owns",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "binds_as_owner",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraPawnExtensionComponent",
+                "label": "ULyraPawnExtensionComponent",
+                "type": "ucomponent",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "协调 PawnData、Controller、PlayerState、ASC 与 InitState。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "responsibilities": [
+                  "设置 PawnData",
+                  "绑定 ASC Owner/Avatar",
+                  "推进 InitState"
+                ],
+                "common_mistakes": [
+                  "用 Delay 代替 InitState",
+                  "重生后未重新绑定 AvatarActor"
+                ],
+                "tags": [],
+                "metrics": {
+                  "in_degree": 2,
+                  "out_degree": 2
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerState",
+                    "peerLabel": "APlayerState"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraHeroComponent",
+                "label": "ULyraHeroComponent",
+                "type": "ucomponent",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "本地英雄输入、相机和 GameplayReady 初始化。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "network_scope": "owning-client",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 2,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "configures",
+                    "peerScope": "engine/session",
+                    "peerNode": "ULocalPlayer",
+                    "peerLabel": "ULocalPlayer"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "injects",
+                    "peerScope": "engine/session",
+                    "peerNode": "concept:LocalUI",
+                    "peerLabel": "Local UI（概念）"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraHealthComponent",
+                "label": "ULyraHealthComponent",
+                "type": "ucomponent",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "桥接 Health Attribute、死亡状态和消息。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "ALyraPlayerController",
+                "label": "ALyraPlayerController",
+                "type": "uactor",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "Lyra 拥有端控制器。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "network_scope": "server-owning-client",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "concept:GameplayReady",
+                "label": "GameplayReady（InitState）",
+                "type": "meta_group",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "所有必要功能达到 GameplayReady 后才可开始 gameplay。",
+                "visibility": "explored",
+                "children_count": 0,
+                "category": "conceptual-group",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 3
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  }
+                ]
+              }
+            }
+          ],
+          "edges": [
+            {
+              "data": {
+                "id": "ALyraGameMode|configures|ULyraExperienceDefinition",
+                "source": "ALyraGameMode",
+                "target": "ULyraExperienceDefinition",
+                "relation": "configures",
+                "domain": "ue5_code",
+                "description": "根据 URL/WorldSettings/默认值选择 Experience。"
+              }
+            },
+            {
+              "data": {
+                "id": "ALyraGameState|owns|ULyraExperienceManagerComponent",
+                "source": "ALyraGameState",
+                "target": "ULyraExperienceManagerComponent",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "ExperienceManager 位于 GameState。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraExperienceManagerComponent|loads|ULyraExperienceDefinition",
+                "source": "ULyraExperienceManagerComponent",
+                "target": "ULyraExperienceDefinition",
+                "relation": "loads",
+                "domain": "ue5_code",
+                "description": "异步加载当前 Experience。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraExperienceDefinition|configures|ULyraExperienceActionSet",
+                "source": "ULyraExperienceDefinition",
+                "target": "ULyraExperienceActionSet",
+                "relation": "configures",
+                "domain": "ue5_code",
+                "description": "引用可复用 ActionSets。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraExperienceDefinition|configures|ULyraPawnData",
+                "source": "ULyraExperienceDefinition",
+                "target": "ULyraPawnData",
+                "relation": "configures",
+                "domain": "ue5_code",
+                "description": "指定默认 PawnData。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraExperienceManagerComponent|activates|UGameFeaturesSubsystem",
+                "source": "ULyraExperienceManagerComponent",
+                "target": "UGameFeaturesSubsystem",
+                "relation": "activates",
+                "domain": "ue5_code",
+                "description": "激活 Experience 所需 GameFeaturePlugin。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeaturesSubsystem|loads|UGameFeatureData",
+                "source": "UGameFeaturesSubsystem",
+                "target": "UGameFeatureData",
+                "relation": "loads",
+                "domain": "ue5_code",
+                "description": "加载插件 GameFeatureData。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureData|owns|UGameFeatureAction",
+                "source": "UGameFeatureData",
+                "target": "UGameFeatureAction",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "持有激活时执行的 Actions。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction_AddComponents|inherits|UGameFeatureAction",
+                "source": "UGameFeatureAction_AddComponents",
+                "target": "UGameFeatureAction",
+                "relation": "inherits",
+                "domain": "ue5_code",
+                "description": "组件注入 Action。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction_AddAbilities|inherits|UGameFeatureAction",
+                "source": "UGameFeatureAction_AddAbilities",
+                "target": "UGameFeatureAction",
+                "relation": "inherits",
+                "domain": "ue5_code",
+                "description": "能力注入 Action。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction_AddInputConfig|inherits|UGameFeatureAction",
+                "source": "UGameFeatureAction_AddInputConfig",
+                "target": "UGameFeatureAction",
+                "relation": "inherits",
+                "domain": "ue5_code",
+                "description": "输入注入 Action。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction_AddWidgets|inherits|UGameFeatureAction",
+                "source": "UGameFeatureAction_AddWidgets",
+                "target": "UGameFeatureAction",
+                "relation": "inherits",
+                "domain": "ue5_code",
+                "description": "UI 注入 Action。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction_AddComponents|injects|ALyraCharacter",
+                "source": "UGameFeatureAction_AddComponents",
+                "target": "ALyraCharacter",
+                "relation": "injects",
+                "domain": "ue5_code",
+                "description": "向匹配 Actor 添加功能组件。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameFeatureAction_AddInputConfig|injects|ULyraHeroComponent",
+                "source": "UGameFeatureAction_AddInputConfig",
+                "target": "ULyraHeroComponent",
+                "relation": "injects",
+                "domain": "ue5_code",
+                "description": "为本地英雄增加 InputConfig。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraPawnData|configures|ALyraCharacter",
+                "source": "ULyraPawnData",
+                "target": "ALyraCharacter",
+                "relation": "configures",
+                "domain": "ue5_code",
+                "description": "配置 Pawn 类和功能数据。"
+              }
+            },
+            {
+              "data": {
+                "id": "ALyraCharacter|owns|ULyraPawnExtensionComponent",
+                "source": "ALyraCharacter",
+                "target": "ULyraPawnExtensionComponent",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "Pawn 初始化协调组件。"
+              }
+            },
+            {
+              "data": {
+                "id": "ALyraCharacter|owns|ULyraHeroComponent",
+                "source": "ALyraCharacter",
+                "target": "ULyraHeroComponent",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "本地英雄功能组件。"
+              }
+            },
+            {
+              "data": {
+                "id": "ALyraCharacter|owns|ULyraHealthComponent",
+                "source": "ALyraCharacter",
+                "target": "ULyraHealthComponent",
+                "relation": "owns",
+                "domain": "ue5_code",
+                "description": "生命与死亡桥接组件。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraPawnExtensionComponent|depends_on|ULyraPawnData",
+                "source": "ULyraPawnExtensionComponent",
+                "target": "ULyraPawnData",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "等待 PawnData。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraPawnExtensionComponent|depends_on|ALyraPlayerState",
+                "source": "ULyraPawnExtensionComponent",
+                "target": "ALyraPlayerState",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "等待 PlayerState/ASC。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraHeroComponent|depends_on|ULyraPawnExtensionComponent",
+                "source": "ULyraHeroComponent",
+                "target": "ULyraPawnExtensionComponent",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "等待 PawnExtension 初始化。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraPawnExtensionComponent|depends_on|ULyraExperienceManagerComponent",
+                "source": "ULyraPawnExtensionComponent",
+                "target": "ULyraExperienceManagerComponent",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "等待 Experience Loaded。"
+              }
+            },
+            {
+              "data": {
+                "id": "concept:GameplayReady|depends_on|ULyraPawnExtensionComponent",
+                "source": "concept:GameplayReady",
+                "target": "ULyraPawnExtensionComponent",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "等待扩展组件 InitState。"
+              }
+            },
+            {
+              "data": {
+                "id": "concept:GameplayReady|depends_on|ULyraHeroComponent",
+                "source": "concept:GameplayReady",
+                "target": "ULyraHeroComponent",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "等待英雄组件 InitState。"
+              }
+            }
+          ]
+        }
+      },
+      "engine/gas": {
+        "id": "engine/gas",
+        "title": "Gameplay Ability System",
+        "description": "能力、效果、属性、标签与表现事件。",
+        "parentScope": "engine",
+        "sourceDocuments": [
+          "ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+          "ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+          "ue5_code_network-scope-reference_2026-07-12.cyto.json",
+          "ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+          "ue5_code_framework-reference_2026-07-11.cyto.json"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "ULyraAbilitySystemComponent",
+                "label": "ULyraAbilitySystemComponent",
+                "type": "ucomponent",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "ASC 的复制模式决定公开/owner-only 数据范围。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 2,
+                  "out_degree": 3
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "grants",
+                    "peerScope": "engine/modular",
+                    "peerNode": "UGameFeatureAction_AddAbilities",
+                    "peerLabel": "UGameFeatureAction_AddAbilities"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "owns",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraPlayerState",
+                    "peerLabel": "ALyraPlayerState"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "binds_as_owner",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraPlayerState",
+                    "peerLabel": "ALyraPlayerState"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "binds_as_avatar",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraCharacter",
+                    "peerLabel": "ALyraCharacter"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "binds_as_owner",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerState",
+                    "peerLabel": "APlayerState"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "binds_as_avatar",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APawn",
+                    "peerLabel": "APawn"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/modular",
+                    "peerNode": "concept:GameplayReady",
+                    "peerLabel": "GameplayReady（InitState）"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraAbilitySet",
+                "label": "ULyraAbilitySet",
+                "type": "uclass",
+                "layer": "project",
+                "module": "LyraGame",
+                "domain": "ue5_code",
+                "description": "批量授予 Abilities、Effects 与 AttributeSets 的数据资产。",
+                "visibility": "explored",
+                "origin": "Lyra",
+                "category": "data-asset",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 3
+                },
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "owns",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraPawnData",
+                    "peerLabel": "ULyraPawnData"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "UGameplayAbility",
+                "label": "UGameplayAbility",
+                "type": "uclass",
+                "layer": "plugin",
+                "module": "GameplayAbilities",
+                "domain": "ue5_code",
+                "description": "可预测、可复制的 Gameplay Ability。",
+                "visibility": "explored",
+                "origin": "UE",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 1
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UGameplayEffect",
+                "label": "UGameplayEffect",
+                "type": "uclass",
+                "layer": "plugin",
+                "module": "GameplayAbilities",
+                "domain": "ue5_code",
+                "description": "修改 Attribute 或施加持续状态的定义。",
+                "visibility": "explored",
+                "origin": "UE",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 2
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "UAttributeSet",
+                "label": "UAttributeSet",
+                "type": "uclass",
+                "layer": "plugin",
+                "module": "GameplayAbilities",
+                "domain": "ue5_code",
+                "description": "ASC 管理的属性集合。",
+                "visibility": "explored",
+                "origin": "UE",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "FGameplayTag",
+                "label": "FGameplayTag",
+                "type": "ustruct",
+                "layer": "plugin",
+                "module": "GameplayTags",
+                "domain": "ue5_code",
+                "description": "分层语义标签。",
+                "visibility": "explored",
+                "origin": "UE",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "FGameplayAbilitySpec",
+                "label": "FGameplayAbilitySpec",
+                "type": "ustruct",
+                "layer": "plugin",
+                "module": "GameplayAbilities",
+                "domain": "ue5_code",
+                "description": "已授予 Ability 的运行时规格。",
+                "visibility": "explored",
+                "origin": "UE",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "FGameplayEffectSpec",
+                "label": "FGameplayEffectSpec",
+                "type": "ustruct",
+                "layer": "plugin",
+                "module": "GameplayAbilities",
+                "domain": "ue5_code",
+                "description": "GameplayEffect 的运行时实例参数。",
+                "visibility": "explored",
+                "origin": "UE",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            },
+            {
+              "data": {
+                "id": "concept:GameplayCue",
+                "label": "Gameplay Cue（概念）",
+                "type": "meta_group",
+                "layer": "engine",
+                "module": "Engine",
+                "domain": "ue5_code",
+                "description": "由 GameplayTag 驱动的表现事件系统。",
+                "visibility": "explored",
+                "children_count": 0,
+                "category": "conceptual-group",
+                "tags": [],
+                "metrics": {
+                  "in_degree": 1,
+                  "out_degree": 0
+                },
+                "interfaces": []
+              }
+            }
+          ],
+          "edges": [
+            {
+              "data": {
+                "id": "ULyraAbilitySet|grants|UGameplayAbility",
+                "source": "ULyraAbilitySet",
+                "target": "UGameplayAbility",
+                "relation": "grants",
+                "domain": "ue5_code",
+                "description": "授予 AbilitySpec。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraAbilitySet|grants|UGameplayEffect",
+                "source": "ULyraAbilitySet",
+                "target": "UGameplayEffect",
+                "relation": "grants",
+                "domain": "ue5_code",
+                "description": "应用初始 GameplayEffects。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraAbilitySet|grants|UAttributeSet",
+                "source": "ULyraAbilitySet",
+                "target": "UAttributeSet",
+                "relation": "grants",
+                "domain": "ue5_code",
+                "description": "创建并加入 AttributeSets。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraAbilitySystemComponent|observes|FGameplayTag",
+                "source": "ULyraAbilitySystemComponent",
+                "target": "FGameplayTag",
+                "relation": "observes",
+                "domain": "ue5_code",
+                "description": "使用 GameplayTag 驱动输入和状态。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameplayEffect|creates|FGameplayEffectSpec",
+                "source": "UGameplayEffect",
+                "target": "FGameplayEffectSpec",
+                "relation": "creates",
+                "domain": "ue5_code",
+                "description": "运行时生成 EffectSpec。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameplayAbility|creates|FGameplayAbilitySpec",
+                "source": "UGameplayAbility",
+                "target": "FGameplayAbilitySpec",
+                "relation": "creates",
+                "domain": "ue5_code",
+                "description": "授予后形成 AbilitySpec。"
+              }
+            },
+            {
+              "data": {
+                "id": "UGameplayEffect|activates|concept:GameplayCue",
+                "source": "UGameplayEffect",
+                "target": "concept:GameplayCue",
+                "relation": "activates",
+                "domain": "ue5_code",
+                "description": "通过 Cue Tag 触发表现。"
+              }
+            },
+            {
+              "data": {
+                "id": "ULyraAbilitySet|depends_on|ULyraAbilitySystemComponent",
+                "source": "ULyraAbilitySet",
+                "target": "ULyraAbilitySystemComponent",
+                "relation": "depends_on",
+                "domain": "ue5_code",
+                "description": "ASC 初始化后授予。"
+              }
+            }
+          ]
+        }
+      },
+      "engine": {
+        "id": "engine",
+        "title": "引擎层",
+        "description": "从进程运行时、线程任务执行到玩法能力的职责层级；横切资料已融合进对应系统。",
+        "parentScope": "root",
+        "sourceDocuments": [
+          "ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+          "ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+          "ue5_code_network-scope-reference_2026-07-12.cyto.json",
+          "ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+          "ue5_code_framework-reference_2026-07-11.cyto.json"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "engine/runtime",
+                "domain": "ue5_code",
+                "label": "引擎运行时",
+                "displayLabel": "引擎运行时\n5 个内部节点  ·  ◁ 0  4 ▷",
+                "description": "进程启动、Engine 实例与 WorldContext 的最高层运行时。",
+                "type": "meta_group",
+                "architectureNode": true,
+                "architectureLayer": false,
+                "drillScope": "engine/runtime",
+                "childCount": 5,
+                "children_count": 5,
+                "interfaceCount": 4,
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "creates",
+                    "peerScope": "engine/session",
+                    "peerNode": "UGameInstance",
+                    "peerLabel": "UGameInstance"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "owns",
+                    "peerScope": "engine/world",
+                    "peerNode": "UWorld",
+                    "peerLabel": "UWorld"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "creates",
+                    "peerScope": "engine/session",
+                    "peerNode": "UGameViewportClient",
+                    "peerLabel": "UGameViewportClient"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "creates",
+                    "peerScope": "engine/session",
+                    "peerNode": "UGameInstance",
+                    "peerLabel": "UGameInstance"
+                  }
+                ],
+                "width": 205,
+                "height": 82
+              }
+            },
+            {
+              "data": {
+                "id": "engine/execution",
+                "domain": "ue5_code",
+                "label": "线程与任务执行",
+                "displayLabel": "线程与任务执行\n8 个内部节点  ·  ◁ 0  0 ▷",
+                "description": "UE5.8 命名线程、任务池、子系统线程、Chaos 求解阶段与 GPU 队列的移交模型。",
+                "type": "meta_group",
+                "architectureNode": true,
+                "architectureLayer": false,
+                "drillScope": "engine/execution",
+                "childCount": 8,
+                "children_count": 8,
+                "interfaceCount": 0,
+                "interfaces": [],
+                "width": 205,
+                "height": 82
+              }
+            },
+            {
+              "data": {
+                "id": "engine/session",
+                "domain": "ue5_code",
+                "label": "应用会话",
+                "displayLabel": "应用会话\n9 个内部节点  ·  ◁ 6  4 ▷",
+                "description": "跨地图 GameInstance、本地玩家、视口与会话级服务。",
+                "type": "meta_group",
+                "architectureNode": true,
+                "architectureLayer": false,
+                "drillScope": "engine/session",
+                "childCount": 9,
+                "children_count": 9,
+                "interfaceCount": 10,
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "creates",
+                    "peerScope": "engine/runtime",
+                    "peerNode": "UGameEngine",
+                    "peerLabel": "UGameEngine"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "creates",
+                    "peerScope": "engine/runtime",
+                    "peerNode": "UGameEngine",
+                    "peerLabel": "UGameEngine"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "loads",
+                    "peerScope": "engine/world",
+                    "peerNode": "UWorld",
+                    "peerLabel": "UWorld"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "configures",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraHeroComponent",
+                    "peerLabel": "ULyraHeroComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "injects",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraHeroComponent",
+                    "peerLabel": "ULyraHeroComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "creates",
+                    "peerScope": "engine/runtime",
+                    "peerNode": "UEngine",
+                    "peerLabel": "UEngine"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "lifecycle_sequence",
+                    "peerScope": "engine/world",
+                    "peerNode": "lifecycle:LoadMap",
+                    "peerLabel": "Engine::LoadMap"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  }
+                ],
+                "width": 205,
+                "height": 82
+              }
+            },
+            {
+              "data": {
+                "id": "engine/world",
+                "domain": "ue5_code",
+                "label": "世界运行时",
+                "displayLabel": "世界运行时\n3 个内部节点  ·  ◁ 3  4 ▷",
+                "description": "随地图创建和销毁的 World 与世界级服务。",
+                "type": "meta_group",
+                "architectureNode": true,
+                "architectureLayer": false,
+                "drillScope": "engine/world",
+                "childCount": 3,
+                "children_count": 3,
+                "interfaceCount": 7,
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "owns",
+                    "peerScope": "engine/runtime",
+                    "peerNode": "FWorldContext",
+                    "peerLabel": "FWorldContext"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "loads",
+                    "peerScope": "engine/session",
+                    "peerNode": "UGameInstance",
+                    "peerLabel": "UGameInstance"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "creates",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameModeBase",
+                    "peerLabel": "AGameModeBase"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "owns",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraExperienceManagerComponent",
+                    "peerLabel": "ULyraExperienceManagerComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "lifecycle_sequence",
+                    "peerScope": "engine/session",
+                    "peerNode": "lifecycle:GameInstanceInit",
+                    "peerLabel": "GameInstance::Init"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "lifecycle_sequence",
+                    "peerScope": "engine/framework",
+                    "peerNode": "lifecycle:InitGame",
+                    "peerLabel": "GameMode::InitGame"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "composes",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameModeBase",
+                    "peerLabel": "AGameModeBase"
+                  }
+                ],
+                "width": 205,
+                "height": 82
+              }
+            },
+            {
+              "data": {
+                "id": "engine/framework",
+                "domain": "ue5_code",
+                "label": "Gameplay 框架职责",
+                "displayLabel": "Gameplay 框架职责\n17 个内部节点  ·  ◁ 11  2 ▷",
+                "description": "规则、公共状态、玩家身份、控制器和可占据身体的职责树。",
+                "type": "meta_group",
+                "architectureNode": true,
+                "architectureLayer": false,
+                "drillScope": "engine/framework",
+                "childCount": 17,
+                "children_count": 17,
+                "interfaceCount": 13,
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "creates",
+                    "peerScope": "engine/world",
+                    "peerNode": "UWorld",
+                    "peerLabel": "UWorld"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "inherits",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraGameMode",
+                    "peerLabel": "ALyraGameMode"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "inherits",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraGameState",
+                    "peerLabel": "ALyraGameState"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "owns",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraGameMode",
+                    "peerLabel": "ALyraGameMode"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraPawnExtensionComponent",
+                    "peerLabel": "ULyraPawnExtensionComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraHeroComponent",
+                    "peerLabel": "ULyraHeroComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "binds_as_owner",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "binds_as_avatar",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "lifecycle_sequence",
+                    "peerScope": "engine/world",
+                    "peerNode": "lifecycle:LoadMap",
+                    "peerLabel": "Engine::LoadMap"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "composes",
+                    "peerScope": "engine/world",
+                    "peerNode": "UWorld",
+                    "peerLabel": "UWorld"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/session",
+                    "peerNode": "UUserWidget",
+                    "peerLabel": "UUserWidget"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/session",
+                    "peerNode": "UInputMappingContext",
+                    "peerLabel": "UInputMappingContext"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/session",
+                    "peerNode": "ULocalPlayer",
+                    "peerLabel": "ULocalPlayer"
+                  }
+                ],
+                "width": 205,
+                "height": 82
+              }
+            },
+            {
+              "data": {
+                "id": "engine/modular",
+                "domain": "ue5_code",
+                "label": "模块化 Gameplay",
+                "displayLabel": "模块化 Gameplay\n20 个内部节点  ·  ◁ 4  10 ▷",
+                "description": "Lyra Experience、Game Features 与 Pawn 初始化装配链。",
+                "type": "meta_group",
+                "architectureNode": true,
+                "architectureLayer": false,
+                "drillScope": "engine/modular",
+                "childCount": 20,
+                "children_count": 20,
+                "interfaceCount": 14,
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameModeBase",
+                    "peerLabel": "AGameModeBase"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameStateBase",
+                    "peerLabel": "AGameStateBase"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "grants",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "owns",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySet",
+                    "peerLabel": "ULyraAbilitySet"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "owns",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "binds_as_owner",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "binds_as_avatar",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "configures",
+                    "peerScope": "engine/session",
+                    "peerNode": "ULocalPlayer",
+                    "peerLabel": "ULocalPlayer"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "injects",
+                    "peerScope": "engine/session",
+                    "peerNode": "concept:LocalUI",
+                    "peerLabel": "Local UI（概念）"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "owns",
+                    "peerScope": "engine/framework",
+                    "peerNode": "concept:AuthoritySpawn",
+                    "peerLabel": "Authority Spawn（概念）"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "owns",
+                    "peerScope": "engine/world",
+                    "peerNode": "UWorld",
+                    "peerLabel": "UWorld"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerState",
+                    "peerLabel": "APlayerState"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/gas",
+                    "peerNode": "ULyraAbilitySystemComponent",
+                    "peerLabel": "ULyraAbilitySystemComponent"
+                  }
+                ],
+                "width": 205,
+                "height": 82
+              }
+            },
+            {
+              "data": {
+                "id": "engine/gas",
+                "domain": "ue5_code",
+                "label": "Gameplay Ability System",
+                "displayLabel": "Gameplay Ability System\n9 个内部节点  ·  ◁ 4  4 ▷",
+                "description": "能力、效果、属性、标签与表现事件。",
+                "type": "meta_group",
+                "architectureNode": true,
+                "architectureLayer": false,
+                "drillScope": "engine/gas",
+                "childCount": 9,
+                "children_count": 9,
+                "interfaceCount": 8,
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "grants",
+                    "peerScope": "engine/modular",
+                    "peerNode": "UGameFeatureAction_AddAbilities",
+                    "peerLabel": "UGameFeatureAction_AddAbilities"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "owns",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ULyraPawnData",
+                    "peerLabel": "ULyraPawnData"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "owns",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraPlayerState",
+                    "peerLabel": "ALyraPlayerState"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "binds_as_owner",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraPlayerState",
+                    "peerLabel": "ALyraPlayerState"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "binds_as_avatar",
+                    "peerScope": "engine/modular",
+                    "peerNode": "ALyraCharacter",
+                    "peerLabel": "ALyraCharacter"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "binds_as_owner",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerState",
+                    "peerLabel": "APlayerState"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "binds_as_avatar",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APawn",
+                    "peerLabel": "APawn"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "engine/modular",
+                    "peerNode": "concept:GameplayReady",
+                    "peerLabel": "GameplayReady（InitState）"
+                  }
+                ],
+                "width": 205,
+                "height": 82
+              }
+            }
+          ],
+          "edges": [
+            {
+              "data": {
+                "id": "runtime-to-execution",
+                "domain": "ue5_code",
+                "source": "engine/runtime",
+                "target": "engine/execution",
+                "relation": "configures",
+                "label": "启动并附着线程",
+                "architectureEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "execution-to-world",
+                "domain": "ue5_code",
+                "source": "engine/execution",
+                "target": "engine/world",
+                "relation": "dispatches_to",
+                "label": "驱动 Tick / 归并结果",
+                "architectureEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "runtime-to-session",
+                "domain": "ue5_code",
+                "source": "engine/runtime",
+                "target": "engine/session",
+                "relation": "contains",
+                "label": "创建会话",
+                "architectureEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "runtime-to-world",
+                "domain": "ue5_code",
+                "source": "engine/runtime",
+                "target": "engine/world",
+                "relation": "contains",
+                "label": "持有 WorldContext",
+                "architectureEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "session-to-world",
+                "domain": "ue5_code",
+                "source": "engine/session",
+                "target": "engine/world",
+                "relation": "loads",
+                "label": "加载地图",
+                "architectureEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "world-to-framework",
+                "domain": "ue5_code",
+                "source": "engine/world",
+                "target": "engine/framework",
+                "relation": "contains",
+                "label": "生成玩法框架",
+                "architectureEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "framework-to-modular",
+                "domain": "ue5_code",
+                "source": "engine/framework",
+                "target": "engine/modular",
+                "relation": "contains",
+                "label": "扩展与装配",
+                "architectureEdge": true
+              }
+            },
+            {
+              "data": {
+                "id": "modular-to-gas",
+                "domain": "ue5_code",
+                "source": "engine/modular",
+                "target": "engine/gas",
+                "relation": "contains",
+                "label": "授予能力",
+                "architectureEdge": true
+              }
+            }
+          ]
+        }
+      },
+      "business/module/Sabotage": {
+        "id": "business/module/Sabotage",
+        "title": "Sabotage",
+        "description": "Sabotage 模块内部职责；对引擎依赖以节点接口点表达。",
+        "parentScope": "business",
+        "sourceDocuments": [
+          "ue5_code_project_2026-07-18.cyto.json"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "ASabotageCharacter",
+                "label": "ASabotageCharacter",
+                "type": "uactor",
+                "layer": "project",
+                "module": "Sabotage",
+                "domain": "ue5_code",
+                "description": "A simple player-controllable third person character Implements a controllable orbiting camera",
+                "source_path": "Sabotage/SabotageCharacter.h",
+                "tags": [
+                  "abstract"
+                ],
+                "ctor_assembles": [
+                  "CameraBoom",
+                  "FollowCamera"
+                ],
+                "inheritance_chain": [
+                  "UObject",
+                  "AActor",
+                  "APawn",
+                  "ACharacter",
+                  "ASabotageCharacter"
+                ],
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 4
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "ACharacter",
+                    "peerLabel": "ACharacter"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ASabotageGameMode",
+                "label": "ASabotageGameMode",
+                "type": "uactor",
+                "layer": "project",
+                "module": "Sabotage",
+                "domain": "ue5_code",
+                "description": "Simple GameMode for a third person game",
+                "source_path": "Sabotage/SabotageGameMode.h",
+                "tags": [
+                  "abstract"
+                ],
+                "inheritance_chain": [
+                  "UObject",
+                  "AActor",
+                  "AInfo",
+                  "AGameModeBase",
+                  "ASabotageGameMode"
+                ],
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 1
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameModeBase",
+                    "peerLabel": "AGameModeBase"
+                  }
+                ]
+              }
+            },
+            {
+              "data": {
+                "id": "ASabotagePlayerController",
+                "label": "ASabotagePlayerController",
+                "type": "uactor",
+                "layer": "project",
+                "module": "Sabotage",
+                "domain": "ue5_code",
+                "description": "Basic PlayerController class for a third person game Manages input mappings",
+                "source_path": "Sabotage/SabotagePlayerController.h",
+                "tags": [
+                  "abstract"
+                ],
+                "inheritance_chain": [
+                  "UObject",
+                  "AActor",
+                  "AController",
+                  "APlayerController",
+                  "ASabotagePlayerController"
+                ],
+                "visibility": "explored",
+                "metrics": {
+                  "in_degree": 0,
+                  "out_degree": 4
+                },
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "aggregates",
+                    "peerScope": "engine/session",
+                    "peerNode": "UInputMappingContext",
+                    "peerLabel": "UInputMappingContext"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/session",
+                    "peerNode": "UUserWidget",
+                    "peerLabel": "UUserWidget"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "composes",
+                    "peerScope": "engine/session",
+                    "peerNode": "UUserWidget",
+                    "peerLabel": "UUserWidget"
+                  }
+                ]
+              }
+            }
+          ],
+          "edges": []
+        }
+      },
+      "business": {
+        "id": "business",
+        "title": "业务层",
+        "description": "项目模块及其本层依赖；模块内部实现通过双击进入。",
+        "parentScope": "root",
+        "sourceDocuments": [
+          "ue5_code_project_2026-07-18.cyto.json"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "business/module/Sabotage",
+                "domain": "ue5_code",
+                "label": "Sabotage",
+                "displayLabel": "Sabotage\n3 个内部节点  ·  ◁ 0  6 ▷",
+                "description": "Sabotage 业务模块",
+                "type": "meta_group",
+                "architectureNode": true,
+                "architectureLayer": false,
+                "drillScope": "business/module/Sabotage",
+                "childCount": 3,
+                "children_count": 3,
+                "interfaceCount": 6,
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "ACharacter",
+                    "peerLabel": "ACharacter"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameModeBase",
+                    "peerLabel": "AGameModeBase"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "aggregates",
+                    "peerScope": "engine/session",
+                    "peerNode": "UInputMappingContext",
+                    "peerLabel": "UInputMappingContext"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/session",
+                    "peerNode": "UUserWidget",
+                    "peerLabel": "UUserWidget"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "composes",
+                    "peerScope": "engine/session",
+                    "peerNode": "UUserWidget",
+                    "peerLabel": "UUserWidget"
+                  }
+                ],
+                "width": 205,
+                "height": 82
+              }
+            }
+          ],
+          "edges": []
+        }
+      },
+      "root": {
+        "id": "root",
+        "title": "代码架构脑图",
+        "description": "一张可钻取的引擎层 × 线程执行模型 × 业务层职责树。",
+        "sourceDocuments": [
+          "ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+          "ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+          "ue5_code_network-scope-reference_2026-07-12.cyto.json",
+          "ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+          "ue5_code_framework-reference_2026-07-11.cyto.json",
+          "ue5_code_project_2026-07-18.cyto.json"
+        ],
+        "elements": {
+          "nodes": [
+            {
+              "data": {
+                "id": "engine",
+                "domain": "ue5_code",
+                "label": "引擎层",
+                "displayLabel": "引擎层\n7 个内部节点  ·  ◁ 6  0 ▷",
+                "description": "从进程运行时、线程任务执行到玩法能力的职责层级；横切资料已融合进对应系统。",
+                "type": "meta_group",
+                "architectureNode": true,
+                "architectureLayer": true,
+                "drillScope": "engine",
+                "childCount": 7,
+                "children_count": 7,
+                "interfaceCount": 6,
+                "interfaces": [
+                  {
+                    "direction": "in",
+                    "relation": "inherits",
+                    "peerScope": "business",
+                    "peerNode": "ACharacter",
+                    "peerLabel": "ACharacter"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "inherits",
+                    "peerScope": "business",
+                    "peerNode": "AGameModeBase",
+                    "peerLabel": "AGameModeBase"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "inherits",
+                    "peerScope": "business",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "aggregates",
+                    "peerScope": "business",
+                    "peerNode": "UInputMappingContext",
+                    "peerLabel": "UInputMappingContext"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "depends_on",
+                    "peerScope": "business",
+                    "peerNode": "UUserWidget",
+                    "peerLabel": "UUserWidget"
+                  },
+                  {
+                    "direction": "in",
+                    "relation": "composes",
+                    "peerScope": "business",
+                    "peerNode": "UUserWidget",
+                    "peerLabel": "UUserWidget"
+                  }
+                ],
+                "width": 230,
+                "height": 92
+              }
+            },
+            {
+              "data": {
+                "id": "business",
+                "domain": "ue5_code",
+                "label": "业务层",
+                "displayLabel": "业务层\n1 个内部节点  ·  ◁ 0  6 ▷",
+                "description": "项目模块及其本层依赖；模块内部实现通过双击进入。",
+                "type": "meta_group",
+                "architectureNode": true,
+                "architectureLayer": true,
+                "drillScope": "business",
+                "childCount": 1,
+                "children_count": 1,
+                "interfaceCount": 6,
+                "interfaces": [
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "ACharacter",
+                    "peerLabel": "ACharacter"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "AGameModeBase",
+                    "peerLabel": "AGameModeBase"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "inherits",
+                    "peerScope": "engine/framework",
+                    "peerNode": "APlayerController",
+                    "peerLabel": "APlayerController"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "aggregates",
+                    "peerScope": "engine/session",
+                    "peerNode": "UInputMappingContext",
+                    "peerLabel": "UInputMappingContext"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "depends_on",
+                    "peerScope": "engine/session",
+                    "peerNode": "UUserWidget",
+                    "peerLabel": "UUserWidget"
+                  },
+                  {
+                    "direction": "out",
+                    "relation": "composes",
+                    "peerScope": "engine/session",
+                    "peerNode": "UUserWidget",
+                    "peerLabel": "UUserWidget"
+                  }
+                ],
+                "width": 230,
+                "height": 92
+              }
+            }
+          ],
+          "edges": [
+            {
+              "data": {
+                "id": "engine-supports-business",
+                "domain": "ue5_code",
+                "source": "engine",
+                "target": "business",
+                "relation": "contains",
+                "label": "框架接口",
+                "architectureEdge": true
+              }
+            }
+          ]
+        }
+      }
+    },
+    "format_version": 2,
+    "provenance": {
+      "schema_version": 1,
+      "status": "unknown",
+      "source_kind": "unknown",
+      "source_roots": []
+    },
+    "coverage": {
+      "status": "unknown",
+      "discovered_files": null,
+      "consumed_files": null,
+      "skipped_files": null,
+      "failed_files": null,
+      "diagnostics": [
+        {
+          "code": "legacy-v1-no-provenance-or-coverage"
+        }
+      ]
+    }
+  },
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "engine",
+          "domain": "ue5_code",
+          "label": "引擎层",
+          "displayLabel": "引擎层\n7 个内部节点  ·  ◁ 6  0 ▷",
+          "description": "从进程运行时、线程任务执行到玩法能力的职责层级；横切资料已融合进对应系统。",
+          "type": "meta_group",
+          "architectureNode": true,
+          "architectureLayer": true,
+          "drillScope": "engine",
+          "childCount": 7,
+          "children_count": 7,
+          "interfaceCount": 6,
+          "interfaces": [
+            {
+              "direction": "in",
+              "relation": "inherits",
+              "peerScope": "business",
+              "peerNode": "ACharacter",
+              "peerLabel": "ACharacter"
+            },
+            {
+              "direction": "in",
+              "relation": "inherits",
+              "peerScope": "business",
+              "peerNode": "AGameModeBase",
+              "peerLabel": "AGameModeBase"
+            },
+            {
+              "direction": "in",
+              "relation": "inherits",
+              "peerScope": "business",
+              "peerNode": "APlayerController",
+              "peerLabel": "APlayerController"
+            },
+            {
+              "direction": "in",
+              "relation": "aggregates",
+              "peerScope": "business",
+              "peerNode": "UInputMappingContext",
+              "peerLabel": "UInputMappingContext"
+            },
+            {
+              "direction": "in",
+              "relation": "depends_on",
+              "peerScope": "business",
+              "peerNode": "UUserWidget",
+              "peerLabel": "UUserWidget"
+            },
+            {
+              "direction": "in",
+              "relation": "composes",
+              "peerScope": "business",
+              "peerNode": "UUserWidget",
+              "peerLabel": "UUserWidget"
+            }
+          ],
+          "width": 230,
+          "height": 92
+        }
+      },
+      {
+        "data": {
+          "id": "business",
+          "domain": "ue5_code",
+          "label": "业务层",
+          "displayLabel": "业务层\n1 个内部节点  ·  ◁ 0  6 ▷",
+          "description": "项目模块及其本层依赖；模块内部实现通过双击进入。",
+          "type": "meta_group",
+          "architectureNode": true,
+          "architectureLayer": true,
+          "drillScope": "business",
+          "childCount": 1,
+          "children_count": 1,
+          "interfaceCount": 6,
+          "interfaces": [
+            {
+              "direction": "out",
+              "relation": "inherits",
+              "peerScope": "engine/framework",
+              "peerNode": "ACharacter",
+              "peerLabel": "ACharacter"
+            },
+            {
+              "direction": "out",
+              "relation": "inherits",
+              "peerScope": "engine/framework",
+              "peerNode": "AGameModeBase",
+              "peerLabel": "AGameModeBase"
+            },
+            {
+              "direction": "out",
+              "relation": "inherits",
+              "peerScope": "engine/framework",
+              "peerNode": "APlayerController",
+              "peerLabel": "APlayerController"
+            },
+            {
+              "direction": "out",
+              "relation": "aggregates",
+              "peerScope": "engine/session",
+              "peerNode": "UInputMappingContext",
+              "peerLabel": "UInputMappingContext"
+            },
+            {
+              "direction": "out",
+              "relation": "depends_on",
+              "peerScope": "engine/session",
+              "peerNode": "UUserWidget",
+              "peerLabel": "UUserWidget"
+            },
+            {
+              "direction": "out",
+              "relation": "composes",
+              "peerScope": "engine/session",
+              "peerNode": "UUserWidget",
+              "peerLabel": "UUserWidget"
+            }
+          ],
+          "width": 230,
+          "height": 92
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "engine-supports-business",
+          "domain": "ue5_code",
+          "source": "engine",
+          "target": "business",
+          "relation": "contains",
+          "label": "框架接口",
+          "architectureEdge": true
+        }
+      }
+    ]
+  }
+}

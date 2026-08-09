@@ -1,156 +1,57 @@
-# Graph Brain — Progress Tracker
+# GraphBrain current status
 
-> 本文件由 Claude Code 在每次会话结束时自动更新。
-> 完成的 Phase 会自动毕业到 `docs/architecture.md`，本文件只保留活跃内容。
-> 详见 CLAUDE.md 中的「阶段毕业协议」。
+> Updated: 2026-08-09
 
----
+## Product state
 
-## 当前状态
+GraphBrain has converged to a read-only UE code architecture viewer with three top-level destinations: Overview, Explore, and Changes. Architecture, relations and API are modes inside Explore. Code facts are read-only; annotations and favorites remain as user-owned reading context.
 
-- **Phase**: 2
-- **最新完成**: P2U1 — .h 头文件解析器
-- **下一步**: P2U2 — Actor 生命周期序列节点
-- **上次会话**: 2026-07-02
+The 2026-08-09 trust audit found that format-valid graphs could still be stale because the catalog exposed file mtimes as update times. Graph format v2 now owns explicit provenance, SHA-256 path/content fingerprints, extraction coverage, and diagnostics. The current Sabotage snapshot verifies against 37 discovered inputs; 33 are consumed and four standalone test translation units are explicitly diagnosed as unsupported. The superseded July project graph is recoverably archived under `data/archive/project-snapshots-v1/`.
 
----
+Annotations, server function favorites, browser class favorites, and browser function navigation caches now converge on `data/reading-context/ue5_code.json`. The document has an explicit format version and monotonic revision; missing preconditions return 428 and stale revisions return 409 with the latest projection. Fifteen legacy annotation node entries were migrated losslessly and their three source files were hash-addressed under `data/archive/reading-context-v1/`.
 
-## Phase 1: ✅ 已完成 — 详见 docs/architecture.md
+Versioned change reports now compare explicit graph snapshots without copying canonical node facts. The first report compares the archived 2026-07-18 project baseline with the verified 2026-08-09 graph: 400 nodes added, 18 semantically changed, 77 relations added, and 55 one-hop affected nodes across eight modules. The baseline remains honestly unverified because its old format has no source fingerprint. Reports use format v1, validate their current file/subsystem/fingerprint against the active graph, and have a lossless exit path because they are derived and rebuildable.
 
----
+## Authoring platform retirement
 
-## Phase 2: 引擎种子层 + 类解析
+Completed with explicit user approval:
 
-> 目标：解析 .h 头文件 → 类关系图谱 + Actor 生命周期 + 三态节点 + 项目代码映射。
-> 本 Phase 结束时，查看器里应能看到 Sabotage 的类级图谱（含函数节点）挂接在
-> 引擎种子类之下，并支持 Fog / Silhouette / Explored 折叠交互。
+- Deleted design, level, narrative, quest, planned-code, review, delivery, timeline, workbench, registry, report, design-package and task-package data and code paths.
+- Deleted 466 persisted data files. Receipt: `data/archive/authoring-platform-v1/deletion-manifest.json`.
+- Deleted 10 standalone authoring prototype/design-card files. Receipt: `data/archive/authoring-platform-v1/residual-deletion-manifest.json`.
+- Migrated two retired-domain annotation files byte-for-byte to `data/archive/authoring-platform-v1/annotations/`.
+- Migrated one orphan code-annotation file byte-for-byte to `data/archive/authoring-platform-v1/annotations/orphaned-code/`.
+- Kept three active annotation files whose subsystem owner exists in active `ue5_code` graphs.
+- Centralized retired HTTP APIs as deterministic 410 responses and retired URLs as home diagnostics.
 
-### P2U1 — .h 头文件解析器 ✅（2026-07-02 完成）
+The deleted authoring content is not recoverable from GraphBrain. The manifest records path, byte count, and SHA-256 for audit; restoration would require an external backup or repository history and a new explicit migration review.
 
-**输入**: `G:\UnrealProject\Sabotage\Source` 下全部 `.h`
-**产出**:
-- `adapters/ue5-code/extract-classes.ts`（解析器可拆分为独立模块复用注释剥离等逻辑）
-- 解析 UCLASS / USTRUCT / UENUM / UINTERFACE 宏与继承链 →
-  `uclass` / `uactor` / `ucomponent` / `ustruct` / `uenum` / `uinterface` 节点
-  （uactor/ucomponent 依据基类链判定）+ `inherits` / `implements` 边
-- UPROPERTY 组件成员（TObjectPtr/TSubobjectPtr 等）→ `composes` 边
-- UFUNCTION 签名提取 → `ufunction` 节点（`parent` = 所属类，compound 关系）+
-  `api` 自动字段：signature / return_type / params.name / params.type /
-  cpp_only / blueprint_exposable
-- 输出 `ue5_code_classes_{date}.cyto.json`，与模块图并存
+## Cross-tool migration
 
-**验收**: 对 Sabotage 全部 .h 运行，产物通过 schema 验证；抽查 3 个类
-（含至少 1 个带 UFUNCTION 的）与源码逐字段一致
+- ClaudeGameStudios now exclusively owns architecture decisions, level plans, Programmer implementation planning, review, and delivery.
+- Removed GraphBrain task-package mode from `dev-story`, `story-readiness`, `story-done`, and `sprint-status`.
+- Updated the UE-native level-builder workflow so UE owns spatial/runtime facts and GraphBrain is optional read-only code evidence.
+- Removed design-asset and document “GraphBrain backfill” paths from ToolRegistry.
 
-**完成记录**：
-- `adapters/ue5-code/extract-classes.ts`（npm script `extract:ue5-classes`）：
-  注释"等长空格替换"剥离（索引对齐，/** */ 文档块按位置回挂 description）；
-  访问标签 public:/protected:/private: 等长替换为 ';'（防函数声明正则跨标签
-  吞并——抽查实测抓到并修复的 bug）；UPROPERTY 持有语义映射
-  TObjectPtr/T*→composes、TArray<指针>/TWeakObjectPtr→aggregates、
-  TSubclassOf→depends_on；UFUNCTION 与无宏普通函数都生成 ufunction 节点
-  （cpp_only 区分）；UCLASS(abstract)→tags、Category→#场景标签、override→tag
-- 引擎侧引用类型用命名启发式判定（A*→uactor、*Component→ucomponent 等），
-  engine/silhouette，P2U4 种子层引入真实数据后可覆盖修正
-- 产物 `ue5_code_classes_2026-07-02.cyto.json`：23 节点（3 项目类 + 12 ufunction +
-  8 引擎引用）、9 边，通过 schema 验证；3 个类逐字段抽查全对（DoMove 的 api
-  签名/参数/blueprint_exposable=true、Move 的 cpp_only=true、FORCEINLINE getter
-  返回类型干净）
-- 样式表补 type 形状（ucomponent 圆角矩形/uinterface 菱形/ustruct·uenum 六边形/
-  ufunction 小号）+ compound 容器样式（类节点含函数子节点）
-- 顺带清理（用户要求）：Sabotage.Build.cs 中已删除变种目录的 PublicIncludePaths
-  残留已清（Variant_* 与 Test/Interfaces，仅存 "Sabotage"）；Saved/ 下的 Variant
-  引用是编辑器缓存，会自动重建，不处理
+## Active format
 
----
+- Graphs: `ue5_code`, `format_version: 2`, with explicit provenance and coverage.
+- Reading context: `ue5_code` only, versioned annotations plus class/function favorites with revision protection.
+- Change reports: `ue5_code`, `format_version: 1`, derived snapshot comparisons with canonical-current reference checks.
+- Archives: excluded from runtime catalog, file APIs, and default validation.
 
-### P2U2 — Actor 生命周期序列节点
+## Compatibility lifetime
 
-**输入**: P2U1 的类图谱
-**产出**:
-- Actor 生命周期 `lifecycle_step` 节点链（PostInitProperties → OnConstruction →
-  PreInitializeComponents → PostInitializeComponents → BeginPlay → Tick → EndPlay）
-  + `lifecycle_sequence` 边（带 order 序号）
-- 项目类覆写的生命周期函数 → `overrides` 边挂到对应 step 节点
-- 生命周期链作为独立子图或叠加层并入类图谱
+Retired 410 endpoints remain through the GraphBrain 0.x line. Removal requires a 1.0 breaking change plus an audit showing no known consumer still calls them.
 
-**验收**: 查看器中能看到顺序正确的生命周期链，Sabotage 覆写的函数正确连线
+## Resident service and stability (2026-08-09)
 
----
+The resident viewer now has a versioned deployment boundary. Release manifest v3 / runtime protocol 1 content-addresses the frontend, bundled server runtime, and manifest bootstrap as one immutable artifact; live UE facts remain under the canonical project `data/` root. Frontend-only v1 and incomplete runtime v2 releases enter through one explicit ID migration into v3. Preparation builds on an isolated directory and port, validates the HTTP catalog/report contracts plus all five workspaces, and writes `prepared_release` only after success. Activation and rollback preserve NSSM configuration and use optimistic deployment-state revisions.
 
-### P2U3 — 三态节点交互
+A same-document workspace soak gate records a versioned runtime report after forced GC. The 12-cycle verification retained one Document, held DOM nodes and event listeners at zero slope, and measured a 0.06 MiB/cycle heap slope with 0.571 MiB net post-warmup growth. The active NSSM service remains on the legacy launch command until `npm run service:activate` is run from an Administrator terminal; the fully validated v3 candidate is prepared and the failed non-admin attempt made no service change.
 
-**输入**: P2U1/U2 的图谱
-**产出**:
-- 按 module 折叠的 `meta_group` 生成逻辑（children_count 正确）
-- 查看器交互：点击 fog 节点 → 提示展开；explored 节点右键 → 折叠回 silhouette；
-  silhouette 容器内点击节点 → 展开直接依赖
-- 折叠/展开状态持久化（刷新不丢）
+## Atomic code-fact publication (2026-08-09)
 
-**验收**: 折叠 → 展开 → 再折叠循环操作无数据丢失、无孤立边
+Generated project graphs and change reports now publish through `data/publications/ue5_code.json` format v1. Payloads are immutable SHA-256-addressed files; schema/reference validation and atomic parse-cache persistence complete before one optimistic-revision pointer write exposes the generation. Catalog, direct graph reads, projections, change reports, and annotation staleness share this resolver. Old dated artifacts remain readable through the centralized legacy boundary and are neither overwritten nor inferred into publication state.
 
----
-
-### P2U4 — 种子层填充
-
-**输入**: 引擎参考资料 + Sabotage 实际用到的引擎子系统
-**产出**:
-- GAS / Enhanced Input / Animation（+ StateTree，Sabotage 实际依赖）入口类种子数据
-  （手工整理，layer="engine"），入口类 silhouette、其余 fog
-- 种子图与 P2U1 项目类图合并加载
-
-**验收**: 查看器能看到种子子系统，入口类带 description
-
----
-
-### P2U5 — 项目类挂载引擎节点
-
-**输入**: P2U1 产物 + P2U4 种子层
-**产出**:
-- 项目类 → 引擎基类的 `inherits` 边自动跨层连接（触发引擎节点
-  fog→silhouette→explored 自动转换规则落地）
-- 覆写引擎虚函数 → `overrides` 边
-
-**验收**: Sabotage 全部自定义类挂在对应引擎基类下，无悬空引用
-
----
-
-### P2U6 — Phase 2 集成验证 + 毕业
-
-**输入**: P2U1–U5 全部产出
-**产出**:
-- 端到端验证：改一个 .h（加函数/改继承）→ 重跑 Adapter → 查看器正确反映
-- 执行「阶段毕业协议」：决策写入 docs/architecture.md，精简本节，展开 Phase 3
-
-**验收**: 完整通路无报错，docs/architecture.md 追加 Phase 2 章节
-
----
-
-## Phase 3: 标注系统 + 双视图查询界面（待展开）
-
-> 目标：双视图（Graph Explorer + API Reference） + 双模查询（视觉 + 文本） + Focus 模式 + Mermaid 内嵌 + 标注增强
-> 到达此 Phase 时展开。
-
-预估 work units：
-1. P3U1 — 全文搜索 + 按类型/标签过滤（同时服务 Graph View 和 API View）
-2. P3U2 — API Reference View（过滤 `ufunction` 节点 → 树形导航 + 表格/卡片列表 + 场景标签筛选 `#combat` `#gas` 等）
-3. P3U3 — 双向跳转（API 条目 → 图谱定位；图谱 ufunction 节点 → API 详情卡片）
-4. P3U4 — Focus 模式（N 跳邻域高亮）
-5. P3U5 — Mermaid 序列图内嵌渲染
-6. P3U6 — 标注侧边栏增强（类型图标、排序、跳转，两个视图共享）
-7. P3U7 — Phase 3 集成验证 + 毕业
-
----
-
-## Phase 4: 自动化 + 多领域扩展（待展开）
-
-> 目标：commit hook 自动更新 + 标注陈旧检测 + Adapter 接口抽离 + 第二个领域
-> 到达此 Phase 时展开。
-
-预估 work units：
-1. P4U1 — Adapter 接口正式抽离（从 ue5-code 中提取通用部分）
-2. P4U2 — 增量更新管线（diff 而非全量重建）
-3. P4U3 — 标注陈旧检测（source_hash 比对 + stale 标记）
-4. P4U4 — VCS hook 集成（Lore 或 Git 的 post-commit 触发扫描）
-5. P4U5 — 第二个领域适配器（Level Design 或 Narrative）
-6. P4U6 — 跨领域边支持 + Phase 4 毕业
+The live Sabotage pipeline completed two zero-diff generations and a real pointer publish → rollback → re-activate drill. Publication revision is 4. Reading context remains its own canonical revisioned owner and is scanned only after a successful fact publication; it is not duplicated inside the generation manifest.

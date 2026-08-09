@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-brain.local/schema/quest-program.schema.json",
+  "title": "Graph Brain QuestProgram",
+  "type": "object",
+  "required": ["meta", "quests", "nodes", "edges"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["format_version", "program_id", "project_id", "title", "version"],
+      "properties": {
+        "format_version": { "const": 2 },
+        "program_id": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "project_id": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "version": { "type": "integer", "minimum": 1 },
+        "updated_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "quests": {
+      "type": "array",
+      "maxItems": 5000,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["id", "kind", "title", "summary", "space_id"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1, "maxLength": 160 },
+              "kind": { "const": "local" },
+              "title": { "type": "string", "maxLength": 240 },
+              "summary": { "type": "string", "maxLength": 2000 },
+              "space_id": { "type": "string", "minLength": 1, "maxLength": 160 },
+              "parent_quest_id": { "type": "string", "minLength": 1, "maxLength": 160 }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["id", "kind", "title", "summary"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1, "maxLength": 160 },
+              "kind": { "const": "journey" },
+              "title": { "type": "string", "maxLength": 240 },
+              "summary": { "type": "string", "maxLength": 2000 }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "required": ["id", "quest_id", "primitive", "spec", "layout"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "quest_id": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "primitive": { "enum": ["entity", "event", "action", "condition", "effect", "control", "outcome", "quest_ref"] },
+          "spec": {
+            "type": "object",
+            "required": ["preset_id", "name", "parameters"],
+            "properties": {
+              "preset_id": { "type": "string", "minLength": 1 },
+              "name": { "type": "string", "maxLength": 500 },
+              "parameters": {
+                "type": "object",
+                "additionalProperties": { "type": ["string", "number", "boolean"] }
+              },
+              "ref": { "$ref": "#/definitions/ref" }
+            },
+            "additionalProperties": false
+          },
+          "layout": { "$ref": "#/definitions/point2" },
+          "placement": { "$ref": "#/definitions/placement" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "maxItems": 30000,
+      "items": {
+        "type": "object",
+        "required": ["id", "quest_id", "kind", "source", "target", "spec"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "quest_id": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "kind": { "enum": ["flow", "role", "relation", "dependency"] },
+          "source": { "$ref": "#/definitions/endpoint" },
+          "target": { "$ref": "#/definitions/endpoint" },
+          "route_id": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "spec": {
+            "type": "object",
+            "required": ["preset_id", "parameters"],
+            "properties": {
+              "preset_id": { "type": "string", "minLength": 1 },
+              "parameters": {
+                "type": "object",
+                "additionalProperties": { "type": ["string", "number", "boolean"] }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "definitions": {
+    "point2": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 10000 },
+        "y": { "type": "number", "minimum": 0, "maximum": 10000 }
+      },
+      "additionalProperties": false
+    },
+    "placement": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "route_id", "t"],
+          "properties": {
+            "kind": { "const": "route" },
+            "route_id": { "type": "string", "minLength": 1 },
+            "t": { "type": "number", "minimum": 0, "maximum": 1 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "x", "y", "elevation"],
+          "properties": {
+            "kind": { "const": "world_point" },
+            "x": { "type": "number", "minimum": 0, "maximum": 100000 },
+            "y": { "type": "number", "minimum": 0, "maximum": 100000 },
+            "elevation": { "type": "number", "minimum": -10000, "maximum": 10000 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "endpoint": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "node_id"],
+          "properties": {
+            "kind": { "const": "node" },
+            "node_id": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "space_id"],
+          "properties": {
+            "kind": { "const": "space" },
+            "space_id": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ref": {
+      "type": "object",
+      "required": ["domain", "subsystem", "node_id"],
+      "properties": {
+        "domain": { "type": "string", "minLength": 1 },
+        "subsystem": { "type": "string", "minLength": 1 },
+        "node_id": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

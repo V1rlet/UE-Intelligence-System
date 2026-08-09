@@ -2,14 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://graph-brain.local/schema/annotation.schema.json",
   "title": "Graph Brain Annotation File (*_annotations.json)",
-  "description": "标注文件：条目数组，每条通过 node_id 关联图谱节点。与 graph JSON 分离存储，避免 Adapter 重新生成图谱时覆盖手动标注。",
+  "description": "Legacy/API annotation projection. Active persistence is reading-context.schema.json; this array shape remains only for examples and thin endpoint compatibility.",
   "type": "array",
   "items": {
     "type": "object",
     "required": ["node_id", "domain", "annotations"],
     "properties": {
       "node_id": { "type": "string", "minLength": 1 },
-      "domain": { "type": "string", "minLength": 1 },
+        "domain": { "const": "ue5_code" },
       "annotations": {
         "type": "array",
         "items": {

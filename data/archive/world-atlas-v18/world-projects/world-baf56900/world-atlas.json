@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "atlas_id": "atlas_river_depot",
+    "project_id": "world-baf56900",
+    "title": "河谷仓库行动地图",
+    "format_version": 18,
+    "version": 1,
+    "generated_at": "2026-08-06T18:51:09.965Z"
+  },
+  "canvas": {
+    "width": 800,
+    "height": 500,
+    "default_tilt": 48,
+    "default_rotation": -5,
+    "min_zoom": 0.65,
+    "max_zoom": 2.1,
+    "default_vertical_scale": 2,
+    "elevation_unit": "m"
+  },
+  "spaces": [
+    {
+      "id": "site_gate",
+      "label": "仓库大门",
+      "kind": "site",
+      "summary": "",
+      "geometry": {
+        "type": "point",
+        "x": 120,
+        "y": 250
+      },
+      "elevation": 0
+    },
+    {
+      "id": "site_office",
+      "label": "办公室",
+      "kind": "site",
+      "summary": "",
+      "geometry": {
+        "type": "point",
+        "x": 400,
+        "y": 180
+      },
+      "elevation": 3
+    },
+    {
+      "id": "site_loft",
+      "label": "阁楼",
+      "kind": "site",
+      "summary": "",
+      "geometry": {
+        "type": "point",
+        "x": 620,
+        "y": 250
+      },
+      "elevation": 8
+    }
+  ],
+  "routes": [
+    {
+      "id": "route_gate_office",
+      "label": "主通道",
+      "from": "site_gate",
+      "to": "site_office",
+      "mode": "road",
+      "via": [
+        [
+          120,
+          250,
+          0
+        ],
+        [
+          400,
+          180,
+          3
+        ]
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "id": "beat_entry",
+      "label": "进入仓库",
+      "kind": "story",
+      "at": "site_gate",
+      "summary": "",
+      "participants": [],
+      "duration_seconds": 3,
+      "transitions": [
+        {
+          "target_beat_id": "beat_sneak",
+          "trigger": "advance",
+          "cut": "hard"
+        }
+      ]
+    },
+    {
+      "id": "beat_sneak",
+      "label": "潜过窄门",
+      "kind": "quest",
+      "at": "site_office",
+      "summary": "",
+      "participants": [],
+      "duration_seconds": 4,
+      "transitions": [
+        {
+          "target_beat_id": "beat_loft",
+          "trigger": "advance",
+          "cut": "fade"
+        }
+      ]
+    },
+    {
+      "id": "beat_loft",
+      "label": "阁楼侦察",
+      "kind": "main_quest",
+      "at": "site_loft",
+      "summary": "",
+      "participants": [],
+      "duration_seconds": 2,
+      "transitions": []
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "draft",
+      "label": "默认阶段",
+      "chapter": 1,
+      "summary": "仓库常态，玩家从大门进入并探索阁楼。",
+      "quest_states": {
+        "quest/world-baf56900::beat_sneak": "active"
+      },
+      "flags": {}
+    }
+  ],
+  "blockout": {
+    "grid_size": 25,
+    "snap_enabled": true,
+    "objects": [
+      {
+        "id": "wb_floor",
+        "label": "仓库底板",
+        "primitive": "box",
+        "role": "space",
+        "position": {
+          "x": 400,
+          "y": 250,
+          "z": 0
+        },
+        "size": {
+          "x": 500,
+          "y": 300,
+          "z": 4
+        },
+        "rotation": 0,
+        "tone": "slate"
+      },
+      {
+        "id": "wb_narrow_arch",
+        "label": "窄门洞",
+        "primitive": "arch",
+        "role": "traversal",
+        "position": {
+          "x": 260,
+          "y": 250,
+          "z": 0
+        },
+        "size": {
+          "x": 40,
+          "y": 4,
+          "z": 30
+        },
+        "rotation": 0,
+        "tone": "red"
+      },
+      {
+        "id": "wb_steep_ramp",
+        "label": "陡坡道",
+        "primitive": "ramp",
+        "role": "traversal",
+        "position": {
+          "x": 550,
+          "y": 250,
+          "z": 4
+        },
+        "size": {
+          "x": 30,
+          "y": 40,
+          "z": 60
+        },
+        "rotation": 0,
+        "tone": "amber"
+      },
+      {
+        "id": "wb_loft_floor",
+        "label": "阁楼板",
+        "primitive": "box",
+        "role": "space",
+        "position": {
+          "x": 620,
+          "y": 250,
+          "z": 8
+        },
+        "size": {
+          "x": 120,
+          "y": 100,
+          "z": 3
+        },
+        "rotation": 0,
+        "tone": "cyan"
+      }
+    ]
+  }
+}

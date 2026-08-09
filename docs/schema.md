@@ -1,168 +1,63 @@
-# Graph Brain — JSON Schema 规范（独立参考）
+# 活动数据格式
 
-> 从 CLAUDE.md 提取的 schema 详细规范，与 `core/schema/*.schema.json` 一一对应。
-> 修改 schema 时同步更新本文档与对应的 `.schema.json` 文件。
+GraphBrain 的活动持久化格式只有三类：UE 代码图、reading-context，以及可重建的代码变化报告。所有旧设计、规划、关卡、叙事、任务、时间线与交付格式均已退役，不由当前 schema 接受。
 
----
+## 图：`*.cyto.json`
 
-## 文件与 Schema 对应关系
+`core/schema/graph.schema.json` 要求：
 
-| 文件类型 | 命名规范 | Schema 文件 | 判定规则 |
-|----------|----------|-------------|----------|
-| 图谱文件 | `{domain}_{subsystem}_{date}.cyto.json` | `graph.schema.json`（引用 node/edge） | 文件名以 `.cyto.json` 结尾，或内容含 `elements` 键 |
-| 标注文件 | `{domain}_{subsystem}_annotations.json` | `annotation.schema.json` | 文件名以 `_annotations.json` 结尾，或顶层为数组 |
+- `meta.domain` 固定为 `ue5_code`。
+- `meta.format_version` 固定为 `2`。
+- `meta.generated_at` 与 `meta.generator` 明确记录提取时间和生成器。
+- `meta.provenance` 是源码来源的唯一所有者：包含版本化来源 schema、来源类型、源码根，以及仅在可证明时写入的 SHA-256 内容指纹。
+- `meta.coverage` 明确记录发现、消费、跳过、失败文件数和逐项诊断；旧图迁移后的值为 `unknown`，不得补猜。
+- `meta.subsystem` 提供稳定子系统身份。
+- `elements.nodes[]` 与 `elements.edges[]` 显式存在。
+- 节点/边 ID 全局唯一，边端点和 parent 必须命中现存节点。
+- 节点类型与关系受 `adapters/ue5-code/meta.ts` 的领域声明约束。
 
-**验证命令**：
+持久化结构升级时必须增加格式版本，并提供确定、幂等、可测试的迁移。不得从文件名或日期猜版本。v1 的 `meta.source_root` 只在 `core/schema/graph-version.ts` 兼容边界读取；v2 写入者只使用 `provenance.source_roots`。
 
-```bash
-npx tsx core/schema/validate.ts <file.json...>
-npm run validate:examples   # 验证 core/schema/examples/ 下的手写示例
+## 阅读上下文：`data/reading-context/ue5_code.json`
+
+`core/schema/reading-context.schema.json` 统一持有标注与收藏：
+
+- `format_version = 1`、`domain = "ue5_code"`；
+- `revision` 每次成功写入单调增加，HTTP 写入必须携带 `If-Match`；不匹配返回 409 和最新投影；
+- 标注的 `subsystem/node_id` 必须指向活动代码图真实节点，类型为 gotcha、best_practice、design_decision、performance 或 reference；
+- 收藏使用 `kind/source/node_id` 作为稳定身份，类与函数不再分散在服务端文件和 localStorage；
+- 源码绑定字段用于检测陈旧度，不取代 node ID。
+
+标注可以描述架构观察或历史决策，但不能新增类、关系、计划或实现状态。
+
+旧 `data/annotations/*_annotations.json` 与 `data/api-favorites/*` 只由 `tools/migrate-reading-context.ts` 读取；迁移后进入带 SHA-256 清单的归档，不再是运行时输入。旧浏览器收藏键只由 `viewer/src/readingContextMigration.ts` 处理。
+
+## 变化报告：`data/changes/*.change.json`
+
+`core/schema/change-report.schema.json` 定义 `format_version = 1` 的只读派生格式：
+
+- `baseline/current` 只持有快照文件名、提取时间和可用的来源指纹；旧 v1 基线没有证据时明确保存 `null`，不猜测；
+- `changes` 记录按稳定 ID 排序的新增、移除、语义修改节点与关系；布局 `position` 和提取统计 `metrics` 不制造语义修改；
+- `impact.direct_node_ids` 是直接变化集合，`affected_node_ids` 只是一跳关系邻居，两者不混为实现结论；
+- 默认校验要求 `current.file`、subsystem 和指纹命中活动图；基线允许位于归档，因为归档不会被 UI 当活动事实加载。
+
+这是新增派生格式，不迁移既有用户内容。旧图可直接作为基线输入。退出/回滚路径是删除 `data/changes` 中的报告：活动图与 reading-context 不受影响，变化页显示空状态；需要时可用两份图确定性重建。增量提取只在基线与目标文件名不同的情况下自动生成报告，同日覆盖会拒绝制造含糊基线并要求显式归档或比较。
+
+## 归档
+
+`data/archive/` 不属于活动 schema 表面。迁移 manifest 自带独立 `schema` 标识、文件哈希与策略说明；默认 validator、catalog 和服务器文件读取均排除归档。
+
+## 校验
+
+```powershell
+npm run validate
+npm run validate:examples
+npm run migrate:graph-versions
+npm run migrate:graph-versions -- --apply
+npm run migrate:graph-versions -- --apply --rollback-v1
+npm run migrate:reading-context
+npm run migrate:reading-context -- --apply
+npm run build:change-report -- --baseline <旧图> --current <当前图>
 ```
 
-结构校验之外，验证脚本还做图内引用一致性检查：节点 id 不重复、边的 source/target
-及节点的 parent 必须指向图内存在的节点。
-
----
-
-## 图谱文件顶层结构
-
-```jsonc
-{
-  "meta": {                                 // 溯源信息（可选但推荐）
-    "domain":       "ue5_code",
-    "subsystem":    "gas",
-    "generated_at": "2026-07-02T05:30:00Z", // ISO 8601
-    "generator":    "ue5-code-adapter@0.1"
-  },
-  "elements": {                             // 可直接传给 cytoscape({ elements })
-    "nodes": [ /* Node */ ],
-    "edges": [ /* Edge */ ]
-  }
-}
-```
-
-> DECISION: 采用 `{ meta, elements }` 包装而非裸元素数组。
-> REASON: `elements` 保持 Cytoscape.js 原生兼容；`meta` 携带溯源信息供增量更新
-> （P4U2）和陈旧检测（P4U3）使用，不污染节点数据。DATE: 2026-07-02
-
----
-
-## Node（节点）
-
-```jsonc
-{
-  "data": {
-    "id":          "ACharacter",              // 唯一标识，UE 类用完整前缀
-    "label":       "ACharacter",              // 显示名称
-    "type":        "uactor",                  // 见下方枚举
-    "layer":       "engine",                  // engine | plugin | project
-    "module":      "Engine",                  // 所属模块名
-    "domain":      "ue5_code",                // 来源适配器的领域标识
-    "description": "Base class for characters with movement", // 一句话职责
-    "source_path": "Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h",
-    "tags":        ["blueprintable", "override_point"],
-    "visibility":  "explored",                // fog | silhouette | explored
-    "metrics": {                              // 由 Core 自动计算
-      "in_degree":    12,
-      "out_degree":   5,
-      "betweenness":  0.34
-    }
-  }
-}
-```
-
-**必填字段**：`id` `label` `type` `domain`。其余可选。
-
-**核心层与领域层的约束划分**：`layer` / `visibility` 枚举是核心概念，对所有领域生效；
-`type` 在核心层为自由字符串，当 `domain: "ue5_code"` 时由条件子模式收紧为下方枚举。
-其他领域的 type 枚举由各自 Adapter 定义。
-
-**Node type 枚举（UE5 Code 领域）**：
-`module` | `uclass` | `uactor` | `ucomponent` | `ustruct` | `uenum` | `uinterface` | `ufunction` | `blueprint` | `lifecycle_step` | `meta_group`
-
-- `ufunction`：函数级节点，必须带 `api` 扩展字段和 `parent`（所属类）
-- `meta_group`：战争迷雾折叠抽象节点，必须带 `children_count`
-- `lifecycle_step`：生命周期中的单个步骤节点（如 PostInitProperties）
-
-### ufunction 节点的 API 扩展字段
-
-当 `type` 为 `ufunction` 时，节点额外包含 `api` 子对象，驱动 API Reference View：
-
-```jsonc
-{
-  "api": {
-    "signature":    "bool TryActivateAbility(FGameplayAbilitySpecHandle Handle, bool bAllowRemoteActivation = true)",
-    "return_type":  "bool",
-    "params": [
-      { "name": "Handle", "type": "FGameplayAbilitySpecHandle", "note": "由 GiveAbility 返回" },
-      { "name": "bAllowRemoteActivation", "type": "bool", "note": "多人环境下是否允许远程激活" }
-    ],
-    "companions":   ["GiveAbility", "CancelAbility", "GetActivatableAbilities"],
-    "cpp_only":     false,
-    "blueprint_exposable": true
-  }
-}
-```
-
-- `api.signature` / `api.return_type`：必填，Adapter 从 `.h` 自动提取
-- `api.params`：参数列表（name、type 自动提取；note 手动补充）
-- `api.companions`：常见搭配函数的 id 引用（手动补充）
-- `api.cpp_only`：是否纯 C++ 函数（基于 UFUNCTION 宏是否存在，自动提取）
-- `api.blueprint_exposable`：是否标记 BlueprintCallable/BlueprintPure（自动提取）
-- `tags` 中以 `#` 开头的为场景标签（`#combat` `#gas` `#init` 等），用于 API View 筛选
-- 踩坑提示和使用场景通过标注系统附加（gotcha / best_practice），不在 `api` 中重复
-
----
-
-## Edge（边）
-
-```jsonc
-{
-  "data": {
-    "id":          "ACharacter--inherits-->APawn",
-    "source":      "ACharacter",
-    "target":      "APawn",
-    "relation":    "inherits",                // 见下方枚举
-    "domain":      "ue5_code",
-    "weight":      5,                         // 耦合强度 1-5（可选）
-    "description": ""                         // 关系说明（可选）
-  }
-}
-```
-
-**必填字段**：`id` `source` `target` `relation` `domain`。
-
-**Edge relation 枚举（UE5 Code 领域）**：
-`inherits` | `implements` | `composes` | `aggregates` | `depends_on` | `delegates` | `calls` | `overrides` | `binds_event` | `lifecycle_sequence` | `cross_domain`
-
-- `lifecycle_sequence`：生命周期执行顺序边，必须带 `data.order` 序号
-- `cross_domain`：跨领域链接（如代码类 ↔ 叙事角色）
-
-**边 id 约定**：`{source}--{relation}-->{target}`。
-
----
-
-## Annotation（标注）
-
-标注文件为**条目数组**，每条通过 `node_id` 关联节点，与 graph JSON 分离存储：
-
-```jsonc
-[
-  {
-    "node_id":      "AActor::PostInitProperties",
-    "domain":       "ue5_code",
-    "annotations": [
-      {
-        "id":           "ann_001",
-        "type":         "gotcha",             // gotcha | best_practice | design_decision | performance | reference
-        "content":      "此函数在 CDO 构造阶段就会被调用……",
-        "created_at":   "2026-06-20T14:30:00Z",
-        "source_hash":  "a3f2c1d...",         // 创建标注时的源文件 hash，用于陈旧检测
-        "stale":        false                 // Core 自动标记：source_hash 不匹配时设为 true
-      }
-    ]
-  }
-]
-```
-
-**条目必填**：`node_id` `domain` `annotations`；**单条标注必填**：`id` `type` `content` `created_at`。
+默认校验活动 `data/graphs`、`data/reading-context` 与 `data/changes`，并执行 annotation → subsystem/node、变化报告 → 当前图/指纹的所有权检查。

@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-brain.local/schema/api-favorites.schema.json",
+  "title": "Graph Brain API Favorites",
+  "description": "Legacy function-favorite array accepted only by the reading-context migration boundary. It is not an active persistence format.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["node_id", "added_at"],
+    "properties": {
+      "node_id": { "type": "string", "minLength": 1 },
+      "added_at": { "type": "string", "format": "date-time" }
+    },
+    "additionalProperties": false
+  }
+}

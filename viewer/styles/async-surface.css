@@ -1,0 +1,147 @@
+/* 异步界面的单一加载与恢复语言。工作区不得再自行拼装空白遮罩。 */
+
+.async-state {
+	z-index: 32;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--sp-5);
+	min-width: 0;
+	padding: var(--sp-8);
+	background: color-mix(in srgb, var(--gb-neutral-15) 82%, transparent);
+	color: var(--gb-text-secondary);
+	text-align: left;
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+
+.async-state-workspace {
+	position: absolute;
+	inset: 0;
+}
+
+/* #71 恢复：动态类 async-state-${variant}（panel 变体，图谱面板内嵌加载）——v4 前缀提取漏网被误删 */
+.async-state-panel {
+	position: absolute;
+	inset: 0;
+}
+
+.async-state-root {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	background:
+		radial-gradient(circle at 48% 40%, color-mix(in srgb, var(--gb-blue-70) 10%, transparent), transparent 34%),
+		var(--gb-neutral-15);
+}
+
+.async-state-mark {
+	position: relative;
+	display: grid;
+	flex: 0 0 42px;
+	width: 42px;
+	height: 42px;
+	place-items: center;
+	border: 1px solid color-mix(in srgb, var(--gb-cyan-75) 30%, transparent);
+	border-radius: 11px;
+	background: color-mix(in srgb, var(--gb-cyan-55b) 9%, var(--gb-violet-25));
+	color: var(--gb-cyan-75);
+	font-style: normal;
+}
+
+.async-state-loading .async-state-mark::after {
+	position: absolute;
+	inset: -5px;
+	border: 1px solid color-mix(in srgb, var(--gb-cyan-75) 22%, transparent);
+	border-radius: 15px;
+	content: "";
+	animation: async-state-breathe 1.4s ease-in-out infinite;
+}
+
+.async-state > span {
+	display: grid;
+	max-width: 440px;
+	gap: var(--sp-1);
+}
+
+.async-state > span b {
+	color: var(--gb-text-primary);
+	font-size: 13px;
+}
+
+.async-state > span small {
+	color: var(--gb-text-muted);
+	font-size: 10.5px;
+	line-height: 1.5;
+}
+
+.async-state-error {
+	flex-direction: column;
+	text-align: center;
+}
+
+.async-state-error > span {
+	justify-items: center;
+}
+
+.async-state-error .async-state-mark {
+	border-color: color-mix(in srgb, var(--gb-amber-75) 34%, transparent);
+	background: color-mix(in srgb, var(--gb-amber-75) 8%, var(--gb-violet-25));
+	color: var(--gb-amber-75);
+}
+
+.async-state-actions {
+	display: flex;
+	justify-content: center;
+	gap: var(--sp-3);
+	margin-top: var(--sp-1);
+}
+
+.async-state-actions button {
+	min-height: 36px;
+	padding: 7px 12px;
+	border: 1px solid color-mix(in srgb, var(--gb-violet-75) 26%, transparent);
+	border-radius: 8px;
+	background: color-mix(in srgb, var(--gb-violet-25) 86%, transparent);
+	color: var(--gb-text-secondary);
+	font-size: 11px;
+}
+
+.async-state-actions button.primary {
+	border-color: color-mix(in srgb, var(--gb-cyan-75) 42%, transparent);
+	color: var(--gb-text-primary);
+}
+
+.async-state-actions button:hover {
+	border-color: color-mix(in srgb, var(--gb-cyan-75) 54%, transparent);
+	color: var(--gb-text-primary);
+}
+
+.async-state > em {
+	color: var(--gb-text-muted);
+	font-size: 9px;
+	font-style: normal;
+}
+
+@keyframes async-state-breathe {
+	0%, 100% { opacity: .35; transform: scale(.94); }
+	50% { opacity: .85; transform: scale(1.04); }
+}
+
+@media (max-width: 620px) {
+	.async-state { padding: 20px 16px; }
+	.async-state-loading { flex-direction: column; text-align: center; }
+	.async-state-loading > span { justify-items: center; }
+	.async-state-actions { width: 100%; }
+	.async-state-actions button { flex: 1 1 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.async-state-loading .async-state-mark::after { animation: none; }
+}
+
+@media (forced-colors: active) {
+	.async-state,
+	.async-state-mark,
+	.async-state-actions button { border: 1px solid CanvasText; }
+}

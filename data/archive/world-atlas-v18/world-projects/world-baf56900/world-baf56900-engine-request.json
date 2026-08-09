@@ -1,0 +1,53 @@
+{
+  "schema": "graphbrain-player-metrics/1",
+  "project_id": "world-baf56900",
+  "atlas_id": "atlas_river_depot",
+  "profile": {
+    "capsule_radius_m": 0.34,
+    "capsule_half_height_m": 0.88,
+    "eye_height_m": 1.6,
+    "walk_speed_mps": 1.5,
+    "sprint_speed_mps": 6,
+    "jump_height_m": 1.2,
+    "step_height_m": 0.45,
+    "max_slope_deg": 45,
+    "crouch_half_height_m": 0.6,
+    "door_width_m": 0.9,
+    "door_height_m": 2
+  },
+  "spawn_points": [
+    {
+      "id": "site_gate",
+      "label": "仓库大门",
+      "x": 120,
+      "y": 250,
+      "z": 0
+    },
+    {
+      "id": "site_office",
+      "label": "办公室",
+      "x": 400,
+      "y": 180,
+      "z": 3
+    },
+    {
+      "id": "site_loft",
+      "label": "阁楼",
+      "x": 620,
+      "y": 250,
+      "z": 8
+    }
+  ],
+  "probes": [
+    {
+      "id": "wb_narrow_arch",
+      "primitive": "arch",
+      "reason": "门洞净空验证"
+    },
+    {
+      "id": "wb_steep_ramp",
+      "primitive": "ramp",
+      "reason": "坡角/行走验证"
+    }
+  ]
+}

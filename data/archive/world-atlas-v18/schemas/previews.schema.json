@@ -1,0 +1,51 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "GraphBrain Preview Registry",
+	"description": "设计资产产物预览登记册（register_previews 产物），data/world-projects/<project>/previews.json",
+	"type": "object",
+	"required": ["project_id", "entries"],
+	"properties": {
+		"project_id": { "type": "string", "minLength": 1 },
+		"entries": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": ["id", "domain", "title", "asset", "created_at"],
+				"properties": {
+					"id": { "type": "string", "minLength": 1 },
+					"domain": { "enum": ["h3", "ue", "concept", "blender", "audio"] },
+					"title": { "type": "string", "minLength": 1 },
+					"asset": {
+						"type": "object",
+						"required": ["dir", "files"],
+						"properties": {
+							"dir": { "type": "string", "minLength": 1 },
+							"files": {
+								"type": "array",
+								"items": { "type": "string" }
+							},
+							"meta": { "type": "object" }
+						},
+						"additionalProperties": false
+					},
+					"links": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"required": ["kind", "target"],
+							"properties": {
+								"kind": { "enum": ["space", "beat", "node"] },
+								"target": { "type": "string", "minLength": 1 }
+							},
+							"additionalProperties": false
+						}
+					},
+					"prompt": { "type": "string" },
+					"created_at": { "type": "string", "minLength": 1 }
+				},
+				"additionalProperties": false
+			}
+		}
+	},
+	"additionalProperties": false
+}

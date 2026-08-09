@@ -2,32 +2,143 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://graph-brain.local/schema/graph.schema.json",
   "title": "Graph Brain Graph File (*.cyto.json)",
-  "description": "完整图谱文件：meta（生成信息）+ elements（Cytoscape.js 标准的 nodes/edges 结构，可直接喂给 cytoscape({ elements })）。",
+  "description": "GraphBrain 只读 UE 代码事实图：meta（版本与来源）+ Cytoscape elements。",
   "type": "object",
-  "required": ["elements"],
+  "required": [
+    "meta",
+    "elements"
+  ],
   "properties": {
     "meta": {
       "type": "object",
+      "required": ["domain", "format_version", "generated_at", "generator", "provenance", "coverage"],
       "properties": {
-        "domain": { "type": "string", "minLength": 1 },
-        "subsystem": { "type": "string" },
-        "generated_at": { "type": "string", "format": "date-time" },
-        "generator": { "type": "string" },
-        "source_root": { "type": "string" }
+        "domain": {
+          "const": "ue5_code"
+        },
+        "subsystem": {
+          "type": "string"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "generator": {
+          "type": "string"
+        },
+        "source_root": {
+          "type": "string",
+          "description": "Legacy v1 field. Current v2 writers use provenance.source_roots."
+        },
+        "format_version": {
+          "const": 2,
+          "description": "ue5_code 持久化结构版本；旧数据必须经集中迁移后进入运行时。"
+        },
+        "provenance": {
+          "type": "object",
+          "required": ["schema_version", "status", "source_kind", "source_roots"],
+          "properties": {
+            "schema_version": { "const": 1 },
+            "status": { "enum": ["verified", "unknown"] },
+            "source_kind": { "enum": ["working_tree", "curated_reference", "unknown"] },
+            "source_roots": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            },
+            "fingerprint": {
+              "type": "object",
+              "required": ["algorithm", "value", "file_count"],
+              "properties": {
+                "algorithm": { "const": "sha256-path-content-v1" },
+                "value": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+                "file_count": { "type": "integer", "minimum": 0 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "status": { "const": "verified" } } },
+              "then": { "required": ["fingerprint"] }
+            },
+            {
+              "if": { "properties": { "status": { "const": "unknown" } } },
+              "then": { "not": { "required": ["fingerprint"] } }
+            }
+          ],
+          "additionalProperties": false
+        },
+        "coverage": {
+          "type": "object",
+          "required": ["status", "discovered_files", "consumed_files", "skipped_files", "failed_files", "diagnostics"],
+          "properties": {
+            "status": { "enum": ["complete", "partial", "unknown"] },
+            "discovered_files": { "type": ["integer", "null"], "minimum": 0 },
+            "consumed_files": { "type": ["integer", "null"], "minimum": 0 },
+            "skipped_files": { "type": ["integer", "null"], "minimum": 0 },
+            "failed_files": { "type": ["integer", "null"], "minimum": 0 },
+            "diagnostics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["code"],
+                "properties": {
+                  "code": { "type": "string", "minLength": 1 },
+                  "path": { "type": "string" },
+                  "message": { "type": "string" }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "status": { "const": "unknown" } } },
+              "then": {
+                "properties": {
+                  "discovered_files": { "type": "null" },
+                  "consumed_files": { "type": "null" },
+                  "skipped_files": { "type": "null" },
+                  "failed_files": { "type": "null" }
+                }
+              }
+            },
+            {
+              "if": { "properties": { "status": { "enum": ["complete", "partial"] } } },
+              "then": {
+                "properties": {
+                  "discovered_files": { "type": "integer", "minimum": 0 },
+                  "consumed_files": { "type": "integer", "minimum": 0 },
+                  "skipped_files": { "type": "integer", "minimum": 0 },
+                  "failed_files": { "type": "integer", "minimum": 0 }
+                }
+              }
+            }
+          ],
+          "additionalProperties": false
+        }
       },
       "additionalProperties": true
     },
     "elements": {
       "type": "object",
-      "required": ["nodes", "edges"],
+      "required": [
+        "nodes",
+        "edges"
+      ],
       "properties": {
         "nodes": {
           "type": "array",
-          "items": { "$ref": "https://graph-brain.local/schema/node.schema.json" }
+          "items": {
+            "$ref": "https://graph-brain.local/schema/node.schema.json"
+          }
         },
         "edges": {
           "type": "array",
-          "items": { "$ref": "https://graph-brain.local/schema/edge.schema.json" }
+          "items": {
+            "$ref": "https://graph-brain.local/schema/edge.schema.json"
+          }
         }
       },
       "additionalProperties": false

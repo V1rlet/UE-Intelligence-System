@@ -1,0 +1,2373 @@
+{
+  "schema": "graphbrain.authoring-platform-deletion/1",
+  "deleted_at": "2026-08-08",
+  "recoverable_from_graphbrain": false,
+  "user_approved_destructive_deletion": true,
+  "retained_capabilities": [
+    "ue5_code graphs",
+    "code annotations",
+    "API favorites",
+    "engine API cache"
+  ],
+  "replacement_owner": "ClaudeGameStudios technical-director, lead-programmer, and specialist programmer workflows",
+  "retired_domains": [
+    "design_workspace",
+    "level_design",
+    "narrative",
+    "quest",
+    "ue5_planned"
+  ],
+  "deleted_targets": [
+    "cross-domain",
+    "design-packages",
+    "doc-registry",
+    "entity-registry",
+    "graphs/design_workspace_level-narrative-mindmap_2026-07-22.cyto.json",
+    "graphs/level_design_demo-facility_2026-07-06.cyto.json",
+    "graphs/narrative_demo-facility_2026-07-06.cyto.json",
+    "graphs/quest_demo-facility_2026-07-07.cyto.json",
+    "graphs/ue5_planned_architecture_r1.cyto.json",
+    "graphs/ue5_planned_architecture_r1_final.cyto.json",
+    "graphs/ue5_planned_combat_r1.cyto.json",
+    "graphs/ue5_planned_combat_r2.cyto.json",
+    "graphs/ue5_planned_combat_r2_final.cyto.json",
+    "graphs/ue5_planned_combat_r3.cyto.json",
+    "impact-report.json",
+    "reports",
+    "standards",
+    "task-packages",
+    "workbench-acks.json"
+  ],
+  "files": [
+    {
+      "path": "cross-domain/cross_domain_links.json",
+      "bytes": 3503,
+      "sha256": "185e56294e14105f92483f5cceb0fb7da65c57c42a16a882dbbc0f32ab99f9e3"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/README.md",
+      "bytes": 686,
+      "sha256": "d053c90e66ac97730ebb95f2db3c7a85b4cd7b42d90c1cc48a53ded622f736fc"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-056fec05dbbd705bd9c7.json",
+      "bytes": 20090,
+      "sha256": "bd8821f364d774d12783f2edae3f7d4c4c8c3666d985842b3c25fd90e0e9f753"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-064b30f5fd379cd1092d.json",
+      "bytes": 22882,
+      "sha256": "7059901dc58a599e14a067be8a3aa16395e3a5d41af7717ff85d24b2a5d6d07f"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-09e9303c9d26fcfa4f8f.json",
+      "bytes": 23311,
+      "sha256": "171ff4ff2972ada027391ca09cafb4a9b08c0de023096a8b9fb9590bf268d2cc"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-0eae2f964d2fbb8158c4.json",
+      "bytes": 19269,
+      "sha256": "5c0cafb217cd64858a3bb95913a47bc6aa959d45dacb18517d1abd0737a6ef4c"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-124058f60588b0a5db96.json",
+      "bytes": 22841,
+      "sha256": "7c3f461796e2c73edec28e510e2f3084b418e16cbb9ddf1973c5df91777c7e6e"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-1276d50257430b7b904c.json",
+      "bytes": 21663,
+      "sha256": "323cc3b8d0609397432011d32977e778c31966db2f9852cb9c8e7809ef724d67"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-1510b3a28ea0c86b9c5e.json",
+      "bytes": 22226,
+      "sha256": "ca7a93f6c934e70b92d56054f2dadf16f90f23034f7412f7584d10406aed1f70"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-2252c459c408b3ccfa84.json",
+      "bytes": 20959,
+      "sha256": "7f5b47e13548906fec38cf249d0e408be93a76e0820b534ef5d10e04a40ad38c"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-24dccad15d05a2d87af8.json",
+      "bytes": 25376,
+      "sha256": "0df9c4942774e9cc6e6aaf06ac6546a16c010b1b4fcb2ab3c0cc705e2d1b6aea"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-26a9aebd6e6922b3aa25.json",
+      "bytes": 20644,
+      "sha256": "aee322c2d15f61c117e22ffff693025d0962b6f381e11d6f0e6525afe44397e0"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-4f8aeb2c22c92cd9a31e.json",
+      "bytes": 20077,
+      "sha256": "81f7d9929314d9fd357c31f3d8a9d63e22abff72ea05cce383dfc2acc193d1b5"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-538d711ee86653e3de54.json",
+      "bytes": 20132,
+      "sha256": "1717b48997b1340e7a023558e6dc4d0caaec31f16fa50fe87db16a5d0cf6224d"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-632f395f6a90b05d7f6a.json",
+      "bytes": 21488,
+      "sha256": "46ccda292bd05937fe55420e84354b7a80a090dee6686dd913739fa472089205"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-698b4d5134c42a4ff217.json",
+      "bytes": 19559,
+      "sha256": "702ba96b32fbbf99c376c8043de7f78ce297e5105004866eb26cf745c3eb96c8"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-69a6f20de83428eb34e5.json",
+      "bytes": 20479,
+      "sha256": "2d75404f2b1246d55db22ece92c9aec30dc16fe3cb10636dc4fa56181661eefb"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-8afcd29c9581b4e08290.json",
+      "bytes": 20707,
+      "sha256": "545dd94d5840cb3403a8472e47ddb183a8456143cb6d1b2b545129351a6f439b"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-8e55722bfda06143f2f5.json",
+      "bytes": 21700,
+      "sha256": "445f0aa700d48f817d5a0ca6faf4725b0ff6e4b87b29b08912edfbeae484ab6e"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-911ea898ce94a4b1c829.json",
+      "bytes": 21071,
+      "sha256": "76aa55562bbaec4d6c37e1c253e522240a1f839b6c12a0fa36d2244d875429ba"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-96791150c56867ccd0e6.json",
+      "bytes": 20552,
+      "sha256": "6888f8aafc6d817e3602b8caca0ac8c9918dc080d70e5c77dc0c41f1fcb7f607"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-ada37011571b9a14cf85.json",
+      "bytes": 21385,
+      "sha256": "99bcbf129920e42719f1eb6b2314744554f9f29cec643b5cc8289509088e2eb4"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-af811eec13f2a83439a9.json",
+      "bytes": 19705,
+      "sha256": "706adea3c87ee5b5453a4941f2725838f1b68941f8606eb42e4aa736be035065"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-b8395ef0b47229a4b2bf.json",
+      "bytes": 20661,
+      "sha256": "c337552e09e14ef2422d931ed6e15b50291ced8963f0fec077ceb4e4640eba26"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-bded506eed191a8833f6.json",
+      "bytes": 19528,
+      "sha256": "fc5caf70614cc5487fbcc17ef6cb63859c5900c36635733c9a53c38f9d2b9589"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-c201032d5906f0a8c36d.json",
+      "bytes": 21881,
+      "sha256": "0bdfaaf70173e1c86652c539812ed58ca81dacf349c5c9498b3b881eb4dddf7b"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-d934c47b60f997ff3f92.json",
+      "bytes": 20889,
+      "sha256": "f4981d8431557dd29528d73d7700740755553abf46195691e97baa526537abb5"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-e41aaa0dff8bf69f3a95.json",
+      "bytes": 19140,
+      "sha256": "517885141bbf380c6b0270233379a11a6eeb1e0357efd36ee0c65b13e528963f"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-e7a7530318e071e3ac25.json",
+      "bytes": 20475,
+      "sha256": "9eff8fd1ec9c2302ddd8e07e300dd1b86dad6eabf5f838d32afeee56be8b9fa7"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-f205cd210310d2160dba.json",
+      "bytes": 20167,
+      "sha256": "6dfaab954e3b568405ee5b6be20841f298d04ff40fa83238415280e3de6e0cf7"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/jobs/job-faa977b1f38460ce8322.json",
+      "bytes": 25875,
+      "sha256": "0bcd5a6b072a20b3ddd4bad93ecfc8af2dadc062faa37c353cd0423da205efc0"
+    },
+    {
+      "path": "design-packages/gameplay-design/beat-gauge/manifest.json",
+      "bytes": 654457,
+      "sha256": "333b8da8b600553d144069f11fb3ce1b19cfe37035f7a495101bb8f8a046a9df"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/README.md",
+      "bytes": 677,
+      "sha256": "f7e59c81fd4510cda41e4846c0764f7e1c03297d945a21a2b8a5cdeee24a2207"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/boss-ai.md",
+      "bytes": 40502,
+      "sha256": "e596e0a9c2b90ad8c975e26ad4349fee239ce58136a7a8fa41c80306a709d16a"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-081a6d0e0f535b4c9fdd.json",
+      "bytes": 24339,
+      "sha256": "8f79a0a24e2e68b1c1b47d9e0b27ff17b11f35cf0c40d4097604a068b3848de6"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-0a5b3a20e62813a867f3.json",
+      "bytes": 22165,
+      "sha256": "23f62d827a5d842a357fa26c51a538b010790633b9048a281a708a36bfd1e3ba"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-0ea9b449c49a2633f89d.json",
+      "bytes": 19484,
+      "sha256": "910f48d115ebafd7fba5cad7b745bba578b35b70b5058ce74874232eb70de865"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-1e6cd5637f8fcc479fda.json",
+      "bytes": 20192,
+      "sha256": "107b25dd947558b17470456ce7ad4352d4721ed2b69b5b7ecc3b0d73eafbd7e8"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-2b2268e428e964946069.json",
+      "bytes": 24253,
+      "sha256": "fdbc8c149160aab5a43dced1a0a16310e1f3557679bc2da0116b0230c90acfe8"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-2d1aeee9484170bef219.json",
+      "bytes": 22499,
+      "sha256": "101b78236dc2a890c8fcc37693f63afb8461e9a0d9886f2e77914ba7048ce749"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-318f45bedc2dcaf66cdc.json",
+      "bytes": 19035,
+      "sha256": "8ff6e456a46cbc0869ed4053878639af1d6da5af0bbf78373c7ac6236b2f8b56"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-356d3e73c71802cc4852.json",
+      "bytes": 19696,
+      "sha256": "ef3c35e5f65d6baffb45934f964ed840ddf67ff0f75d3db58af6fe0d0c2b64f3"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-3b1b66cda631329f3687.json",
+      "bytes": 19419,
+      "sha256": "863e95a992e6ea73614ef05ce0608cbf810c08fd5f5b05941b91dc9cc97dd98f"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-4006ccd397feb5be8429.json",
+      "bytes": 22545,
+      "sha256": "02941a1d24179c35e70f709a6cfc65c088fd6a8527fbb8e66bde6566f5f86fee"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-416e216c48f9f6c15f50.json",
+      "bytes": 19783,
+      "sha256": "47cc2f1046d5d6c606de12dbce5a7eaa6a64c830c700a006d4a3596c9243a6cd"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-419397298883474074d9.json",
+      "bytes": 19696,
+      "sha256": "73869172509e21c83b25c6b3dcfa32bc414625279c0ee5a9696c9cf253f78af7"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-466f574f761cc918e9c4.json",
+      "bytes": 19879,
+      "sha256": "1a2d60bbe0b9ca79e909efe137cc8aada239b89a30a6ea5d48025c5014b9d3f8"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-4788dbcad6db534be903.json",
+      "bytes": 22390,
+      "sha256": "d6ae54995b9a46bae51e2fe35c56cf3075a97d35ddea0103a33edf6c18356c1f"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-4e0675be343b9e3e3d64.json",
+      "bytes": 21199,
+      "sha256": "e769e44ac64ac6ca0ed48d750f82812ee7ff76e991aed00da8f1fd11e20ba434"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-53f6e4344503387e85d4.json",
+      "bytes": 32746,
+      "sha256": "0af0dd7451e15ca8816caab54322b5ec13aa8e56d1038f3e1a3d9046f32114d5"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-5c3741ba9b3dbec038b5.json",
+      "bytes": 20768,
+      "sha256": "a50cee082ecd98b47778fb9cb5c808d1217b40d4cd9bd161e585b3f83a05d5a5"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-675a5e929b97901e14ae.json",
+      "bytes": 22871,
+      "sha256": "fbac2656bab1bdbeb7506fe2d87f973f3771d9bc8f2ca3ad819bb9786da49d6d"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-68211b86181f14afd69b.json",
+      "bytes": 19710,
+      "sha256": "246e193ff2b6a4ad5526d1cae36d205c79d5755d68e6e76d8f294463963e47a9"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-69496df38a219bc63c04.json",
+      "bytes": 21294,
+      "sha256": "6c003b211c90df5ba8bdc998b0afb727bcc82927e91507da2da7c0376b8ba2e0"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-6be88a52f2e175f16326.json",
+      "bytes": 19964,
+      "sha256": "8f571a9263b863be6682a55aa5ad50184f9b4e7ca66beef7aa1dfb47d8964242"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-7636b1fc852d08873f91.json",
+      "bytes": 21678,
+      "sha256": "fed4b34d145c3522ac844390d19185af23e4311ca0172a1c7d1d9bcb245ed631"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-7a2246575d20377e321e.json",
+      "bytes": 22707,
+      "sha256": "aff11c5cb53574d09eeca12cd7817d4c40197f925ed96727b7a3206415cbf9ba"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-7ea9d82e3e294bc9f21b.json",
+      "bytes": 19626,
+      "sha256": "cd0ca701509457ed8e8abd15d2d45f86412ab4eae0700b8a8350097d396c1506"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-82128caccee7863579e2.json",
+      "bytes": 19480,
+      "sha256": "853781febe905311e2a7b0e08b90b5558e522a0797ad6c53c09b0bdb6df52474"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-a9fbde4825943f10d859.json",
+      "bytes": 20351,
+      "sha256": "95e1a8452f8721ac6a954023fd981474e7196069fddc6aa019a9f545b363d881"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-aceb89b433854cf1e692.json",
+      "bytes": 22897,
+      "sha256": "d6cf4b41e241e5e82d583ec4033dd4132243ee4db2484c7a08f63f8147e8c80b"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-ad78716789b494feba8c.json",
+      "bytes": 19932,
+      "sha256": "b7c7d0b7fe715ae28c1b7c1f0edf435f8e39f3d7c1a4908aaaf5fc39f3de3d55"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-c13a0dddd4ac87aee50c.json",
+      "bytes": 20279,
+      "sha256": "75a274452b4e7e54a60d830bc13956f2982e994defaca32a63af7913f5fce58b"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-c2eb8e5d55e45b47f29b.json",
+      "bytes": 20763,
+      "sha256": "3aaa509ff1f7722077eaa504bbb86053ab174e75c78c4aab5c96a74aac5f89d4"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-c8eb1f513d98bfcd5eef.json",
+      "bytes": 19726,
+      "sha256": "77ed51edd22c22d5b8e04aea7b7496d525ecf42d82703a410dd11d4636491f06"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/jobs/job-e5b2e685f0febcdb5b43.json",
+      "bytes": 21522,
+      "sha256": "9fc93e29c57523bf2ca33da94fa1ea4db0d4cb339f694f9a8b63449e43db6e0b"
+    },
+    {
+      "path": "design-packages/gameplay-design/boss-ai/manifest.json",
+      "bytes": 726686,
+      "sha256": "3db7b69f1159a3f9c6658cb8cfab900dc8023043964a8c36e14f5a8a1fb16e04"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/README.md",
+      "bytes": 689,
+      "sha256": "48be833182072fb07f4961599ea703527978abfffc3cc0351da01d7d552285d9"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-024796d29da87cfd9ecb.json",
+      "bytes": 21919,
+      "sha256": "63a11985b993231e012aedba25c338ed951e00998b107054205c637b893c76ca"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-09c7ef8b243bc5c9bd2c.json",
+      "bytes": 23097,
+      "sha256": "1e33f3d12947e1d4d5633f53ce06e312b3f91e5006971e25c23eb6ddb8bb8027"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-11642afa238817833446.json",
+      "bytes": 19552,
+      "sha256": "d5c3974501793541c952943088de46e5723bab97b91e1cc691420d0db9d402b8"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-1a1345b097b21de84ebf.json",
+      "bytes": 19231,
+      "sha256": "ff8c013cf552648dbaad65e61b3df8637c6b15abfff444a09240e486d28fd030"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-278de02d9486a69ae88a.json",
+      "bytes": 19698,
+      "sha256": "a3f04b37033ab604c9b2104499486913fe4fff6cc7d543bdf79682cdaadf2eb8"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-35f2599f5a984d8deef7.json",
+      "bytes": 19543,
+      "sha256": "4b097c5bf3ea2da7ba5ab6d9db750305d6ef13946a4c7718c0416b92bbd89ed6"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-35f778351ce12b56546e.json",
+      "bytes": 19455,
+      "sha256": "9562b05367ef0ce8b0d9331846c4894afd0fabc4041b0f4a541eb7f00fb1e25e"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-3749c55b6388968da048.json",
+      "bytes": 19564,
+      "sha256": "98d211a1e31ee745a642c047a39cbd8abeaf4fbd4d96dee92777a1cbe6973754"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-38dfdaa48e78e8c7d1af.json",
+      "bytes": 19512,
+      "sha256": "c734d971301cd0beeea33e646f6223e8401d1bc3a96daf48b4490941437d806f"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-3d766ef3030f08ace19a.json",
+      "bytes": 19754,
+      "sha256": "17bb6d4f93993fcff998e3b6bd32793b48c51cc0509efe4e9dd4c53040016c9d"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-44e98a15d623f497517c.json",
+      "bytes": 20314,
+      "sha256": "7c7908639b6df95c227548e7ca1ed863259783f63da310e3dcaafb7968319941"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-4c0b0316390e99dfde93.json",
+      "bytes": 21727,
+      "sha256": "f0612c34d07a1b70f4fa6e0edad55ac52d710dc578b526b833903aadab8f11d3"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-645d3d901a6c7e99c056.json",
+      "bytes": 20202,
+      "sha256": "5aa1712de369a57300054a2cfa55dbaf5186f60d1a5fd2c7bcb99128951ea9e4"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-6882bb26855f5ecf63bc.json",
+      "bytes": 20549,
+      "sha256": "0ed6d63f3e2d11b5b39823bef5919d9acb403ad4a2598f2e74736af5b03556dc"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-6bc5e1122e97c458abe4.json",
+      "bytes": 25259,
+      "sha256": "c7b87d7cbbb79374c849f204434424940a0455b4b1806d9d5590814e3858713d"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-6c844d20a05d00ab627e.json",
+      "bytes": 22361,
+      "sha256": "5a5009460d51c79338e0503b72f9d588f5295e21e2237251a509c99f23695786"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-888cb12940814d92a174.json",
+      "bytes": 19348,
+      "sha256": "cd9a24647d1b917595883634802030842b1f9c6c0f9d4adf42ea5ef59882f7dd"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-8db1e1c39cbc60a69fdf.json",
+      "bytes": 19492,
+      "sha256": "6256ff33e035812ca7964c5fd4e52407ada846f8b53ee56ddc837ef93bf97822"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-be841a257ed58a241bad.json",
+      "bytes": 22186,
+      "sha256": "179d6fc7f142e83f21179aaf133db8e70f4c0fa086da99d58b40991745110959"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-c0a2df1dfde97de580f3.json",
+      "bytes": 20032,
+      "sha256": "74c2fcecfc6b803aca4b23f6eea188a60eb6c69fae2efc8ec0f1d5abc5da1e19"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-c3773defce994eef6efe.json",
+      "bytes": 19701,
+      "sha256": "dab7e5a4c05395fc562e314a04d854519988e9450a533493c427e8906c0e2006"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-d027bf4fcc94d3304658.json",
+      "bytes": 20211,
+      "sha256": "561abe8ec83e45eab3ccdf7e39c9b29b9a28107ada183189dd72ab3b9d290e60"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-d62bc951e29ad3415e62.json",
+      "bytes": 19283,
+      "sha256": "4f5fe25bee659cd8e58ca804f744cf83c66a49c5885ca56f0991a1e7d325b494"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-d891f7594c9ee68e6ffc.json",
+      "bytes": 36326,
+      "sha256": "0ef0d339ef55505609d60e6041196370e41cad3851f4062bd53199b6e12bdfd0"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-e2287501ca3ece168bb6.json",
+      "bytes": 20140,
+      "sha256": "867d4e6bee29c25b1533f0f9c1f96345b5f9b851f46a387e3b3ed4c63dce025d"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-eb4dc7e11d1c9cea64b7.json",
+      "bytes": 22995,
+      "sha256": "eefe1fefe885e8b3dc6abef46aeeb0802422d04653aea5f1db0bdba9e5b9e738"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/jobs/job-ed2a6d29dd40d68370e6.json",
+      "bytes": 19542,
+      "sha256": "4a69c30adb8b1cf918c3d318d9db543d26e4b40bd92c2fca8b5e7fbc5aebf51c"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-base/manifest.json",
+      "bytes": 607994,
+      "sha256": "80b67b61516847f831fcd6a62b2f1256351667e2da631fc30873197a0698095a"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/README.md",
+      "bytes": 689,
+      "sha256": "c8a1725087266764cd1c809d11a89310e30ec9949987880d1502e0c30d6d17c3"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/combat-system-demo.md",
+      "bytes": 6804,
+      "sha256": "1948fa66e7ea3c23c4ecc7562d84d700cc2c58d8bb90eae5f1be8e2416129706"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-021305b0b7bb92566db3.json",
+      "bytes": 19813,
+      "sha256": "814f980512ee489dafb95bfa4fc742fb411cb3546a4838f91d8899910d939bfb"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-06e2dd3f41bfe993273c.json",
+      "bytes": 19131,
+      "sha256": "a0472ba88fcb5a58c0d99865689ca55bd91a4c7b793342af77d96434923463d2"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-085ea09dd61e643d74d3.json",
+      "bytes": 19423,
+      "sha256": "c341fa89da8d4ade655f23270858edcd67f3c9ed879ab5be65a8c7acfb60fe7e"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-43c4cf28a75de0c14b73.json",
+      "bytes": 19295,
+      "sha256": "3f5a2fbe79bfab0ed9a2f6460a1b4ebe5deed90d397b2533ba1e0fefa7645eb1"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-63577479d4bb632271de.json",
+      "bytes": 19486,
+      "sha256": "32ea1bafbcd7fe9c5ccef1cf8d96822f33e603122fa8b0e9b9f85d4239da4c1e"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-71f1f268e20c417e4af6.json",
+      "bytes": 20223,
+      "sha256": "2633c6fdbe4a363bd137c997fc831220f6aaa636da674b80e36b09a7872f8004"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-7bc67cfd2859fb1dae4e.json",
+      "bytes": 20064,
+      "sha256": "c423eaa4d6c019cf965446f9e29311bf78a8ead4c311f2f437c97a352e606bae"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-7fc9f7569d29a9f66b1e.json",
+      "bytes": 19343,
+      "sha256": "3faaf0ad55bea6f01e71a2140c75dceb378aded93e3fc29733eecabd9d4fa458"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-905050ac8225bbc5cd5e.json",
+      "bytes": 19643,
+      "sha256": "aa411dd551e0ba4214199d3fbfc487f226fe697a0b87cfa307128ebf8c4524ed"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-a4c2c3ee21435a2b3d7d.json",
+      "bytes": 20534,
+      "sha256": "38fdd0d2eb879a2d5b199db5995dd0135262b84f9d3b86b9b99a88bedc22f67b"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-a7ebafd3bb1122b0cb85.json",
+      "bytes": 19869,
+      "sha256": "d39d18917b373a463c886e76b5468bc34655d780013d1bf9f5c8b589c9f48041"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-d85f8fc80ab0823c545b.json",
+      "bytes": 20191,
+      "sha256": "4edc56ee381a180b07d7760d51b7bc3ba3db2800ba2df81b1eecb786d88ede4a"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-e1f3020f5c9170c9fccd.json",
+      "bytes": 19527,
+      "sha256": "24c8c3d1be932c5becc42816bc98adc914bfdc83305f228cc32328e623b7b615"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/jobs/job-e7fd1cf0e362d981cbe2.json",
+      "bytes": 19375,
+      "sha256": "94b1327a1256a9bf45d77f3008954bec1df0b44d9e111bfa443abeff47b96af1"
+    },
+    {
+      "path": "design-packages/gameplay-design/combat-demo/manifest.json",
+      "bytes": 295220,
+      "sha256": "3eefdd37a6825623f51b80534bb8306f17fd3a7d249652e7e20fd37e9fc45b8c"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/README.md",
+      "bytes": 692,
+      "sha256": "9ef50078ad465aa075468d754f053e13c69d7c49bd91da8a97541c70613218d3"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-047eaa305e7a8cde19a5.json",
+      "bytes": 19330,
+      "sha256": "25f30b4c3567a5a93b41b89ef3e34990e8cdaaf705554275cf1d06157bb298df"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-20dd9f3d22ae63a2f2c5.json",
+      "bytes": 19860,
+      "sha256": "51abe102d34d60eec5ee76ca3b904a7c6685874e4a1ce748169e9c4e10c1f8db"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-462c48173415d36a6488.json",
+      "bytes": 19100,
+      "sha256": "5b9010231f78a915cd052bb421037d1485708ac7f6ed35e837e9a8e4bf2ea29f"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-50061baf240c714a14b5.json",
+      "bytes": 19612,
+      "sha256": "22a3c70475a0eec223fd7d15ab25d6f494521aacac001b239b6d9c174a7846eb"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-500a72869d298910f90c.json",
+      "bytes": 25987,
+      "sha256": "85162b238357cac61a1650e63d994b18ac25c90607647d325d76c38e560c18d1"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-5ff065711eddf678819a.json",
+      "bytes": 21305,
+      "sha256": "4b7c4b78cdccb9bafd9e596db070899013c9b635484476146c557b185ce53aa0"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-6e765acc3c23d7c23fb5.json",
+      "bytes": 19380,
+      "sha256": "eca3e8333cced940152eda498c8e16e36c82bac9d49083335eca63004129446a"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-a2ebdae5fe48a37c7d0d.json",
+      "bytes": 19977,
+      "sha256": "86448c69cedd8e4b9aa210c73aed968d2ee4189cb636da1155909d4bc645af16"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-b625e0996a30ed8b1f68.json",
+      "bytes": 19016,
+      "sha256": "efac6400a69953f9bdc5a595320e5bb265fb16a65879b18b56445d2403daa60f"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-be55edd19cfee75ac090.json",
+      "bytes": 21165,
+      "sha256": "5796581ac7455c7ac54be7ca143a7f95c5955c030e16eeea1420286a67e90d40"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-d10714ba889172cdcd82.json",
+      "bytes": 19434,
+      "sha256": "b58862a6bced129bf53902daa9598bdf170806c275ebf5492408b0d87ddd5db6"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-d161cfd60a78703c5bf1.json",
+      "bytes": 20196,
+      "sha256": "cec267272044c2999dee52ef3d9ecf2f29fa96401f0b971013d1c089054cd8d4"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-d1f808094123709c28e3.json",
+      "bytes": 19597,
+      "sha256": "bb349cf792a32587d615ddd200e063d5b5df0f2f259db9c47ab8714eb1aeab49"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-e02c9fe202be15861baa.json",
+      "bytes": 21422,
+      "sha256": "044f1c38d30b894310e71905fdaf351ea166ac90ed419bef0fd8a618e9789511"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/jobs/job-ef6f68b3cd464769c0d6.json",
+      "bytes": 22808,
+      "sha256": "c752b457229331eacd1b77536c2781dce14af588a080a91e9f375ebece9db5d1"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/manifest.json",
+      "bytes": 328853,
+      "sha256": "cb01894dc7d284efdee90ed016f0bf84a5f973ecb8a1f7ad9523b21ce0b54261"
+    },
+    {
+      "path": "design-packages/gameplay-design/core-systems/systems-index.md",
+      "bytes": 12928,
+      "sha256": "09e166c85058933d44ad3c64e14cf2bf3591aa41882aa598b88258f4486be4fa"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/README.md",
+      "bytes": 695,
+      "sha256": "550ec6d4384419d69b1125391baf5936e34a79d1efaf58599b6be31d399cdb19"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/enemy-base-ai.md",
+      "bytes": 10680,
+      "sha256": "e8a596ceea58be5e5fad5ab84efac1a5e262d9a2fdeef85c46b3de653c9da017"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-1194426e4113ea8ad298.json",
+      "bytes": 22021,
+      "sha256": "65373481600908460fdda3bdbfde98a8b04e0136db1e0f253c3ede381486a764"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-252a31bd969353da4627.json",
+      "bytes": 22315,
+      "sha256": "70279700cd233ca7cb8c878941cd828bf4e51f8d909a4494dedc1be8b6c0c47d"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-5c9ab039b50c3eff1f99.json",
+      "bytes": 18729,
+      "sha256": "82f7c8b526e3b575332cf8016224f4f0479bc9862d358ba3f3bb3368534cb323"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-5e9fb54f8f1f21b7686c.json",
+      "bytes": 18719,
+      "sha256": "b8a1046711ebbcb7b08eece80ccb748240a4ce05782e0a60ac46821598c21ff0"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-63039d741a0005928174.json",
+      "bytes": 18758,
+      "sha256": "8eef29ada9eb21a306e517afb3c02421567985bc42201e493d4ada86342e3d5f"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-6b0c28eb6ad11f17426f.json",
+      "bytes": 18808,
+      "sha256": "72acca51547884e2546b714af8ac85175ae9e7b02978313d0c2b9d1d97166fc5"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-81850e4bc1a2df4e4945.json",
+      "bytes": 19233,
+      "sha256": "ebf75e88aa5f92d2a82ce406727e3efe73746ef3059ba2f697d560459b88e7ca"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-81ee8a64b219b7f0edcc.json",
+      "bytes": 18778,
+      "sha256": "8c6cd067a6adfc9b62dcd87085d7b969e3eb719ebf7c1be777258c89441f42a0"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-c0055d6d644bd25f8d5f.json",
+      "bytes": 18743,
+      "sha256": "0ed97862b54a392e47be6929f4ac3cf9f02ee586893c1f64bfb7025064797333"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-c4251df977c9c0788c12.json",
+      "bytes": 26036,
+      "sha256": "c38762e809161e6d3765a4367b4b4c92542369f5685974edc28d5460e3c64ac6"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-d69af71cea8923f920f2.json",
+      "bytes": 22393,
+      "sha256": "fcfdc7905e3617735230dde47f4d84df29d7c3a73536cc4cca655d9a2b7dbb13"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-d6db10e367b0b7c3f80b.json",
+      "bytes": 18753,
+      "sha256": "ebdca287fd65ffce3de5da6dbba1b01a816baf5d57a74aae0c2f4576c6063ffa"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-dd89133821fc6e9c3d47.json",
+      "bytes": 21108,
+      "sha256": "8a18eef91fec32cdba975051b683a8331920e7735915e8e2926ebfbd2c5cb026"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/jobs/job-eee0c9d78895db2f6740.json",
+      "bytes": 18743,
+      "sha256": "e1542f66001272bc5c89456f3e9a66c994b3ebb0da70d2774e4acfde97847d41"
+    },
+    {
+      "path": "design-packages/gameplay-design/enemy-base-ai/manifest.json",
+      "bytes": 302437,
+      "sha256": "790b073e5f03b3dbb8e57c2ea57390b0cb763ff4328dbcdc7c2c9c8dbff6e684"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/README.md",
+      "bytes": 707,
+      "sha256": "9bb8921e310eb23ab18b1f047e6abea5b109d605853f2b394a195b68273e1917"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/environment-state.md",
+      "bytes": 56879,
+      "sha256": "0ca07dbfc32c428b90b1de2ae24a5eb1a638fe110b68be37a0dbd58ea63ba779"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-0739521b3c81bd52602d.json",
+      "bytes": 23154,
+      "sha256": "676839a9bcd3ace4258b38011a0952cdb33e59b7b1a7ee985546e8e85a864e85"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-0c1314c3aa4be8c805c4.json",
+      "bytes": 20152,
+      "sha256": "7a2ef804c5aeeb132058511bc36ef8144f1ea013c9953c751e3079f218b1aa39"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-0d49d7afd226dd6ace72.json",
+      "bytes": 21031,
+      "sha256": "765150dbe8470cffbbb222245ec248d354afad729478490185dff0fcdebb9943"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-15eb434a56c1fd06c422.json",
+      "bytes": 19742,
+      "sha256": "05cf4d9c5c7f1112ca087e24fa53cf4065a2f44d075a16747995b89c0c36aaca"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-16853972a2b34fbb7708.json",
+      "bytes": 21055,
+      "sha256": "209430e713fb7cc325f9ce3e51e29004db7729d175d16953e19718ac8fdcc647"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-19c204e963d4ac87299f.json",
+      "bytes": 20023,
+      "sha256": "6ebd1998211f93676c4237a301cb74cbeb62d168b8bbcdc2a287f6a8c2b40335"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-1fb5e89ff58cd007042f.json",
+      "bytes": 21172,
+      "sha256": "29a44122828cbbc6f1d4e02dc25efa1ce01620f4bc98756cff84e0c8c242cec6"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-22636d1cccff75e533ed.json",
+      "bytes": 21509,
+      "sha256": "4744b4fa9c32152ad2112c031300b67d2860184040f617271fc6c1f87c823a16"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-2b4faf1270b650fef439.json",
+      "bytes": 20447,
+      "sha256": "146e72cf8f2fcd251e55434cff2cc08a275fb8f4d38e75ebef1d777b3bfa5fbc"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-32aedaa3d5d0acfda76a.json",
+      "bytes": 39283,
+      "sha256": "39d9cd9ce99e9f69c1e347c3c851c352f78b48050b8683f8554251117f691d9e"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-35460c771b06991c23af.json",
+      "bytes": 20905,
+      "sha256": "41199d612c895dce4d8f1bdc1ee09a80c2a4ed6da36c81c42995588c633f60e7"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-40a1d7881673892493f5.json",
+      "bytes": 19659,
+      "sha256": "d8287512c45198b0c1e7fd5a7db024079ccf57193811c83556068f80e9c54145"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-4b8c134b02e7bc390c83.json",
+      "bytes": 21925,
+      "sha256": "8df2688c30ef7ec0e9c229a2b3e933d4fca847f24cb96988334962ba34ccbdd6"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-5702ecc535ac643bcdd0.json",
+      "bytes": 22408,
+      "sha256": "f43e34c35cb381f0ebd96f452198a35d613af2c89214cd3507a24150ce7d46e9"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-696b5534ea2bb3d9abae.json",
+      "bytes": 19717,
+      "sha256": "7c5079148e386d161c51ab63a1fdf0a9615e0f870ebf7a3ce585c4097cd8d2c6"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-830f40e8721a061ab98f.json",
+      "bytes": 20679,
+      "sha256": "5f0c823d465fc1a8943890bacdb51496e1c63f2727425d97099c4be87db92505"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-8600261b5903b9e430ba.json",
+      "bytes": 22218,
+      "sha256": "c6eb802b9f5f5597d2aeabbd96bd1a43808851104f1021f0c2b6de730f1302c1"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-8b55bde0eaae6c1287ea.json",
+      "bytes": 23651,
+      "sha256": "5ea7d7e78e9a72d50d9b7c9495f7710f18a4941fe28933a247c92ee5e45b1303"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-a70cc2ddea6fa4a782a4.json",
+      "bytes": 33505,
+      "sha256": "a70bac94e596d98f63ad2fddab9f82743008045dc9725e9001e8b1b87e57d071"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-a813f6af4912908a7033.json",
+      "bytes": 24446,
+      "sha256": "3834a93d8a05c5ed68d57fa76f16022e23b70cd9c196fc50c1327532a3c71524"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-afc382541be67a4530ad.json",
+      "bytes": 20000,
+      "sha256": "7c8a387b37bbc0552b169ff23502e22ff4873c8544b15f279be67251b5203e53"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-b3eef224f82bae9ac0a1.json",
+      "bytes": 21157,
+      "sha256": "198ab811592a7c51fd533cbd408f701b6497e439331414ec783ea75e25343305"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-bdbc8de3ab50b153de26.json",
+      "bytes": 19508,
+      "sha256": "039bc86b45984fb96cccabfc0ca4c2b9bcda6ca3b7f5513ee135dfd7a42b8328"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-c20a02db399f0b808d83.json",
+      "bytes": 19707,
+      "sha256": "034d0d4556be851e696d32a00922f12cd6e56b68cfcf0aa95e8aea94e6ab99f0"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-ca8867470fee664f4583.json",
+      "bytes": 19908,
+      "sha256": "0ed7a71df1095ae0664b31045a587a1339be50e0a4d432c098ea40ab5abffe22"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-cdecf3abc78277e5f3a5.json",
+      "bytes": 20085,
+      "sha256": "7756a39143ea5d0056dc24103484c26fc330a4f9e8c3e7aa74780e5ddbd5071b"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-d0de672d95c863c162f3.json",
+      "bytes": 19357,
+      "sha256": "b1cdcdaba0338266a63426b3b6ea4843f7edfde0035d83cdfc32cbfc41a18b64"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-d22ff217821cec921518.json",
+      "bytes": 23096,
+      "sha256": "49df7fb9c872b961f6a6846bb1d960c23383e89290f8565187a12b78fe8a8d9b"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-dbf9a860012032bf71fd.json",
+      "bytes": 21174,
+      "sha256": "047ad67a36ba0f71dd4e11852ef6e3e2050988afcf71856be16ad06d2d22a317"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-dcfa83c7f06269093ab9.json",
+      "bytes": 23154,
+      "sha256": "53090e690f987d3b55c4a10eb1b19c5d0afdb70dc20e3729c9db1b800e0a719f"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-e48f393a25fb94626120.json",
+      "bytes": 19670,
+      "sha256": "d93d09ab28f57cc348d272548f72cd142abfbf3d1efef9f1aede80fae1f47245"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-f136a449d9d624afa6c9.json",
+      "bytes": 21117,
+      "sha256": "77bf17493c2e0b94fd65f266b79c113fa4a0476f6e22068e52d79c94ecdbc486"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-fcebdcf85ea28f510d54.json",
+      "bytes": 22571,
+      "sha256": "23b89eb5f692f0a753e6c667016c93e90a58d154d80761435f47adcfa1857db7"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/jobs/job-fe8360231b033099be13.json",
+      "bytes": 26560,
+      "sha256": "4f3119903c7eb7bc1b7c2c5c57e696f16c54412910aefe034d1197ca996f4371"
+    },
+    {
+      "path": "design-packages/gameplay-design/environment-state/manifest.json",
+      "bytes": 800301,
+      "sha256": "ad205b2a9dc7ea7b13b49a77ce6c6e5565e149d7b65dbccc9b4f75fd80408a0a"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/README.md",
+      "bytes": 749,
+      "sha256": "9a630997e910a8d3220683163133bfc74c776c4e3015da78634233b1207fb3fb"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/experience-gamefeature-assembly.md",
+      "bytes": 26641,
+      "sha256": "bb7803747e15ae733658574897c11e64e9e85c55a552a3910d5734b0220ca3d6"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-0405e11b7fda83502389.json",
+      "bytes": 24599,
+      "sha256": "d559357498d58d679a55204bbb85d03cc956f2255a6f76568ce56979a1fcd278"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-25fcd9ccbd273d7aabe2.json",
+      "bytes": 26906,
+      "sha256": "e6968765516ca9e6da499bd6f623273b0d7a90b67192b5e82bb305f59e0950f4"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-45b628ffc9b95fc5aa8a.json",
+      "bytes": 24933,
+      "sha256": "43829070929cc45df64c3b2f1d787629b62ed0ce63454d936a3789796f5be9dd"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-4c02cf8d505c3a633b71.json",
+      "bytes": 19445,
+      "sha256": "d9a661f657ebd9694cdbe7a9ced1ec26f1d1f5da2faacce43373457aecf7cee9"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-5a16acf42511e7d7365d.json",
+      "bytes": 24994,
+      "sha256": "c303f11fd88e8374da62b100c2fcd0bb27f20bc64b135930fb8cf1ac689a3642"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-6154c6c16089f0c4bab6.json",
+      "bytes": 20538,
+      "sha256": "33c49450407a4c17192d1ebffbc63b994c5fbe0fde56c8657327f25ba6c04ed0"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-6822934afea04c5fd763.json",
+      "bytes": 20050,
+      "sha256": "72a83555b2784c733683ee4dda9d650cda4f9fd961493939427fabd621c7f42b"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-6db7e910dc4b2679adac.json",
+      "bytes": 21210,
+      "sha256": "869d30dd5e8dff644c1e79a8b0dbe5b00bc6c4bfe53c41b6ebc2c70456d1f5f8"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-831a0269fb9525e59b89.json",
+      "bytes": 21551,
+      "sha256": "e1e72180acd8a07356ba26e97033b378a8f23216e70154263e0d0b671d70a13f"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-8f2a8802c3ca021a2c74.json",
+      "bytes": 21147,
+      "sha256": "2c249a438e194a26f6bec4a8bed265dbff7c8217dc098f5ee06d7da296c9664c"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-98d776249ee332d05473.json",
+      "bytes": 21687,
+      "sha256": "cc87a9ec3c99822919298cbf10599356bd169fe7947a5271ce0b52cff96479ce"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-af44e0ad51110106565b.json",
+      "bytes": 21841,
+      "sha256": "e85722b1b4abd800102353f7b401ecec8e873c819ffd5aa4842cce7f832ea390"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-c83c1f9bea286579008a.json",
+      "bytes": 21113,
+      "sha256": "6e3f8ae1d4a3c6db57407e20c4aa4201f105a7a3341ea03f068e7c8be9502400"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-f3543668ae1fbbe7915c.json",
+      "bytes": 22415,
+      "sha256": "d02d621862224ae6d7191bfa91ab09d6040d56e418f3fd7af435d1732b38c567"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/jobs/job-fc438a8381d7f344dac3.json",
+      "bytes": 23928,
+      "sha256": "61751ea494702e772b5b05e4c7fc0994a2aec96648307e6a77e27b6f5c28e736"
+    },
+    {
+      "path": "design-packages/gameplay-design/experience-gamefeature-assembly/manifest.json",
+      "bytes": 357050,
+      "sha256": "254477058c74cf0c7cf4b43383b43e475ef961f84ecb2efdec84d22c26b7daf3"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/README.md",
+      "bytes": 707,
+      "sha256": "2999b1bf6babc6ad8173c78b3c587e4da277e73431ddcc320b15d54d253b055a"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-05bbf91e9e18b2eebbcc.json",
+      "bytes": 20104,
+      "sha256": "00f7453ee51995a41aad84930b39bc2dd986354f42d1901c1636bf5556219558"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-06a8a0e690e22307c4c1.json",
+      "bytes": 18966,
+      "sha256": "4a81b55f8f54833f1c442d192c395acddfb673eea0a2262fe9f043bc9bc0664a"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-0e03a4571d9ba89edf0b.json",
+      "bytes": 20749,
+      "sha256": "6e72800486aa2f8b8719cc8c82dcf6c89684a4b8df5b5f566b6ba7e4e3dc48c1"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-109485e8d6f027af3333.json",
+      "bytes": 19205,
+      "sha256": "e687b01b9b4b3e568ca46966cd8bbe11962a4468759936ddb99be471d427aa84"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-139f4841a357cf4ee174.json",
+      "bytes": 19521,
+      "sha256": "9a0e3b8878efa6ac60d29ba832c950c24acf4d9dab058fb704afd57cd43e6af8"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-2ed6a52cdf182a0feb64.json",
+      "bytes": 22351,
+      "sha256": "5693813ec51774fba595f3b88419c0e36264d77b9636a4327b7eb6a517b31719"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-38c3b4b0ef996312b442.json",
+      "bytes": 20409,
+      "sha256": "7d8ca16548b400e16e33bdf3c6f299622ab04c930ba38448204436d5d5d1c28c"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-3c5f98410ef282c3d240.json",
+      "bytes": 25010,
+      "sha256": "d4211ef7140ac36fa582a5bf04cf7a79a53919269b06505eb1ce5db7fb22f268"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-3ce11c5f1eb26213f7d7.json",
+      "bytes": 22283,
+      "sha256": "ae9f1411e3a6a85e3fb6b3f46d9dcbd40ce7497e6132f99d420e301b45fa08f0"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-4553d96195d7f5e90a85.json",
+      "bytes": 21008,
+      "sha256": "1debcdc3dec8bd1a530f8b1c458ef92452e001a6a6c7cd8ccfbc3ae3b72d27d3"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-4fe1a576a53365fa1f0a.json",
+      "bytes": 20232,
+      "sha256": "f95c9031fe1892dd707d6ef6a046f8a568cfae18556e1db015401742176233a5"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-78a4c9a5a0497a8973ae.json",
+      "bytes": 19191,
+      "sha256": "d5a5b3668d91715ab6266baea63353b13d13cab28b7a01a733fdc2942e03fb5e"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-87dfd1587e5bfe8422bd.json",
+      "bytes": 21308,
+      "sha256": "209ed3e9c9139e1e92aa675b35eae393508fb6bdb2538c99327496a591b19680"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-88e69125db798dba29f0.json",
+      "bytes": 19796,
+      "sha256": "7cdcf7b0b5b775292b07a1661b7ee7d403ced10f8badcdeadb33ed7589ad34cf"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-8a3d561860ea518d871a.json",
+      "bytes": 21127,
+      "sha256": "567d10d74f9c1cd30ebdaf036773587d8112de8fe4748c4ab97ddfa1e8cd50bc"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-9908ad5cbb0108e56445.json",
+      "bytes": 20097,
+      "sha256": "eb25c27217907e3d8fc549ff5337d42f240a375230b778c7bddbb1916e32ebb4"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-99fd3f0fd0a1e4f1283d.json",
+      "bytes": 19569,
+      "sha256": "57718ebdbb6bd58210f7b0fd0b481781c860c6619ff1ecf8c74a0ef0ef453bce"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-9c871b9ce721b3690f2c.json",
+      "bytes": 24472,
+      "sha256": "032b3bc81a0423f30707f0af587c718b798da3f4ad6b9ced536f31f898ace573"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-a821058c858f6351e9c5.json",
+      "bytes": 21378,
+      "sha256": "a5bfbc4df62db83512a03e693faba4b981886caced107069adfefedfa627ad70"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-aaf12ca0cf3c61dad018.json",
+      "bytes": 19196,
+      "sha256": "03b987ee54be3bc5cfffb038f2fdf56bc306105853400bbde5a9b7554d3176d7"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-b0c77e84d74e0e6ab89f.json",
+      "bytes": 19468,
+      "sha256": "e2da049bf57b42591ccd2bfb6a9a6a7cf8cc678a5598de7b5a5c40c6657ff732"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-b89bbfceff08ba219500.json",
+      "bytes": 20545,
+      "sha256": "e5038f7479af191a261234b4d4133469a187d6f910e94109267f5418cb98a18d"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-ba58a3146ebb560cf38d.json",
+      "bytes": 20167,
+      "sha256": "eb12077f802ee422479094f35cc63bce9b46d4b8528a4ee9f79532b87c4deb50"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-bfbf3993fc35eab2edea.json",
+      "bytes": 20241,
+      "sha256": "d1e5d1e26bddb250821dade567f9b6485080bea60393db3c869fd4a193f7b9b1"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-d7b436ee49eab029c42a.json",
+      "bytes": 19285,
+      "sha256": "02a55cde2a41ae53b9f555c662d1ac54debb11dc604ecbdb25e94ef8549009e4"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-e22438d25eb82d5b1854.json",
+      "bytes": 19528,
+      "sha256": "793ba5990e844db6a3b2b75d324fdd4a557146b10af7a37eeca736b702ac4189"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-e3297af305176d9115a3.json",
+      "bytes": 20063,
+      "sha256": "6b087678d60d8f6177d7bea223aae9130bdb17700b02790e2ce3840d9e7581ef"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-e5dfd0ac7193577a514c.json",
+      "bytes": 21456,
+      "sha256": "3c793988257d3309d3215e776649975bb53ce7941d10304f7f4498cc210a18ae"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-e71d243dfba0473bc210.json",
+      "bytes": 24940,
+      "sha256": "020484ec35e7fd103f43d45649afd48ae3a42e881eafbd53e597c3d7b22ce773"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-e99648367bfd92840ab4.json",
+      "bytes": 19992,
+      "sha256": "f3044f371ad1de82f68581daea5019e677bc0ecfca837d37bee236ab812a6d18"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-eb016fe418af86be7dce.json",
+      "bytes": 21110,
+      "sha256": "0dff6a17ec1d84b7afb25b3d0fc4d42a1dea0077af9a96d7fd01f49b3bc6ef9d"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/jobs/job-f6b23b4456c0a338fe2d.json",
+      "bytes": 30431,
+      "sha256": "a84bc08002020f71e2abf44c665304ce96a4f3c5314d54fd2d5d6aaf6345a68c"
+    },
+    {
+      "path": "design-packages/gameplay-design/extreme-precision/manifest.json",
+      "bytes": 717012,
+      "sha256": "8131332c28df0e91455c51e404eec68228f95c82228b0950847745a1b4d0d380"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/README.md",
+      "bytes": 692,
+      "sha256": "da57ce314b51cda1830c80cd802973c4617c7093fcc493b4d22a82a95a9e812d"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/game-concept.md",
+      "bytes": 24373,
+      "sha256": "fface145e131dbb97e301f3532e2ca0510c2f94fd1176f737fb87c8ebe3888d4"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-006e185b2d7cb5394cd9.json",
+      "bytes": 19928,
+      "sha256": "23464b249708e1c776a4c1490ae76f4e50be5bc5fce4f8f01d59bdb52a0f5388"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-0075f282e73f29ad8149.json",
+      "bytes": 20306,
+      "sha256": "9f7fc1a46f501a904cdffea1776c5378bb05f2dcfe1d49a3fb4c022d0be3089e"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-0d1bbf8cd52a7b21d242.json",
+      "bytes": 20672,
+      "sha256": "4bc63ea3134e6521e0d7ff85d42d4fa9fef63f79f8293c09120d67ac4dbdf672"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-0df2ad06e72b74e489cd.json",
+      "bytes": 20845,
+      "sha256": "2eb370751955ffaacc2a306e314f688cb4702a22d90be84f059d695c1b80b779"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-1689d3cebda8a09d0954.json",
+      "bytes": 19490,
+      "sha256": "7fa6dac07080a7f5b8362e8799d2b51582ee2952dfe68f2648ca6c073e42e3d3"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-287cbe4b8c33d7bd532b.json",
+      "bytes": 20450,
+      "sha256": "e04992a837c9e94ff66b1a6cfc340a8d156a47b6f53c3e8843b36f48287c15d0"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-2a270e196e9399c392b3.json",
+      "bytes": 20364,
+      "sha256": "89068f6e8f223ebd326f02ed85451fb04198e64b2bca5b2acd5fd5e1975cee13"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-37162d790a2eac2e2d3c.json",
+      "bytes": 20021,
+      "sha256": "df96f6671e11b4bd98ccda32993d90f158e89eb039359c7c222d8ff8d0bb0e02"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-478e7b142be30a7e2f24.json",
+      "bytes": 19525,
+      "sha256": "0d5328c64a2df0fc6b6f78f3ecd57b09d304b21df6559bd9a67062ef20bc95cb"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-5df0e424e7c25a7e7146.json",
+      "bytes": 19796,
+      "sha256": "e97a244191d490b05f97648501a1fe73ec647c3345e49c09a3b2a88c870d603c"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-5e7c85590fd2546dd4c0.json",
+      "bytes": 20386,
+      "sha256": "7bf4e7933a787eea26da268844b8a9bda9c0042c28559c8974f62fb00daa177e"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-663c41896f40a38dba86.json",
+      "bytes": 21217,
+      "sha256": "a4244aafcdcb4ac4f70038a3b0a256d6bf5e4cfbf0cdddf28774f9d5a3494748"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-6d8b51ba410a9ec85002.json",
+      "bytes": 19751,
+      "sha256": "78737bc814fd17a3d99e8e1000a103a8bbdc779bf1320653e893634313be46c1"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-7ce63069c1982bcbd4be.json",
+      "bytes": 19396,
+      "sha256": "ae90b1938d127028d3204772c5b3a578afe2eb8058ff5b775d3f4abe789f159d"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-7eb03518aac3d509e523.json",
+      "bytes": 19790,
+      "sha256": "45d0e8e9a75802a58a83276a926d907c26abc0d77934531c3d4a5d584a6b820d"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-8d79796a04e0d92e687e.json",
+      "bytes": 22778,
+      "sha256": "9df3d7555b4d0ca933c242f59f97812148bf47496fcb2dd206ddc026bd8a6798"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-91f75a061b38f07bef08.json",
+      "bytes": 22476,
+      "sha256": "8a0afc42fe4c9aa0b9e3b168033793a7eabf676b9e0b8baab76bb854ef7a7f97"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-aa8b612da111a1e4d836.json",
+      "bytes": 20065,
+      "sha256": "926386499b8970ef1a01f1839410858f5aa470d9784c92d020b76123763af529"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-aab88b6d0a148b8827aa.json",
+      "bytes": 19603,
+      "sha256": "259c5e4031cc6e63df448c54da2872e4c780f4610ae7271756e4b90e396bae82"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-ad35c5a426458bb144ae.json",
+      "bytes": 20515,
+      "sha256": "c33e75bb921e0ba24ccaf54444d26be4239b27421a3d9a829be73175941978a3"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-b8a95fce8d2b9e4626e2.json",
+      "bytes": 20278,
+      "sha256": "4591eb052856fbb77856deacaa5349088630ac7ab606e2133ecd678f5c954a73"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-bf7b8bc74ca1b6186f86.json",
+      "bytes": 19359,
+      "sha256": "9a5be2bc248bc433f64ab16134b4ee51238868996e765f71aa1fdbe76356d593"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-c2c70d301b77aaf6c8e6.json",
+      "bytes": 20668,
+      "sha256": "ff9b04fac8190ca8261d7846ed64244cac4a8c9e57dcacc776f61dd56d552378"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-ca2e5a464ad57e3d524f.json",
+      "bytes": 19883,
+      "sha256": "13bdc9561a81eb893def1a0cf6e89609ab4ce68c012ab3ba3a4866b51d111360"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-d25620a91d52766f9489.json",
+      "bytes": 21425,
+      "sha256": "c7a371ea48e9afe6750464573ab475050d4c7835ca4637ff5b21928313d6d939"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-d7399de4160bb4429d68.json",
+      "bytes": 19529,
+      "sha256": "a95a594a8f93762bcdddab8724f15083edfbb6881e404f24c828a95e8d798099"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-e34ff3ec1e6419026c48.json",
+      "bytes": 19562,
+      "sha256": "b6a733547be0cc3a035eec19dae2cdc323f2768531d49901b8f2d927b07ce521"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-e9f5bad470a7c5b8fbc7.json",
+      "bytes": 21436,
+      "sha256": "059d89cc2522e7604860b3a8996906047d024d25cee1de46694b78e85cb74b50"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-eea127101238adcf8097.json",
+      "bytes": 19900,
+      "sha256": "a95a050f0ef69d0faf79b750bd9a35a575d08e8e94dbdc860e6957a9c70d5a68"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-f717f358a3d6ac88a878.json",
+      "bytes": 19973,
+      "sha256": "9109856477e172b7349ccbda22f90cdb1bd4b7e4f6144401d897b320437f07c8"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-f7c6eccc694cd66c9cb7.json",
+      "bytes": 20747,
+      "sha256": "9c2de3bd0276ed2baaa7411fc4c05f1113116548ea1a834d62685c9d4fce0d92"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-fd682c2b35da7f39bb44.json",
+      "bytes": 19731,
+      "sha256": "c6ae23dbfe81b2f06e33384e0eb4fac4bd0176c16bc7fb4b657291957491b92c"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-fd9dec9e1ad0fe96a4d1.json",
+      "bytes": 20002,
+      "sha256": "c3664281520bf03d64bb4009c8e2014af4157b67672ca6e74750a1a570d4bc7f"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/jobs/job-fe340e656a35c0a2c61e.json",
+      "bytes": 19514,
+      "sha256": "24063ca740e654628ee27b139a927e30a737983bbe6610e5b83e875a3e25cc66"
+    },
+    {
+      "path": "design-packages/gameplay-design/game-concept/manifest.json",
+      "bytes": 735891,
+      "sha256": "b2fc287dd3ceb3a36216f8dde32c5dba78d1ab4e00ed9227e67cafc5175562ab"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/README.md",
+      "bytes": 692,
+      "sha256": "bffe3b581e9ecf8013d2d5105861d0a7830169ae63ae0f676e191982579e23d3"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-078b13c8a67646c82ec8.json",
+      "bytes": 24106,
+      "sha256": "1b5091e0d9737fac5101612c08bf7c04eb6e257fd1883cd33a7c4f81b7a8389a"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-3100278e1f65b8cacd3d.json",
+      "bytes": 19774,
+      "sha256": "1b6d6454ce2bd24124a6a57e6f518ecf7bf1193fa76c076a5e127c88703e6e96"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-45dd33e447fb60d5fccf.json",
+      "bytes": 23751,
+      "sha256": "95e493e126fd097dac2d78cdac67a664e33f8591360111137c40e362f7648163"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-7007a95147b46d77c0ab.json",
+      "bytes": 25139,
+      "sha256": "f23e02e7f3a78784937a0a39484c30beef571313ef19778174f5a6308a87805b"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-72f014686ea5202c817c.json",
+      "bytes": 20671,
+      "sha256": "f545b5a61ace28575a7172c3d36746945526f3e5e2e25f938f96d9e2917963af"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-8e18e11baa13d1570b08.json",
+      "bytes": 20624,
+      "sha256": "d5f07e1fb8dea6916ab298500915866255c77fa3a91f691cbf80002111d3d917"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-8ef3d0c83c78599856c2.json",
+      "bytes": 21705,
+      "sha256": "19173a829044f9b134de2d031c829634ec98cbefab32813aeda3b5f381e28130"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-94cc0e138b5b12495fd9.json",
+      "bytes": 21465,
+      "sha256": "7639a37d30b529d8fafa7372ea78f7012928738cbe3f77714507d082280fc329"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-9a11c0f2a5397dc9ca44.json",
+      "bytes": 23513,
+      "sha256": "bb91e99b04500b706c72acf231fb86c6e8a3462341627230644d4a702b1824a6"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-a80f7219c52c5007c909.json",
+      "bytes": 20535,
+      "sha256": "c29aa1b87a2b7c1c41fb9cd35be2ceeaf19b1e2ba55321567c00668edc3f8a67"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-acf4b6f9375f6319ebfb.json",
+      "bytes": 20514,
+      "sha256": "b85c3f16c4261ddade7c3af9d4250a834b6cdc0be0d847ea56e920a79f9dfdb4"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-ae66deef038145ce8002.json",
+      "bytes": 21559,
+      "sha256": "6f04a2c5719ff32fe7882f492dc9b7fa82f811d7ebcb2c2fdc9d2301ea8396d9"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-eae4bf083e416d80dd63.json",
+      "bytes": 19177,
+      "sha256": "37c21ed896491ad68a87b69ca6d14bbcd49c1212c23d299e9d2876557f6b642c"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-ee0e3f8cd1bf664ef45f.json",
+      "bytes": 20068,
+      "sha256": "1b8de6d7497dafce16ebcda8be3c02d4761368357367128823067b27dfac1faa"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/jobs/job-f307cabacccb9e53ff14.json",
+      "bytes": 35638,
+      "sha256": "571a2444e08e5e4b007564bfc6b4d338690cc4581a9fafbb7ee88b0b1b416f81"
+    },
+    {
+      "path": "design-packages/gameplay-design/gameplaytags/manifest.json",
+      "bytes": 358907,
+      "sha256": "52eab1be2b577fcc447875f43b0591076128ce9fb6f8aa1cab7a98d02d696dda"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/README.md",
+      "bytes": 695,
+      "sha256": "01b1e925dc59683367a6024539161900e812819b89da3c1901ddbbb0583dff54"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-00d02e9b746e5d4a046e.json",
+      "bytes": 19941,
+      "sha256": "c880473b409f358c4ffdc565a3e718e63ba68d80795d04ba49d6adfbe45a40a4"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-014d6b03fd8de62c3948.json",
+      "bytes": 20561,
+      "sha256": "66aed8f4e4526e8b1fe143d76b4e712b8f0b8e1b0f540b476768d2e212d1274c"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-044dd253a28413df14db.json",
+      "bytes": 20653,
+      "sha256": "520b6217b62d8ae5c8edcf9e4cd36c8ca1597e669c963adb7b1a0750354584be"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-09135741f8406707422e.json",
+      "bytes": 20949,
+      "sha256": "6754773d15cdae0fd5fd64109828d83940ceb2b38bbcb738298df213cc86193b"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-0ca66109a854b8bc5b8a.json",
+      "bytes": 23672,
+      "sha256": "3e7acc798764bafd7539b3dce90b72c6b0733503c4bf45c704c8b5c711a30630"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-0ea298242d97d51ab4a8.json",
+      "bytes": 21878,
+      "sha256": "b2fc26e1840c1a26c9e93ed775d8627f18e641799f1557adab069162b0ab1a0d"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-1169e411d554bd419d6b.json",
+      "bytes": 21420,
+      "sha256": "955b45754465ea8210ed67bf8464a6eef2086602c1b387953463661c460bd9c7"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-16dda9fa22924de7ba73.json",
+      "bytes": 19520,
+      "sha256": "25c99d11e904131a010f225488195f1c02fc0eec9b3e89f353547f6fc60b9a00"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-1cf0b7915403b018369d.json",
+      "bytes": 20028,
+      "sha256": "a157b3807f8edd84fdcffdb9172accc535db57efd85d53944b28d8cb3164c684"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-1e3bd9b633e724e77e4f.json",
+      "bytes": 19507,
+      "sha256": "9c96f8643305a5d162f149748475757d6f21a77951c228062fa1a817eacbcff0"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-1ef6022beb39e4a77211.json",
+      "bytes": 19106,
+      "sha256": "2d7edc5055cd9559535309439aa4d22bad9abbc053ff14448b945825b93885a3"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-21d386abaad0b3e7853d.json",
+      "bytes": 21415,
+      "sha256": "caf9030bccd13cccfaeabaccf4cb053dfbe7d4d49e8481f41d7fef604bca3b03"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-253e15f809940fadf7df.json",
+      "bytes": 19735,
+      "sha256": "85ece54a3dd1935ae631b049427e81db1f1ab3f902bc582e3cd774f065d38552"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-28e1c4f9db31fd202bef.json",
+      "bytes": 21800,
+      "sha256": "dbb700e12e5958222c048c424235c75a91e62ae6d7e7c71466a062d135908303"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-2c7f225d4becf2b5eef1.json",
+      "bytes": 20627,
+      "sha256": "2d6beea0ad9137153513ffb4365a1d686f26bf84a21aa6a5e668f2e89744f971"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-3009733d9dc994cfc65a.json",
+      "bytes": 21525,
+      "sha256": "9cb86ec58c4fb471ac0b139b66e6719770804aa618c7b11f49d2b7bc4aa6aeb5"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-34e3e6aeb1a6e16065ea.json",
+      "bytes": 20500,
+      "sha256": "a859f00885f84cd3513a45aa8ffe308b5798f7b75f6c5636490a5983f0bccb96"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-39bc2b756961be95a653.json",
+      "bytes": 24412,
+      "sha256": "1be03ed02d6949a3e75bd24125e305d2526a0eda7bc57c3606fd896ac1ee4051"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-39c934e7f0f615a82e77.json",
+      "bytes": 21228,
+      "sha256": "a50d642cda8a5a883d518826cff883dec05370a7ae6df8f18acc1cf5560b1af9"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-3b28afafe29dfb07f1a6.json",
+      "bytes": 22325,
+      "sha256": "e64fef60e244e80e8b42ffdab8fa3d5d8aed6a954f37d75d495cecd0b0297f8d"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-3b480836fbc95d4ac7a8.json",
+      "bytes": 22555,
+      "sha256": "93cf99fd824186c4d9ccf9f9eabf11dc974519278787b7929461937ffef183bc"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-3c2dcb4619eb20ba2d98.json",
+      "bytes": 19484,
+      "sha256": "44b7e9beb7ae1e63777eb1f375ed732b294fd5058299f6967050abaf3e0ed761"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-44d9e80436f9e3f82744.json",
+      "bytes": 23289,
+      "sha256": "8f0baa20824675293b1f1d5aced943c70e83e32bcd63522bca370e6291fd492e"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-4537d4ff55d699cb2b2a.json",
+      "bytes": 19247,
+      "sha256": "32f903d25ed7ebc9b3a81babfe5dad1e0fee2b91aed8e67b29bd8ebff4aef5e9"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-4bc0e71a50c5330330bf.json",
+      "bytes": 19335,
+      "sha256": "1bbfabd568493d304c67573096a1d9ef63260a338fc6c1e1879842ee13277505"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-4ceae2d50196401dc278.json",
+      "bytes": 19416,
+      "sha256": "7f254cdc0325936ea5a3fdfdac30660317736611f49f3b4f7019d25450233ce9"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-517820627f1497355946.json",
+      "bytes": 19727,
+      "sha256": "d284915996a250799aa5533c30f6aa1d7c08a088b9ee3caa26cb6877c6b29088"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-521e42550081437faaaf.json",
+      "bytes": 20898,
+      "sha256": "f63f172ac906f05820b26a4fde2a0cf89025c663dd07496bdfab63905c14664e"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-52d8dfe55b5246d1329d.json",
+      "bytes": 21085,
+      "sha256": "b1d2a5f9598d185bbd0bd4db72fbb0754ccc57d9d05250e79660fe2fb16189d8"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-571571ee67729e0621f8.json",
+      "bytes": 19155,
+      "sha256": "c500475a8a56370a7ca1f5428904655bc99e16877db37914a63832e62e3e3354"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-5735d6bbd4065a3c4a6d.json",
+      "bytes": 19962,
+      "sha256": "4205e435b7e2cb1853576a61896ce7af37005cc680e80911f8fb35300b2ac02b"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-6816bbbf1422064686e6.json",
+      "bytes": 21976,
+      "sha256": "6d5d173c503f6e210252a0703a99fdaebdc1b1770d13295e5f0a29e55c50de6f"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-68ae3ac7520315f59448.json",
+      "bytes": 21033,
+      "sha256": "3c661314a954e6b32045c0ce267222a082b4c5f95d443235c90293e03e361b4e"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-6ae405a2ece3114eb9ce.json",
+      "bytes": 21955,
+      "sha256": "8c5b9b82a13e5995376c556148658a2c035746fc6456299572a02ec5d56c89d8"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-6caed5b8ae17bf787025.json",
+      "bytes": 19598,
+      "sha256": "0c279ae11ff319bd34626a711c510515bf58686014a89f6ce4bc4ac62b653ff5"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-6ce50fabe3f88ac4a2ce.json",
+      "bytes": 21387,
+      "sha256": "2a65c2e211a11f8c0a267a45795ce1ff113016d422c4eb8e62cf062a3339021f"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-70385d65f6015e4953e5.json",
+      "bytes": 21226,
+      "sha256": "0e97aebec77cfdcb1fa82182b545937d283189995e418c8db16d7d4e63f1834b"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-70db0a90eeab1f3c03c2.json",
+      "bytes": 24072,
+      "sha256": "5dd004d911bf89bf8d7e3ce0b261046b4782e865a00967cf967fb2e93d2ff06c"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-72eaf8a1787bb67b2af4.json",
+      "bytes": 22663,
+      "sha256": "0f557fb1464cb0c58692109c11cc83f494f8d6587749686df51060ba8c65ec72"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-7790bd1aa0b909b40793.json",
+      "bytes": 21003,
+      "sha256": "3c89a1ba56e2ae186f340dbfac13f5d10a200373688f793db35d9d4007ddc155"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-7e6c1301ad1537fbd03e.json",
+      "bytes": 24146,
+      "sha256": "c108dae6dcc77efe1d838e07036c8dd0a1bc3e460a1fac079fefe4a9ef84f288"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-88dbf697ad23106fa761.json",
+      "bytes": 20955,
+      "sha256": "79c15576e72ffcd6b0182678da67b29ed03ab1637fbb6af29d35c0937f0261ec"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-88fd601e652aa912982a.json",
+      "bytes": 20584,
+      "sha256": "4faa7aa3ff5de7925b06b99690785b6a3eafc8892440667152e77e273a4af368"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-8e424a25f545769fd193.json",
+      "bytes": 21852,
+      "sha256": "712b6b718659d952af88480fe6cb9f2992e8108e91cd2c495ff4c992f38a17f3"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-8f93f78dddcdf728a38c.json",
+      "bytes": 20418,
+      "sha256": "d1af6e04f54d6ac087c0c838d021370cb1f5a328883acc446c4400464c0d8970"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-9223ee26974853204da0.json",
+      "bytes": 20844,
+      "sha256": "f213862530e791fe577bcf984c418fc1733608fd581348062fd938dc5c445917"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-932ec4324a842f38d499.json",
+      "bytes": 21556,
+      "sha256": "d2c35946b227b644f0f74c2a2ed83b7d97619d39398456ef2dd6a9003db5beb3"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-96aa0c3413d20bf3c606.json",
+      "bytes": 20365,
+      "sha256": "7550d8101467475e31aa4ee5382cfab82ea4d1478c3843bfdf38be3757dfe71b"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-9d1e68012c0eab270496.json",
+      "bytes": 19368,
+      "sha256": "69f8dc9af1fd512d0b9d8787352245b34ba7e2f2d7909d1a6735f2d25870d84b"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-9d6207a65b8fd852b3a4.json",
+      "bytes": 21980,
+      "sha256": "07002b799dae371b6d0eb60d0db0f3b07b3b3f3597defa39a296eff876dd2ef6"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-a21483636b80eb1dacf6.json",
+      "bytes": 43039,
+      "sha256": "72cf901869af4cef3ac1b96a04b5f5304f8ed51efeb02e65a698d26692da0395"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-a3ea2a856eb936824ef8.json",
+      "bytes": 19694,
+      "sha256": "6ad5de339635586858b2f275663d63d652769227a7fc5b4172d5e5ff4df524e9"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-a41c9c6ae77b22cf72cf.json",
+      "bytes": 20218,
+      "sha256": "adb053bb60fdd51240f3f9e89646297db1a88f533644988ad17b86b858f08192"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-a4eae23992e732eb6188.json",
+      "bytes": 19969,
+      "sha256": "c577b913671fcd8711a6c7888d029362fd9806cffcba74721bbe97a3859871d4"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-a5b18c852605478f4616.json",
+      "bytes": 19434,
+      "sha256": "c28cac7ecb08395da72d56f1dd018010d059a1aef769aba45e0387b9cd9344ec"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-a5e29e0eb67038d86856.json",
+      "bytes": 21398,
+      "sha256": "e3ac1e060dfee99b8e84c0b4e74c75452dfca03f6528bbbdd27033823cb61e7a"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-a976f785443adb9c8036.json",
+      "bytes": 21562,
+      "sha256": "01bd9e387d87e72519b3a0c99720d85fc3305ecfbf86cdb3ac444659258e20b3"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-aa28a95f4cad1943625f.json",
+      "bytes": 20193,
+      "sha256": "2356099b94ed26d6447d060330795a80eaee01ce60cbcd983f17fadff2d48ac1"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-aad3fa888fb79222e4d9.json",
+      "bytes": 19782,
+      "sha256": "4c0a81de1b5bb42e6632e29e3dd270236da4a34db8c5f9dd7cece7cda4222278"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-b0ae7375692e85ea61f6.json",
+      "bytes": 20255,
+      "sha256": "de3f1e6875585778197ec66c2e63fc30c7da3a163b9c87017128f8af70907ce1"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-b2f202d011c0ed207abd.json",
+      "bytes": 26105,
+      "sha256": "0335b623670819660ca9c8d151ecc82ff06214d22f81793c16f42a11a7682849"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-bf22f48589072b03040d.json",
+      "bytes": 22582,
+      "sha256": "3e03418d86943cae6cd1fb87d0658d02cef2feb8670b9b8c46b276470d960050"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-bf35bce1fb1aff4d86cc.json",
+      "bytes": 20716,
+      "sha256": "c1f933a28326d44e762bf44d1975fda536cfa2337c79994b6cb0fdd399ccd063"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-c3c8c454e762bff519bc.json",
+      "bytes": 21238,
+      "sha256": "f444f6deb00946c67a9739b5e907610a24bcc5d84faf5c40f220818221256afc"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-c46a352d4cfbcfc2805a.json",
+      "bytes": 20750,
+      "sha256": "2dc84ff85d8c4b49ab97ab5d0bdc85e4c0bbe610ec7313109a6090e38f949e76"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-c61a78947ced9de5f584.json",
+      "bytes": 21602,
+      "sha256": "bd0ebc5d31061b262d37247c75f4955daa4bcd54cbf7126bd4ed9fcd000e38ac"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-c96008f9714c7a0eb59e.json",
+      "bytes": 21299,
+      "sha256": "19ed3786472e06768b4a827e6821040d8ad407e5cb0ba8397c27d9ec9298b3ba"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-caa8a0a6fe4c402f5a48.json",
+      "bytes": 21275,
+      "sha256": "5e39ff2b961bf74a6563f947a600c34cd5f265fc5a8f3ca0ca008fcb3dfa0a68"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-cb1aedb9f94e448ec771.json",
+      "bytes": 20979,
+      "sha256": "851b543180c7b7fd1a55c515873be4c03b71437e55c4dd544cfe31192a624ed3"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-cbc0fafe1ae158e60400.json",
+      "bytes": 20427,
+      "sha256": "94e1fb5f6bd777c79e67073f87dd19b679628222a5a8c9e7358cbfe57e53dd15"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-cfefcfc2bba6f9d474b4.json",
+      "bytes": 20537,
+      "sha256": "02775244fcacc93bc7d935007941321b4b21681a1c969966cdeb591d91817f8c"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-d744c7bb4e4559013711.json",
+      "bytes": 21893,
+      "sha256": "a94d32125e6eedaaa4a00af3b7abe78dc3a66da4df1bc7ef3451a8ab10677318"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-dc4b5213ad6d405b59a7.json",
+      "bytes": 20584,
+      "sha256": "8570a36c1b182dbefe393664d2ddc0e5e50c27c90d93236ee00af4f2339851eb"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-e583eb0e19956645db21.json",
+      "bytes": 22387,
+      "sha256": "4213e2b348d1d905cf2840c4e5cf2a5a97a42ff16d97179b2194292cd618c767"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-e709b3feba3c5b34ccc9.json",
+      "bytes": 19027,
+      "sha256": "5f1a5ba37a2d53a72b1f696c2559e1de6d8b13582af5764888589d84e871dabf"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-e78c437ded76ff7507b3.json",
+      "bytes": 20820,
+      "sha256": "1844fc3f682bd75c0a45adab95184199a9d90605c1f36cfc1cfb9a8f44750437"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-ec4c925639305b84b06c.json",
+      "bytes": 20741,
+      "sha256": "3649dcbf0aaba674ffa4ccd0d4d66d57912cd648f825bef1ee7f767024eedd9c"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-ef7d3323a33f168a2bd4.json",
+      "bytes": 22653,
+      "sha256": "e246886bd492552949fa4b1b32367050d45478328255452361b995cee1f63a5e"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-f1d9889a89540e90aca6.json",
+      "bytes": 19958,
+      "sha256": "a91bd87eb0ff8ad5ab19cab0507e170403b7cc64a102c94b0478aafb0f39075e"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-f2f39dd59a7dde552a32.json",
+      "bytes": 20469,
+      "sha256": "915a658470e5fde9537e5590a320ce03d7c142204fe8c6dd605d7642d74e14c9"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/jobs/job-fe10e2885848dbd16ece.json",
+      "bytes": 20050,
+      "sha256": "3643df1af60bfbd1e2519d3cc9d110b14526b807665da2f9f7986774c635fe4a"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/manifest.json",
+      "bytes": 1834127,
+      "sha256": "b548735d518d1c83bfeb1347cf2947a82d46517f5200132afb75b61bfcad6857"
+    },
+    {
+      "path": "design-packages/gameplay-design/module-system/module-system.md",
+      "bytes": 99355,
+      "sha256": "6d529f28b3704c2d58f3be33528cce2f747ad785a77d1a002b59e0e2ab8de274"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/README.md",
+      "bytes": 716,
+      "sha256": "7176ee28a190f8e4f2cf44996eb74d1d31460caf1bb4266b94dc6aa1b9820064"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-0f6d5d9f0b2c8d80fa66.json",
+      "bytes": 20309,
+      "sha256": "81fd454ce46ccf58c830e783d1540def167e16ff29b232cc711efc63b085aff7"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-0f7a9e162aae586844d2.json",
+      "bytes": 20851,
+      "sha256": "cf2539d521d440c1f8a4f4d95be79a6fabb51e02ee591b9d236066a56cf2b545"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-1b5b615ddb24da4877a0.json",
+      "bytes": 22959,
+      "sha256": "f2229111c9dd24d24d35b83080de9be6493eff6efd985ba9f1e01588df8a7594"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-28cf72e411caa8785949.json",
+      "bytes": 21848,
+      "sha256": "fbe4de243784c720296879645b8364757204330d6671d9c720eb4be7d97b5cdf"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-2a74f88790144d634cad.json",
+      "bytes": 18811,
+      "sha256": "d2d740720d2d572597ec732fc036277a070a4bd727a28cc378db3124d378d589"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-3be19b9e26eedcfb0560.json",
+      "bytes": 20603,
+      "sha256": "3c0d3746ce00202d501007e6358872958c6d9c0c5dfd8b2209a4c81dc19dfc8b"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-3f74d03a76703556e74f.json",
+      "bytes": 20556,
+      "sha256": "e63322b709ea2f2176bd562b3a025e9f9690c57b0a3dd85dabda5f7e1b5aaf09"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-423cd7a44bc737b4dcb9.json",
+      "bytes": 22702,
+      "sha256": "a6a2d35ba42325f6a6de999fde9acec53733da43c1a91295b445dfd27bbf10da"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-446fe121cc4ac6522e99.json",
+      "bytes": 19128,
+      "sha256": "559eae3f317b317d8e40906e69062b9e7aa48fbd02540cadda4d46d62b9edb59"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-4e04924c2e47d0772c18.json",
+      "bytes": 24440,
+      "sha256": "f7a24fa594b4d0bc9c2d38959020d5f088f4e4dc7cbf8ab80804a64d1028a7f0"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-54a5fd26abd3692e56ea.json",
+      "bytes": 20863,
+      "sha256": "32c2c4806a9495b49e12f75611f87a59cf8808e5098058e1f9ce279f07f1e3fe"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-6c23406c1822ae15e6f4.json",
+      "bytes": 19316,
+      "sha256": "b8d16d11b8fed33575acbacd06434717a66f0392387ea5d08f4aa2133c7adfb4"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-919cdc95a6df2547a13a.json",
+      "bytes": 19287,
+      "sha256": "00fc9f05fbf734a865cd260d76f08ca31df805d5eef87d0651b6007c0e6716c2"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-92b5278cd8abd47c744a.json",
+      "bytes": 19672,
+      "sha256": "018c62926552cf9a6f40ed865ba5f2ffb61974a839c301edddda1418cac04535"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-93fe11e3918b85def4c8.json",
+      "bytes": 35339,
+      "sha256": "596def7e3af63a0ffbdd18f77aa2a73182a4f1b2ea13fafd653c8488dca2151d"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-959489fa98c468ac0ac1.json",
+      "bytes": 21001,
+      "sha256": "c39888b3c57cfc6210550c4847ced6bcda57c5451ee769fd1dc2dbfc2070ef3c"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-98a0413e4b8c09c39e34.json",
+      "bytes": 28180,
+      "sha256": "8e21476d2dd16cc236d591dcb0e764af8bd9048bf8c58604b7f6a341831f0710"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-a774e9cf142aaaba6c3b.json",
+      "bytes": 18861,
+      "sha256": "e25d919e613b03296fa1e46ef68175955e79d6a22ea97dc3d245af9487a4e84d"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-ae9a85df8287b5d71dcf.json",
+      "bytes": 20640,
+      "sha256": "ba56ab3e998164190b837bb22d7c8a78a76cc0384cbf224d1ede93a8962d616c"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-c018d3a352a795509806.json",
+      "bytes": 19431,
+      "sha256": "03236570fe90ad9eb27b0186a0e939a4b7711090816f505485c1f430e9226e19"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-dc048de83e3479637295.json",
+      "bytes": 22374,
+      "sha256": "8d9325619e50d03b7dcd2adb7b35333e8fab5fbd19063b46ed616dbabd15fb26"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-f3f1403717ef9f70edfe.json",
+      "bytes": 38245,
+      "sha256": "f9348bc23a6759aefc3586a7c8ddb0930844454cc179c37f0cb09ae74730c5aa"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/jobs/job-f47e0d9f70563e43b7ca.json",
+      "bytes": 19669,
+      "sha256": "18e26909653b38219a9f507cedc30232b65bac6b999de977cff27c17bd1c5faa"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/manifest.json",
+      "bytes": 546648,
+      "sha256": "d882059ba57533a10bc444654f9f7dc668894412061f108483bd262e63bfb38e"
+    },
+    {
+      "path": "design-packages/gameplay-design/persistence-layering/persistence-layering.md",
+      "bytes": 41403,
+      "sha256": "05e42a025857f26bee87380d52c9ea049c96a968abf48956132e0147d64de017"
+    },
+    {
+      "path": "doc-registry/registry.json",
+      "bytes": 30479,
+      "sha256": "2af65ded01d080146cdbfaff52b137a03dc418ce9469c09d3823774ec2538482"
+    },
+    {
+      "path": "entity-registry/entities.json",
+      "bytes": 1686289,
+      "sha256": "c9ce880199033400a9a6ea45e87b0b81de92cbe6b97126055bf0bae825658407"
+    },
+    {
+      "path": "graphs/design_workspace_level-narrative-mindmap_2026-07-22.cyto.json",
+      "bytes": 61944,
+      "sha256": "d8b3ffadf6be2f5744f1c4ebc40d829158f279177006a9d2e8a03233fec82545"
+    },
+    {
+      "path": "graphs/level_design_demo-facility_2026-07-06.cyto.json",
+      "bytes": 14076,
+      "sha256": "ff3a43eca9ff547e0fbd974c2f61d8854644d0547092c1fa80d6bd9aabecacf7"
+    },
+    {
+      "path": "graphs/narrative_demo-facility_2026-07-06.cyto.json",
+      "bytes": 13210,
+      "sha256": "e8c1046478bef2a242e85066d70ba5842a88ae5ddecb2396fb033623274f0a9a"
+    },
+    {
+      "path": "graphs/quest_demo-facility_2026-07-07.cyto.json",
+      "bytes": 8791,
+      "sha256": "dd03044b83f00641ba7c62a1c92aeeaddef65b20d447d514c8a13505cea9f502"
+    },
+    {
+      "path": "graphs/ue5_planned_architecture_r1.cyto.json",
+      "bytes": 9658,
+      "sha256": "b6ed050a2da481add150e46d896b6f051b0d27aef2ff3d1c0ac525812386b0ba"
+    },
+    {
+      "path": "graphs/ue5_planned_architecture_r1_final.cyto.json",
+      "bytes": 10055,
+      "sha256": "093d459cec9717762d9eb3f39061d4f8fa6137f0c8e13c90b30e7e01990abbfe"
+    },
+    {
+      "path": "graphs/ue5_planned_combat_r1.cyto.json",
+      "bytes": 50330,
+      "sha256": "0b530501528e3e7c2f2c4d08621f8184d39840579c0150c8b915656073c642f5"
+    },
+    {
+      "path": "graphs/ue5_planned_combat_r2.cyto.json",
+      "bytes": 58684,
+      "sha256": "780b1a31d78eeb1bd7d95406f3226e329f46466a0490b3bb113d1c1eb73688a7"
+    },
+    {
+      "path": "graphs/ue5_planned_combat_r2_final.cyto.json",
+      "bytes": 58812,
+      "sha256": "70686f496f89f20236a1cae62e4fed0d7b97972ee66328316029ff70b0926d83"
+    },
+    {
+      "path": "graphs/ue5_planned_combat_r3.cyto.json",
+      "bytes": 65077,
+      "sha256": "7daa84bbbfbbf14ba69d7ea8649bf4f3009fd9654031d83ed878427d26d2312b"
+    },
+    {
+      "path": "impact-report.json",
+      "bytes": 896,
+      "sha256": "c97441b5a8110d26ae21c33db251fce11b70c085dad7847574a17fa729c2371d"
+    },
+    {
+      "path": "reports/graphbrain_quality_audit_2026-07-13.md",
+      "bytes": 6620,
+      "sha256": "7b98f3a8ff2c5f7205f8c56d2a58635fff2490762ef8816503eb041826f1be2f"
+    },
+    {
+      "path": "reports/ue5_code_project_analysis_2026-07-06.json",
+      "bytes": 328,
+      "sha256": "119063c30835a4f8d47826e99aca9a626948e60f763d8cdb289e44d04b2eb4ff"
+    },
+    {
+      "path": "reports/ue5_code_project_analysis_2026-07-06.md",
+      "bytes": 214,
+      "sha256": "8997baa406f99524acd5b81b4e269dbf441841297cf1a3a4b14cae8d6bc8c4f6"
+    },
+    {
+      "path": "reports/ue5_code_project_analysis_2026-07-07.json",
+      "bytes": 744,
+      "sha256": "f56ce80bed8b8ef2a158c6e045b8b27c3b6be6764255cb38ab4c2e5e3e6a9a9c"
+    },
+    {
+      "path": "reports/ue5_code_project_analysis_2026-07-07.md",
+      "bytes": 333,
+      "sha256": "a6a7937fa3f58302c5ce7e6665512f455d25cce3e5aba4d73efb30875b23c0ed"
+    },
+    {
+      "path": "reports/ue5_code_project_analysis_2026-07-12.json",
+      "bytes": 455,
+      "sha256": "7a5b7afe08610aff251bac9ddaa2ad5511914b5f445f141047a4aa71ec2486a7"
+    },
+    {
+      "path": "reports/ue5_code_project_analysis_2026-07-12.md",
+      "bytes": 274,
+      "sha256": "d988c780cf74edcd85d0aa67f679032b389263cb052d8882c29b8ab89baede1d"
+    },
+    {
+      "path": "reports/ue5_code_project_cycles_baseline.json",
+      "bytes": 223,
+      "sha256": "118bd5794845cb4136c0627f1ea45279a1b73459d46ab6f9588398ae2f375152"
+    },
+    {
+      "path": "reports/ue5_planned_combat_analysis_2026-07-06.json",
+      "bytes": 1193,
+      "sha256": "42f3d787d81700ae398666fd7787064d547b8a86f75214837e4288305b51641a"
+    },
+    {
+      "path": "reports/ue5_planned_combat_analysis_2026-07-06.md",
+      "bytes": 576,
+      "sha256": "7c50e0019239988dbeb82bf7197187d167deef094db52c59bdb3b53b61c98a4a"
+    },
+    {
+      "path": "reports/ue5_planned_combat_analysis_2026-07-07.json",
+      "bytes": 1056,
+      "sha256": "6164e3de3a328a121dbdd293c1ad61bb88d3160296962e5e19d988a6c429cbf8"
+    },
+    {
+      "path": "reports/ue5_planned_combat_analysis_2026-07-07.md",
+      "bytes": 524,
+      "sha256": "2e98928669168b893669a75fb2fb0acef139b090a226de85fc87e346231f8b3c"
+    },
+    {
+      "path": "reports/ue5_planned_combat_audit_2026-07-06.json",
+      "bytes": 1260,
+      "sha256": "84f0735685876b5ea1fe89a3477e8393fe30920784b210c6210794af13897fb5"
+    },
+    {
+      "path": "reports/ue5_planned_combat_audit_2026-07-06.md",
+      "bytes": 1105,
+      "sha256": "0da231df2323ab987639815d14d44edbb20e35be714e87de296cf667e963010f"
+    },
+    {
+      "path": "reports/ue5_planned_combat_audit_2026-07-11.json",
+      "bytes": 15476,
+      "sha256": "ddceefcd80b94eac81ddf5af01ff0858cf9bb9affd659ed3d82e15c119cd99f0"
+    },
+    {
+      "path": "reports/ue5_planned_combat_audit_2026-07-11.md",
+      "bytes": 8820,
+      "sha256": "eb3a36f9f484efb4bfa60dd0b9fd0d3084be3eae51edf993c91274eec17086a6"
+    },
+    {
+      "path": "standards/snapshots/graphbrain-best-practices-0.1-placeholder-8036403762a8.md",
+      "bytes": 3479,
+      "sha256": "8036403762a8582da6dd0ea04110fdb0c49ad5b2db3992b5b4f3344c67bb2394"
+    },
+    {
+      "path": "standards/snapshots/ue5-coding-standard-5.2.0-S1-b235b7d21a44.md",
+      "bytes": 25391,
+      "sha256": "b235b7d21a440bc2b61aee5faa8715504ce871a0a88e7749a0a67deead37b409"
+    },
+    {
+      "path": "standards/snapshots/ue5-coding-standard-6.1.0-4d2d7efd382e.md",
+      "bytes": 8151,
+      "sha256": "4d2d7efd382e6dc0c76cded418d7e30de613247610962459b96e5594db9ae8bb"
+    },
+    {
+      "path": "task-packages/combat/AGENTS.md",
+      "bytes": 241,
+      "sha256": "c8ed0eea3c53c11958218934c1b3c5816b5a34488b5c2f3fc446a34a56a975a9"
+    },
+    {
+      "path": "task-packages/combat/BEST-PRACTICES.md",
+      "bytes": 3479,
+      "sha256": "8036403762a8582da6dd0ea04110fdb0c49ad5b2db3992b5b4f3344c67bb2394"
+    },
+    {
+      "path": "task-packages/combat/CODING-STANDARD-CONTRACT.json",
+      "bytes": 5236,
+      "sha256": "b67809b20d17141a66658fc46839b3bc1e371d2965309c1a6a8b47a983dbd641"
+    },
+    {
+      "path": "task-packages/combat/CODING-STANDARD.md",
+      "bytes": 8151,
+      "sha256": "4d2d7efd382e6dc0c76cded418d7e30de613247610962459b96e5594db9ae8bb"
+    },
+    {
+      "path": "task-packages/combat/DEVIATIONS.md",
+      "bytes": 278,
+      "sha256": "ef5c30fdb5c07b5735e72e2b087732c00b4112e51c12e878a6ec60cad1153c2a"
+    },
+    {
+      "path": "task-packages/combat/DISPATCH.md",
+      "bytes": 11402,
+      "sha256": "45d48c99325676ac7372538d1c174df3d6699e438583a63903a8c368327f55fa"
+    },
+    {
+      "path": "task-packages/combat/MANIFEST.md",
+      "bytes": 4122,
+      "sha256": "91da7c3d47695c305f915cfb3357bf540d425581f165d58f1a9810a9fb5782fe"
+    },
+    {
+      "path": "task-packages/combat/README.md",
+      "bytes": 258,
+      "sha256": "952be3417b599a64dc2b90d28e95c3e532d288892b0147e789061ce1d6cadb36"
+    },
+    {
+      "path": "task-packages/combat/SOURCE-SPEC.cyto.json",
+      "bytes": 58812,
+      "sha256": "70686f496f89f20236a1cae62e4fed0d7b97972ee66328316029ff70b0926d83"
+    },
+    {
+      "path": "task-packages/combat/TASK-PACKAGE.json",
+      "bytes": 25765,
+      "sha256": "bd70dd027f89e50ccc09c09047567f68e24db451691e9cedfe410ab1b4f2ae39"
+    },
+    {
+      "path": "task-packages/combat/TASK-PACKAGE.md",
+      "bytes": 3417,
+      "sha256": "f94ca640795a15a8733c28f05eba1478641a16224c4be391a8e8be18c463efb4"
+    },
+    {
+      "path": "task-packages/combat/VERIFICATION.md",
+      "bytes": 2927,
+      "sha256": "16a1a89d0f7dac48d741e5e0277258c46b5e1b8f799a10d8c06893944d1f12e2"
+    },
+    {
+      "path": "task-packages/combat/briefs/ACombatCharacterBase.md",
+      "bytes": 7633,
+      "sha256": "1be12e79ec5df947619c9991f8714986d6743d337abb3243cf234bab3117b201"
+    },
+    {
+      "path": "task-packages/combat/briefs/AEnemyAIController.md",
+      "bytes": 3762,
+      "sha256": "a95672b0f7681ec05d9a451d4d16b58442588dc4ffda01f14dbf59f3c8283e4d"
+    },
+    {
+      "path": "task-packages/combat/briefs/AEnemyCombatCharacter.md",
+      "bytes": 4058,
+      "sha256": "bda3341f7c48211e266986541a3e2530ae6e8367e9b7ee47d513d2400eb6088e"
+    },
+    {
+      "path": "task-packages/combat/briefs/APlayerCombatCharacter.md",
+      "bytes": 4656,
+      "sha256": "e710581a15a3dc15cb7feb64137f8c10bdb02bb95c375e48249fa3c3aca3808e"
+    },
+    {
+      "path": "task-packages/combat/briefs/EAttackType.md",
+      "bytes": 2975,
+      "sha256": "7dd215ca82e861d24e9415c39d6d3fc192fe39a70bef401e8d55b6157210c749"
+    },
+    {
+      "path": "task-packages/combat/briefs/FDamageInfo.md",
+      "bytes": 3083,
+      "sha256": "cbfe33121d55decd68626219f49bf597b1d77ac21e5551c8c2e7c65572aebb9a"
+    },
+    {
+      "path": "task-packages/combat/briefs/ICombatAttacker.md",
+      "bytes": 2798,
+      "sha256": "72e6ee3a1df8df62ad78baab1be28d1093d4e4825bbae494b16851c7c84e9d64"
+    },
+    {
+      "path": "task-packages/combat/briefs/ICombatDamageable.md",
+      "bytes": 2897,
+      "sha256": "678479f0dcccba6f33a806a42ed0a391504739d3d5b118565ebff0e1f8adfe0e"
+    },
+    {
+      "path": "task-packages/combat/briefs/UAnimNotify_CheckCombo.md",
+      "bytes": 3824,
+      "sha256": "86607da715f0b1be963fbcdf03377acde76b2ecce50caa2ac27208f0a65a1661"
+    },
+    {
+      "path": "task-packages/combat/briefs/UAnimNotify_DoAttackTrace.md",
+      "bytes": 4157,
+      "sha256": "533b4c0d828f2dc85e4a408ec66e4e64409dc111e65219951e6990abafaf2040"
+    },
+    {
+      "path": "task-packages/combat/briefs/UAnimNotify_EndDash.md",
+      "bytes": 3596,
+      "sha256": "10eb464101245b52986054eedce42eb684d193eb20959f4862ec99c2f2cbe450"
+    },
+    {
+      "path": "task-packages/combat/briefs/UCombatConfigDataAsset.md",
+      "bytes": 3785,
+      "sha256": "6c86242facbe988abfa3a45a2221ff6757592a73aad04e7cc63576bb0e6ff08f"
+    },
+    {
+      "path": "task-packages/combat/briefs/UComboComponent.md",
+      "bytes": 6603,
+      "sha256": "29f2fd9dfbdf3f8aea42e4ac104b84655c79f45d4b79194587cc88b8153e011c"
+    },
+    {
+      "path": "task-packages/combat/briefs/UExecCalc_CombatDamage.md",
+      "bytes": 4963,
+      "sha256": "1123ded6915f0cf4b06bb9713c5845a27d364c22957f502e9959fefdb33373c3"
+    },
+    {
+      "path": "task-packages/combat/briefs/UGA_Dodge.md",
+      "bytes": 3830,
+      "sha256": "5e03bf086bf53725ecb8543da868b43fd5995d1377beb048dbda149a4683c578"
+    },
+    {
+      "path": "task-packages/combat/briefs/UGA_Finisher.md",
+      "bytes": 4089,
+      "sha256": "f577d9668115eec74504cdf2a8648c2cc02adbe1f20fabae84b98416bd67f9a9"
+    },
+    {
+      "path": "task-packages/combat/briefs/UGA_MeleeAttack.md",
+      "bytes": 4223,
+      "sha256": "db5732e4c1a0b3ac5e91cd2ca63d69e7fd8ff282741962377a0265d1f27b76ed"
+    },
+    {
+      "path": "task-packages/combat/briefs/UGE_CombatDamage.md",
+      "bytes": 3626,
+      "sha256": "2146db1e64e098259b934f916c06030680351d927f723da740ccd0f730735021"
+    },
+    {
+      "path": "task-packages/combat/taskpack.json",
+      "bytes": 55326,
+      "sha256": "6bdb05cd4461013310093a07fcef85ffa2c9f9f05c22f70746e73cee0c5d0d06"
+    },
+    {
+      "path": "task-packages/combat/taskpack.schema.json",
+      "bytes": 6870,
+      "sha256": "f303f03e82adee380c536aa2da22f8ce9d75656c72e1a109a4100dded93b40ae"
+    },
+    {
+      "path": "workbench-acks.json",
+      "bytes": 60,
+      "sha256": "3a8b3d91c3e7f310871cafdd8be08e58280e570d9ffdbd87339f9bbfd2662801"
+    }
+  ]
+}

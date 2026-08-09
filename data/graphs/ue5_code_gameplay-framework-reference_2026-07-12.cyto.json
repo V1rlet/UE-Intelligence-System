@@ -1,0 +1,807 @@
+{
+  "meta": {
+    "domain": "ue5_code",
+    "subsystem": "gameplay-framework-reference",
+    "title": "UE5 Gameplay Framework · 运行时职责与所有权",
+    "kind": "reference",
+    "viewpoint": "gameplay-framework",
+    "generated_at": "2026-07-16T14:16:45.088Z",
+    "generator": "build-architecture-references.ts / UE5 Lyra Cytoscape brief",
+    "format_version": 2,
+    "provenance": {
+      "schema_version": 1,
+      "status": "unknown",
+      "source_kind": "unknown",
+      "source_roots": []
+    },
+    "coverage": {
+      "status": "unknown",
+      "discovered_files": null,
+      "consumed_files": null,
+      "skipped_files": null,
+      "failed_files": null,
+      "diagnostics": [
+        {
+          "code": "legacy-v1-no-provenance-or-coverage"
+        }
+      ]
+    }
+  },
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "id": "group:engine",
+          "label": "Engine Runtime",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "引擎进程与 WorldContext 管理层",
+          "visibility": "explored",
+          "children_count": 4,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "group:session",
+          "label": "Application Session",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "跨地图会话、本地玩家与生命周期作用域",
+          "visibility": "explored",
+          "children_count": 6,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "group:world",
+          "label": "World",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "随地图创建销毁的运行时世界",
+          "visibility": "explored",
+          "children_count": 3,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "group:framework",
+          "label": "Gameplay Framework",
+          "type": "meta_group",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "服务器规则、玩家身份、控制器与可占据身体",
+          "visibility": "explored",
+          "children_count": 7,
+          "category": "conceptual-group",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "FEngineLoop",
+          "label": "FEngineLoop",
+          "type": "ustruct",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "引擎主循环入口，驱动 PreInit、Init、Tick 与退出。",
+          "visibility": "explored",
+          "parent": "group:engine",
+          "origin": "UE",
+          "category": "engine-runtime",
+          "lifetime_scope": "process",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UEngine",
+          "label": "UEngine",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "引擎运行时根对象，管理 GameInstance 与 WorldContext。",
+          "visibility": "explored",
+          "parent": "group:engine",
+          "origin": "UE",
+          "category": "engine-runtime",
+          "lifetime_scope": "process",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameEngine",
+          "label": "UGameEngine",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "游戏运行时 UEngine 实现，创建 GameInstance 和视口。",
+          "visibility": "explored",
+          "parent": "group:engine",
+          "origin": "UE",
+          "category": "engine-runtime",
+          "lifetime_scope": "process",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "FWorldContext",
+          "label": "FWorldContext",
+          "type": "ustruct",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "引擎管理 World 的上下文记录；不是 UObject Outer 层级。",
+          "visibility": "explored",
+          "parent": "group:engine",
+          "origin": "UE",
+          "category": "engine-runtime",
+          "lifetime_scope": "process",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameInstance",
+          "label": "UGameInstance",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "跨地图存活的会话根对象。",
+          "visibility": "explored",
+          "parent": "group:session",
+          "origin": "UE",
+          "category": "session",
+          "lifetime_scope": "game-instance",
+          "responsibilities": [
+            "保存跨图会话数据",
+            "管理 LocalPlayer",
+            "承载 GameInstanceSubsystem"
+          ],
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 3
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameInstanceSubsystem",
+          "label": "UGameInstanceSubsystem",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "随 GameInstance 自动创建的会话级服务。",
+          "visibility": "explored",
+          "parent": "group:session",
+          "origin": "UE",
+          "category": "subsystem",
+          "lifetime_scope": "game-instance",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ULocalPlayer",
+          "label": "ULocalPlayer",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "本机玩家、视口与输入设备的所有者。",
+          "visibility": "explored",
+          "parent": "group:session",
+          "origin": "UE",
+          "category": "player",
+          "network_scope": "local-only",
+          "lifetime_scope": "game-instance",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ULocalPlayerSubsystem",
+          "label": "ULocalPlayerSubsystem",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "随 LocalPlayer 创建的本地玩家服务。",
+          "visibility": "explored",
+          "parent": "group:session",
+          "origin": "UE",
+          "category": "subsystem",
+          "network_scope": "local-only",
+          "lifetime_scope": "local-player",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UGameViewportClient",
+          "label": "UGameViewportClient",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "连接窗口、视口、LocalPlayer 与 UWorld。",
+          "visibility": "explored",
+          "parent": "group:session",
+          "origin": "UE",
+          "category": "ui",
+          "network_scope": "local-only",
+          "lifetime_scope": "game-instance",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UWorld",
+          "label": "UWorld",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "地图运行时容器，持有 Actor 和 WorldSubsystem。",
+          "visibility": "explored",
+          "parent": "group:world",
+          "origin": "UE",
+          "category": "world",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 2,
+            "out_degree": 2
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "AActor",
+          "label": "AActor",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "可放入 World 的实体与组件容器；Pawn 的直接基类。",
+          "visibility": "explored",
+          "parent": "group:framework",
+          "origin": "UE",
+          "category": "gameplay-framework",
+          "network_scope": "server-all-clients",
+          "lifetime_scope": "actor",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "UWorldSubsystem",
+          "label": "UWorldSubsystem",
+          "type": "uclass",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "随 World 自动创建的世界级服务。",
+          "visibility": "explored",
+          "parent": "group:world",
+          "origin": "UE",
+          "category": "subsystem",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "AGameModeBase",
+          "label": "AGameModeBase",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "服务器规则与玩家生成权威。",
+          "visibility": "explored",
+          "parent": "group:framework",
+          "origin": "UE",
+          "category": "gameplay-framework",
+          "network_scope": "server-only",
+          "lifetime_scope": "world",
+          "common_mistakes": [
+            "客户端访问 GameMode",
+            "把跨地图状态放入 GameMode"
+          ],
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 4
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "AGameStateBase",
+          "label": "AGameStateBase",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "向所有端发布公共比赛状态。",
+          "visibility": "explored",
+          "parent": "group:framework",
+          "origin": "UE",
+          "category": "gameplay-framework",
+          "network_scope": "server-all-clients",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "APlayerController",
+          "label": "APlayerController",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "玩家意志、输入路由与 owner-only 通信端点。",
+          "visibility": "explored",
+          "parent": "group:framework",
+          "origin": "UE",
+          "category": "player",
+          "network_scope": "server-owning-client",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 3
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "APlayerState",
+          "label": "APlayerState",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "跨 Pawn 重生持续的公共玩家身份。",
+          "visibility": "explored",
+          "parent": "group:framework",
+          "origin": "UE",
+          "category": "player",
+          "network_scope": "server-all-clients",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 3,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "APawn",
+          "label": "APawn",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "可被 Controller 占据并可销毁重生的身体。",
+          "visibility": "explored",
+          "parent": "group:framework",
+          "origin": "UE",
+          "category": "pawn",
+          "network_scope": "server-all-clients",
+          "lifetime_scope": "actor",
+          "tags": [],
+          "metrics": {
+            "in_degree": 3,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "ACharacter",
+          "label": "ACharacter",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "带 CharacterMovement 的人形 Pawn。",
+          "visibility": "explored",
+          "parent": "group:framework",
+          "origin": "UE",
+          "category": "pawn",
+          "network_scope": "server-all-clients",
+          "lifetime_scope": "actor",
+          "tags": [],
+          "metrics": {
+            "in_degree": 0,
+            "out_degree": 1
+          }
+        },
+        "classes": "origin-ue"
+      },
+      {
+        "data": {
+          "id": "AHUD",
+          "label": "AHUD",
+          "type": "uactor",
+          "layer": "engine",
+          "module": "Engine",
+          "domain": "ue5_code",
+          "description": "归属本地 PlayerController 的画布式 HUD。",
+          "visibility": "explored",
+          "parent": "group:framework",
+          "origin": "UE",
+          "category": "ui",
+          "network_scope": "owning-client",
+          "lifetime_scope": "world",
+          "tags": [],
+          "metrics": {
+            "in_degree": 1,
+            "out_degree": 0
+          }
+        },
+        "classes": "origin-ue"
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "FEngineLoop--creates-->UEngine",
+          "source": "FEngineLoop",
+          "target": "UEngine",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "Init 阶段创建并初始化 Engine。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "UEngine--owns-->UGameEngine",
+          "source": "UEngine",
+          "target": "UGameEngine",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "游戏进程使用 UGameEngine 实现。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UGameEngine--creates-->UGameInstance",
+          "source": "UGameEngine",
+          "target": "UGameInstance",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "启动游戏会话时创建 GameInstance。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "UEngine--owns-->FWorldContext",
+          "source": "UEngine",
+          "target": "FWorldContext",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "维护一个或多个 WorldContext。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "FWorldContext--owns-->UWorld",
+          "source": "FWorldContext",
+          "target": "UWorld",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "WorldContext 指向当前 World。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UGameInstance--owns-->UGameInstanceSubsystem",
+          "source": "UGameInstance",
+          "target": "UGameInstanceSubsystem",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "自动实例化会话级 Subsystem。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UGameInstance--owns-->ULocalPlayer",
+          "source": "UGameInstance",
+          "target": "ULocalPlayer",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "单机或分屏本地玩家集合。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "ULocalPlayer--owns-->ULocalPlayerSubsystem",
+          "source": "ULocalPlayer",
+          "target": "ULocalPlayerSubsystem",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "自动实例化本地玩家 Subsystem。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UGameEngine--creates-->UGameViewportClient",
+          "source": "UGameEngine",
+          "target": "UGameViewportClient",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "创建游戏视口客户端。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "UGameViewportClient--owns-->ULocalPlayer",
+          "source": "UGameViewportClient",
+          "target": "ULocalPlayer",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "视口承载一个或多个 LocalPlayer。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UGameInstance--loads-->UWorld",
+          "source": "UGameInstance",
+          "target": "UWorld",
+          "relation": "loads",
+          "domain": "ue5_code",
+          "description": "参与 Browse/Travel，切换当前 World。"
+        },
+        "classes": "edge-loads"
+      },
+      {
+        "data": {
+          "id": "UWorld--owns-->UWorldSubsystem",
+          "source": "UWorld",
+          "target": "UWorldSubsystem",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "自动实例化 World 级 Subsystem。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "UWorld--creates-->AGameModeBase",
+          "source": "UWorld",
+          "target": "AGameModeBase",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "服务器加载地图时创建规则 Actor。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "AGameModeBase--creates-->AGameStateBase",
+          "source": "AGameModeBase",
+          "target": "AGameStateBase",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "创建并维护公共比赛状态。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "AGameModeBase--creates-->APlayerController",
+          "source": "AGameModeBase",
+          "target": "APlayerController",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "登录成功后建立玩家控制器。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "AGameModeBase--creates-->APlayerState",
+          "source": "AGameModeBase",
+          "target": "APlayerState",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "为玩家建立可复制身份状态。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "AGameModeBase--creates-->APawn",
+          "source": "AGameModeBase",
+          "target": "APawn",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "RestartPlayer 流程生成默认 Pawn。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "APlayerController--possesses-->APawn",
+          "source": "APlayerController",
+          "target": "APawn",
+          "relation": "possesses",
+          "domain": "ue5_code",
+          "description": "服务器权威占据当前 Pawn。"
+        },
+        "classes": "edge-possesses"
+      },
+      {
+        "data": {
+          "id": "APlayerController--owns-->APlayerState",
+          "source": "APlayerController",
+          "target": "APlayerState",
+          "relation": "owns",
+          "domain": "ue5_code",
+          "description": "控制器关联自己的 PlayerState。"
+        },
+        "classes": "edge-owns"
+      },
+      {
+        "data": {
+          "id": "AGameStateBase--publishes-->APlayerState",
+          "source": "AGameStateBase",
+          "target": "APlayerState",
+          "relation": "publishes",
+          "domain": "ue5_code",
+          "description": "PlayerArray 向所有端发布玩家集合。"
+        },
+        "classes": "edge-publishes"
+      },
+      {
+        "data": {
+          "id": "APlayerController--creates-->AHUD",
+          "source": "APlayerController",
+          "target": "AHUD",
+          "relation": "creates",
+          "domain": "ue5_code",
+          "description": "拥有端创建 HUD。"
+        },
+        "classes": "edge-creates"
+      },
+      {
+        "data": {
+          "id": "APawn--inherits-->AActor",
+          "source": "APawn",
+          "target": "AActor",
+          "relation": "inherits",
+          "domain": "ue5_code",
+          "description": "Pawn 是可被 Controller 占据的 Actor。"
+        },
+        "classes": "edge-inherits"
+      },
+      {
+        "data": {
+          "id": "ACharacter--inherits-->APawn",
+          "source": "ACharacter",
+          "target": "APawn",
+          "relation": "inherits",
+          "domain": "ue5_code",
+          "description": "Character 是带移动能力的 Pawn。"
+        },
+        "classes": "edge-inherits"
+      }
+    ]
+  }
+}

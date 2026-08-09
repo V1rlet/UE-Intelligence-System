@@ -1,0 +1,20 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "GraphBrain Player Metrics Profile",
+	"description": "玩家可游玩 metrics profile 覆盖文件，data/world-projects/<project>/player-metrics.json（字段可部分覆盖，缺省用 DEFAULT_PLAYER_PROFILE）",
+	"type": "object",
+	"properties": {
+		"capsule_radius_m": { "type": "number", "exclusiveMinimum": 0 },
+		"capsule_half_height_m": { "type": "number", "exclusiveMinimum": 0 },
+		"eye_height_m": { "type": "number", "exclusiveMinimum": 0 },
+		"walk_speed_mps": { "type": "number", "minimum": 0 },
+		"sprint_speed_mps": { "type": "number", "minimum": 0 },
+		"jump_height_m": { "type": "number", "minimum": 0 },
+		"step_height_m": { "type": "number", "minimum": 0 },
+		"max_slope_deg": { "type": "number", "minimum": 0, "maximum": 90 },
+		"crouch_half_height_m": { "type": "number", "exclusiveMinimum": 0 },
+		"door_width_m": { "type": "number", "exclusiveMinimum": 0 },
+		"door_height_m": { "type": "number", "exclusiveMinimum": 0 }
+	},
+	"additionalProperties": false
+}

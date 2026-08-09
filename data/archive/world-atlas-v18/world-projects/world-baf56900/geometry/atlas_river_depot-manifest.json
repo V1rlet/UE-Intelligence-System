@@ -1,0 +1,98 @@
+{
+  "schema": "graphbrain-geometry-manifest/1",
+  "atlas_id": "atlas_river_depot",
+  "project_id": "world-baf56900",
+  "generated_at": "2026-08-06T18:51:09.965Z",
+  "unit": "meter",
+  "spaces": [
+    {
+      "id": "site_gate",
+      "label": "仓库大门",
+      "kind": "site",
+      "x": 120,
+      "y": 250,
+      "elevation_m": 0
+    },
+    {
+      "id": "site_office",
+      "label": "办公室",
+      "kind": "site",
+      "x": 400,
+      "y": 180,
+      "elevation_m": 3
+    },
+    {
+      "id": "site_loft",
+      "label": "阁楼",
+      "kind": "site",
+      "x": 620,
+      "y": 250,
+      "elevation_m": 8
+    }
+  ],
+  "routes": [
+    {
+      "id": "route_gate_office",
+      "label": "主通道",
+      "from": "site_gate",
+      "to": "site_office",
+      "points": [
+        {
+          "x": 120,
+          "y": 250,
+          "elevation_m": 0
+        },
+        {
+          "x": 400,
+          "y": 180,
+          "elevation_m": 3
+        }
+      ]
+    }
+  ],
+  "volumes": [],
+  "beats": [
+    {
+      "id": "beat_entry",
+      "label": "进入仓库",
+      "kind": "story",
+      "anchor_space": "site_gate",
+      "x": 120,
+      "y": 250,
+      "duration_seconds": 3,
+      "transitions": [
+        {
+          "target_beat_id": "beat_sneak",
+          "trigger": "advance",
+          "cut": "hard"
+        }
+      ]
+    },
+    {
+      "id": "beat_sneak",
+      "label": "潜过窄门",
+      "kind": "quest",
+      "anchor_space": "site_office",
+      "x": 400,
+      "y": 180,
+      "duration_seconds": 4,
+      "transitions": [
+        {
+          "target_beat_id": "beat_loft",
+          "trigger": "advance",
+          "cut": "fade"
+        }
+      ]
+    },
+    {
+      "id": "beat_loft",
+      "label": "阁楼侦察",
+      "kind": "main_quest",
+      "anchor_space": "site_loft",
+      "x": 620,
+      "y": 250,
+      "duration_seconds": 2,
+      "transitions": []
+    }
+  ]
+}

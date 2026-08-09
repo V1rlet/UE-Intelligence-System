@@ -1,0 +1,25 @@
+# Node 依赖（可由 package.json 重装）
+node_modules/
+
+# 常驻服务日志（install-service.cmd 注册的 NSSM 服务写入）
+logs/
+
+# 解析缓存（P4U2 增量管线的派生数据，含本机绝对路径）
+data/cache/
+
+# 引擎类按需解析缓存（以本机引擎根哈希分目录，可随时从本机 UE 源码重建；
+# 官方内容缓存 data/api-catalog/modules 相反要入库——重建需向 Epic 抓 1600+ 页）
+data/api-catalog/parsed-classes/
+
+# Git 残留（迁移到 Lore 后保留作历史归档，不入 Lore 仓库）
+.git/
+.gitignore
+
+# IDE / 系统
+.vs/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 构建产物（vite build 派生输出，dev server 不依赖）
+viewer/dist/

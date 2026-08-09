@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://graph-brain.local/schema/node.schema.json",
   "title": "Graph Brain Node",
-  "description": "图谱节点（Cytoscape.js 兼容）。核心字段领域无关；ue5_code 领域的 type 枚举与 ufunction/api 约束通过条件子模式收紧。",
+  "description": "GraphBrain 的 ue5_code 节点（Cytoscape.js 兼容）。",
   "type": "object",
   "required": ["data"],
   "properties": {
@@ -12,10 +12,17 @@
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "label": { "type": "string", "minLength": 1 },
-        "type": { "type": "string", "minLength": 1 },
+        "type": {
+          "enum": [
+            "module", "uclass", "uactor", "ucomponent", "ustruct",
+            "uenum", "uinterface", "ufunction", "blueprint",
+            "lifecycle_step", "meta_group", "folder", "file",
+            "execution_lane", "scheduler", "system"
+          ]
+        },
         "layer": { "enum": ["engine", "plugin", "project"] },
         "module": { "type": "string" },
-        "domain": { "type": "string", "minLength": 1 },
+        "domain": { "const": "ue5_code" },
         "parent": { "type": "string", "minLength": 1 },
         "description": { "type": "string" },
         "source_path": { "type": "string" },
@@ -34,26 +41,24 @@
           },
           "additionalProperties": false
         },
-        "api": { "$ref": "#/definitions/api" }
+        "api": { "$ref": "#/definitions/api" },
+		"cpp_declarations": {
+		  "type": "array",
+		  "items": {
+			"type": "object",
+			"required": ["name", "kind", "bases", "description"],
+			"properties": {
+			  "name": { "type": "string", "minLength": 1 },
+			  "kind": { "enum": ["class", "struct", "enum"] },
+			  "bases": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+			  "description": { "type": "string" },
+			  "reflection": { "enum": ["USTRUCT", "UENUM"] }
+			},
+			"additionalProperties": false
+		  }
+		}
       },
       "allOf": [
-        {
-          "if": {
-            "properties": { "domain": { "const": "ue5_code" } },
-            "required": ["domain"]
-          },
-          "then": {
-            "properties": {
-              "type": {
-                "enum": [
-                  "module", "uclass", "uactor", "ucomponent", "ustruct",
-                  "uenum", "uinterface", "ufunction", "blueprint",
-                  "lifecycle_step", "meta_group"
-                ]
-              }
-            }
-          }
-        },
         {
           "if": {
             "properties": { "type": { "const": "ufunction" } },
@@ -95,7 +100,7 @@
             "type": "object",
             "required": ["name", "type"],
             "properties": {
-              "name": { "type": "string", "minLength": 1 },
+              "name": { "type": "string" },
               "type": { "type": "string", "minLength": 1 },
               "note": { "type": "string" }
             },
@@ -107,7 +112,11 @@
           "items": { "type": "string", "minLength": 1 }
         },
         "cpp_only": { "type": "boolean" },
-        "blueprint_exposable": { "type": "boolean" }
+        "blueprint_exposable": { "type": "boolean" },
+        "is_static": { "type": "boolean" },
+        "trigger": { "type": "string", "minLength": 1 },
+        "behavior": { "type": "string", "minLength": 1 },
+        "edge_cases": { "type": "string", "minLength": 1 }
       },
       "additionalProperties": false
     }

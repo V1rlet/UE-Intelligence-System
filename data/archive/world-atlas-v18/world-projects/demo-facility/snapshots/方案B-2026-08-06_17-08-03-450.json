@@ -1,0 +1,1546 @@
+{
+  "meta": {
+    "format_version": 1,
+    "name": "方案B",
+    "created_at": "2026-08-06T17:08:03.450Z",
+    "base_version": 2,
+    "atlas_id": "atlas_river_valley",
+    "project_id": "demo-facility"
+  },
+  "atlas": {
+    "meta": {
+      "atlas_id": "atlas_river_valley",
+      "project_id": "demo-facility",
+      "title": "河谷设施行动地图",
+      "format_version": 17,
+      "version": 2,
+      "generated_at": "2026-08-06T07:26:35.571Z"
+    },
+    "canvas": {
+      "width": 1000,
+      "height": 680,
+      "default_tilt": 48,
+      "default_rotation": -5,
+      "min_zoom": 0.65,
+      "max_zoom": 2.1,
+      "default_vertical_scale": 2,
+      "elevation_unit": "m"
+    },
+    "spaces": [
+      {
+        "id": "region_valley",
+        "label": "雾岭河谷",
+        "kind": "region",
+        "summary": "群山包围的工业河谷，唯一公路从西南方向接近设施。",
+        "geometry": {
+          "type": "polygon",
+          "points": [
+            [
+              35,
+              80
+            ],
+            [
+              258,
+              24
+            ],
+            [
+              472,
+              70
+            ],
+            [
+              670,
+              32
+            ],
+            [
+              948,
+              128
+            ],
+            [
+              978,
+              540
+            ],
+            [
+              754,
+              648
+            ],
+            [
+              438,
+              621
+            ],
+            [
+              154,
+              656
+            ],
+            [
+              20,
+              414
+            ]
+          ]
+        },
+        "tone": "slate"
+      },
+      {
+        "id": "region_perimeter",
+        "label": "外围警戒带",
+        "kind": "region",
+        "parent": "region_valley",
+        "summary": "围栏、岗哨和前院构成第一层警戒圈。",
+        "geometry": {
+          "type": "polygon",
+          "points": [
+            [
+              92,
+              356
+            ],
+            [
+              184,
+              198
+            ],
+            [
+              390,
+              128
+            ],
+            [
+              520,
+              214
+            ],
+            [
+              446,
+              426
+            ],
+            [
+              234,
+              516
+            ]
+          ]
+        },
+        "tone": "green"
+      },
+      {
+        "id": "region_main",
+        "label": "主楼作业区",
+        "kind": "region",
+        "parent": "region_valley",
+        "summary": "大厅、警卫室与维修通道组成的地上枢纽。",
+        "geometry": {
+          "type": "polygon",
+          "points": [
+            [
+              408,
+              202
+            ],
+            [
+              684,
+              138
+            ],
+            [
+              827,
+              248
+            ],
+            [
+              746,
+              478
+            ],
+            [
+              480,
+              452
+            ]
+          ]
+        },
+        "tone": "cyan"
+      },
+      {
+        "id": "region_underground",
+        "label": "地下动力层",
+        "kind": "region",
+        "parent": "region_valley",
+        "summary": "通风管网与发电机房位于主楼下方，可形成潜入捷径。",
+        "geometry": {
+          "type": "polygon",
+          "points": [
+            [
+              286,
+              472
+            ],
+            [
+              488,
+              407
+            ],
+            [
+              733,
+              494
+            ],
+            [
+              653,
+              601
+            ],
+            [
+              376,
+              600
+            ]
+          ]
+        },
+        "tone": "violet"
+      },
+      {
+        "id": "region_core",
+        "label": "数据核心区",
+        "kind": "region",
+        "parent": "region_valley",
+        "summary": "服务器阵列与最后一道门禁所在的高安全区域。",
+        "geometry": {
+          "type": "polygon",
+          "points": [
+            [
+              716,
+              188
+            ],
+            [
+              912,
+              194
+            ],
+            [
+              940,
+              390
+            ],
+            [
+              756,
+              457
+            ],
+            [
+              670,
+              322
+            ]
+          ]
+        },
+        "tone": "amber"
+      },
+      {
+        "id": "site_entry",
+        "label": "西侧山脊",
+        "kind": "level_entry",
+        "parent": "region_valley",
+        "summary": "行动简报与玩家出生位置，俯瞰完整设施。",
+        "geometry": {
+          "type": "point",
+          "x": 106,
+          "y": 538
+        },
+        "elevation": 58,
+        "tone": "cyan",
+        "feature": {
+          "kind": "spawn",
+          "radius": 18,
+          "note": "山脊潜入的玩家出生与任务简报区域。"
+        },
+        "refs": [
+          {
+            "domain": "level_design",
+            "subsystem": "demo-facility",
+            "node_id": "ent_main"
+          },
+          {
+            "domain": "narrative",
+            "subsystem": "demo-facility",
+            "node_id": "loc_facility"
+          }
+        ]
+      },
+      {
+        "id": "site_courtyard",
+        "label": "前院",
+        "kind": "site",
+        "parent": "region_perimeter",
+        "summary": "开阔警戒区，巡逻路线与大厅摄像头视线在此交叠。",
+        "geometry": {
+          "type": "point",
+          "x": 302,
+          "y": 340
+        },
+        "elevation": 22,
+        "tone": "green",
+        "feature": {
+          "kind": "encounter",
+          "radius": 58,
+          "note": "巡逻路径交叠的开放遭遇区。"
+        },
+        "refs": [
+          {
+            "domain": "level_design",
+            "subsystem": "demo-facility",
+            "node_id": "area_courtyard"
+          }
+        ]
+      },
+      {
+        "id": "site_lobby",
+        "label": "主楼大厅",
+        "kind": "site",
+        "parent": "region_main",
+        "summary": "地上路线的分流枢纽，连接警卫室和维修通道。",
+        "geometry": {
+          "type": "point",
+          "x": 508,
+          "y": 306
+        },
+        "elevation": 34,
+        "tone": "cyan",
+        "feature": {
+          "kind": "traversal",
+          "radius": 24,
+          "note": "连接正门、警卫室与维修走廊的交通枢纽。"
+        },
+        "refs": [
+          {
+            "domain": "level_design",
+            "subsystem": "demo-facility",
+            "node_id": "area_lobby"
+          }
+        ]
+      },
+      {
+        "id": "site_guardroom",
+        "label": "警卫室",
+        "kind": "site",
+        "parent": "region_main",
+        "summary": "正门路线的钥匙卡获取点，雷诺负责此处安保。",
+        "geometry": {
+          "type": "point",
+          "x": 578,
+          "y": 196
+        },
+        "elevation": 40,
+        "tone": "amber",
+        "feature": {
+          "kind": "resource",
+          "radius": 20,
+          "note": "钥匙卡与战术补给的高风险资源点。"
+        },
+        "refs": [
+          {
+            "domain": "level_design",
+            "subsystem": "demo-facility",
+            "node_id": "area_guardroom"
+          },
+          {
+            "domain": "narrative",
+            "subsystem": "demo-facility",
+            "node_id": "item_keycard"
+          }
+        ]
+      },
+      {
+        "id": "site_maintenance",
+        "label": "维修通道",
+        "kind": "site",
+        "parent": "region_main",
+        "summary": "连接屋顶、机房、地下动力层的三岔节点。",
+        "geometry": {
+          "type": "point",
+          "x": 646,
+          "y": 382
+        },
+        "elevation": 30,
+        "tone": "cyan",
+        "feature": {
+          "kind": "traversal",
+          "radius": 32,
+          "note": "向动力层和服务器区分流的垂直交通点。"
+        },
+        "refs": [
+          {
+            "domain": "level_design",
+            "subsystem": "demo-facility",
+            "node_id": "area_maintenance"
+          }
+        ]
+      },
+      {
+        "id": "site_roof",
+        "label": "屋顶制高点",
+        "kind": "landmark",
+        "parent": "region_main",
+        "summary": "可以观察前院并单向跳回外围。",
+        "geometry": {
+          "type": "point",
+          "x": 680,
+          "y": 208
+        },
+        "elevation": 74,
+        "tone": "slate",
+        "feature": {
+          "kind": "vista",
+          "radius": 72,
+          "note": "俯瞰设施核心与撤离方向的构图地标。"
+        },
+        "refs": [
+          {
+            "domain": "level_design",
+            "subsystem": "demo-facility",
+            "node_id": "area_roof"
+          }
+        ]
+      },
+      {
+        "id": "site_generator",
+        "label": "发电机房",
+        "kind": "site",
+        "parent": "region_underground",
+        "summary": "切断供电会关闭监控并使机房门禁失效。",
+        "geometry": {
+          "type": "point",
+          "x": 530,
+          "y": 526
+        },
+        "elevation": -28,
+        "tone": "violet",
+        "feature": {
+          "kind": "resource",
+          "radius": 36,
+          "note": "地下供电设施，影响全图照明与警戒状态。"
+        },
+        "refs": [
+          {
+            "domain": "level_design",
+            "subsystem": "demo-facility",
+            "node_id": "area_generator"
+          },
+          {
+            "domain": "narrative",
+            "subsystem": "demo-facility",
+            "node_id": "loc_generator"
+          }
+        ]
+      },
+      {
+        "id": "site_vent",
+        "label": "通风管入口",
+        "kind": "level_entry",
+        "parent": "region_underground",
+        "summary": "用撬棍打开格栅后可以绕过大厅，从上方进入机房。",
+        "geometry": {
+          "type": "point",
+          "x": 326,
+          "y": 486
+        },
+        "elevation": 6,
+        "tone": "violet",
+        "feature": {
+          "kind": "traversal",
+          "radius": 12,
+          "note": "单向管网捷径与隐蔽垂直入口。"
+        },
+        "refs": [
+          {
+            "domain": "level_design",
+            "subsystem": "demo-facility",
+            "node_id": "area_vent"
+          }
+        ]
+      },
+      {
+        "id": "site_server",
+        "label": "服务器核心",
+        "kind": "site",
+        "parent": "region_core",
+        "summary": "熄灯行动的主目标，门禁和驻守警卫构成最后防线。",
+        "geometry": {
+          "type": "point",
+          "x": 824,
+          "y": 324
+        },
+        "elevation": 50,
+        "tone": "amber",
+        "feature": {
+          "kind": "encounter",
+          "radius": 44,
+          "note": "任务目标与警报升级汇合的核心遭遇空间。"
+        },
+        "refs": [
+          {
+            "domain": "level_design",
+            "subsystem": "demo-facility",
+            "node_id": "area_server"
+          },
+          {
+            "domain": "narrative",
+            "subsystem": "demo-facility",
+            "node_id": "loc_server_room"
+          }
+        ]
+      },
+      {
+        "id": "site_extract",
+        "label": "后坡撤离点",
+        "kind": "level_entry",
+        "parent": "region_valley",
+        "summary": "服务器爆破后沿东南山坡撤离。",
+        "geometry": {
+          "type": "point",
+          "x": 886,
+          "y": 558
+        },
+        "elevation": 36,
+        "tone": "green",
+        "feature": {
+          "kind": "spawn",
+          "radius": 26,
+          "note": "警报阶段启用的撤离与回收点。"
+        },
+        "refs": [
+          {
+            "domain": "level_design",
+            "subsystem": "demo-facility",
+            "node_id": "exit_extract"
+          }
+        ]
+      }
+    ],
+    "routes": [
+      {
+        "id": "route_entry_yard",
+        "label": "山脊潜入线",
+        "from": "site_entry",
+        "to": "site_courtyard",
+        "mode": "trail",
+        "via": [
+          [
+            160,
+            452,
+            48
+          ],
+          [
+            232,
+            402,
+            31
+          ]
+        ]
+      },
+      {
+        "id": "route_yard_lobby",
+        "label": "正门通道",
+        "from": "site_courtyard",
+        "to": "site_lobby",
+        "mode": "road",
+        "via": [
+          [
+            390,
+            324,
+            27
+          ]
+        ]
+      },
+      {
+        "id": "route_lobby_guard",
+        "label": "警卫室走廊",
+        "from": "site_lobby",
+        "to": "site_guardroom",
+        "mode": "road",
+        "via": [
+          [
+            544,
+            252,
+            37
+          ]
+        ]
+      },
+      {
+        "id": "route_lobby_maintenance",
+        "label": "维修走廊",
+        "from": "site_lobby",
+        "to": "site_maintenance",
+        "mode": "road",
+        "via": [
+          [
+            568,
+            342,
+            32
+          ]
+        ]
+      },
+      {
+        "id": "route_yard_vent",
+        "label": "格栅捷径",
+        "from": "site_courtyard",
+        "to": "site_vent",
+        "mode": "vent",
+        "via": [
+          [
+            304,
+            412,
+            15
+          ]
+        ],
+        "visible_when": {
+          "op": "chapter_at_least",
+          "value": 2
+        }
+      },
+      {
+        "id": "route_vent_server",
+        "label": "管网坠入路线",
+        "from": "site_vent",
+        "to": "site_server",
+        "mode": "one_way",
+        "via": [
+          [
+            450,
+            544,
+            -8
+          ],
+          [
+            650,
+            502,
+            -22
+          ],
+          [
+            760,
+            410,
+            18
+          ]
+        ]
+      },
+      {
+        "id": "route_maintenance_generator",
+        "label": "动力层楼梯",
+        "from": "site_maintenance",
+        "to": "site_generator",
+        "mode": "trail",
+        "via": [
+          [
+            618,
+            458,
+            4
+          ]
+        ]
+      },
+      {
+        "id": "route_maintenance_server",
+        "label": "机房门禁",
+        "from": "site_maintenance",
+        "to": "site_server",
+        "mode": "road",
+        "via": [
+          [
+            730,
+            366,
+            39
+          ]
+        ]
+      },
+      {
+        "id": "route_server_extract",
+        "label": "警报撤离线",
+        "from": "site_server",
+        "to": "site_extract",
+        "mode": "travel",
+        "via": [
+          [
+            902,
+            402,
+            44
+          ],
+          [
+            920,
+            490,
+            39
+          ]
+        ],
+        "visible_when": {
+          "op": "flag_equals",
+          "flag": "alarm",
+          "value": true
+        }
+      }
+    ],
+    "beats": [
+      {
+        "id": "beat_briefing",
+        "label": "行动简报",
+        "kind": "story",
+        "at": "site_entry",
+        "duration_seconds": 4,
+        "summary": "灯塔从远端交代销毁阵列与撤离方案。",
+        "participants": [
+          {
+            "role": "quest",
+            "ref": {
+              "domain": "quest",
+              "subsystem": "demo-facility",
+              "node_id": "quest_briefing"
+            }
+          },
+          {
+            "role": "event",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "ev_briefing"
+            }
+          },
+          {
+            "role": "character",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "char_handler"
+            }
+          }
+        ],
+        "organization": {
+          "review_status": "unreviewed_legacy"
+        },
+        "diagram_position": {
+          "x": 185,
+          "y": 120
+        },
+        "when": {
+          "op": "quest_state",
+          "quest": {
+            "domain": "quest",
+            "subsystem": "demo-facility",
+            "node_id": "quest_briefing"
+          },
+          "state": "active"
+        },
+        "transitions": [
+          {
+            "target_beat_id": "beat_patrol",
+            "trigger": "advance",
+            "cut": "hard"
+          }
+        ],
+        "influences": [],
+        "effects": [],
+        "presentation": {
+          "priority": 100,
+          "badge": "序章"
+        },
+        "narrative": {
+          "function": "unresolved",
+          "delivery": "unresolved",
+          "pacing": "unresolved",
+          "audience": "unresolved",
+          "information": "",
+          "viewpoint": "",
+          "emotional_tone": "",
+          "player_takeaway": ""
+        }
+      },
+      {
+        "id": "beat_patrol",
+        "label": "绕过巡逻",
+        "kind": "character",
+        "at": "site_courtyard",
+        "duration_seconds": 3,
+        "summary": "科尔沿前院环形巡逻，大厅摄像头覆盖入口。",
+        "participants": [
+          {
+            "role": "character",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "char_patrol_guard"
+            }
+          },
+          {
+            "role": "event",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "ev_infiltration"
+            }
+          }
+        ],
+        "organization": {
+          "review_status": "unreviewed_legacy"
+        },
+        "diagram_position": {
+          "x": 575,
+          "y": 120
+        },
+        "when": {
+          "op": "chapter_at_least",
+          "value": 2
+        },
+        "transitions": [
+          {
+            "target_beat_id": "beat_keycard",
+            "trigger": "advance",
+            "cut": "hard"
+          }
+        ],
+        "influences": [],
+        "effects": [],
+        "presentation": {
+          "priority": 45,
+          "badge": "巡逻"
+        },
+        "narrative": {
+          "function": "unresolved",
+          "delivery": "unresolved",
+          "pacing": "unresolved",
+          "audience": "unresolved",
+          "information": "",
+          "viewpoint": "",
+          "emotional_tone": "",
+          "player_takeaway": ""
+        }
+      },
+      {
+        "id": "beat_keycard",
+        "label": "正门路线：钥匙卡",
+        "kind": "side_quest",
+        "at": "site_guardroom",
+        "duration_seconds": 3,
+        "summary": "从警卫岗哨取得万能钥匙卡，打开机房正门。",
+        "participants": [
+          {
+            "role": "quest",
+            "ref": {
+              "domain": "quest",
+              "subsystem": "demo-facility",
+              "node_id": "quest_entry_keycard"
+            }
+          },
+          {
+            "role": "item",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "item_keycard"
+            }
+          },
+          {
+            "role": "character",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "char_guard_captain"
+            }
+          }
+        ],
+        "organization": {
+          "review_status": "unreviewed_legacy"
+        },
+        "diagram_position": {
+          "x": 965,
+          "y": 120
+        },
+        "when": {
+          "op": "quest_state",
+          "quest": {
+            "domain": "quest",
+            "subsystem": "demo-facility",
+            "node_id": "quest_entry_keycard"
+          },
+          "state": [
+            "available",
+            "active"
+          ]
+        },
+        "transitions": [
+          {
+            "target_beat_id": "beat_vent",
+            "trigger": "advance",
+            "cut": "hard"
+          }
+        ],
+        "influences": [],
+        "effects": [],
+        "presentation": {
+          "priority": 70,
+          "badge": "支线"
+        },
+        "quest": {
+          "function": "unresolved",
+          "method": "unresolved",
+          "failure_mode": "unresolved",
+          "goal": "",
+          "completion": "",
+          "failure": "",
+          "feedback": "",
+          "stakes": "",
+          "reward": ""
+        }
+      },
+      {
+        "id": "beat_vent",
+        "label": "通风管潜入路线",
+        "kind": "side_quest",
+        "at": "site_vent",
+        "duration_seconds": 4,
+        "summary": "找到撬棍打开格栅，从管道顶部坠入服务器机房。",
+        "participants": [
+          {
+            "role": "quest",
+            "ref": {
+              "domain": "quest",
+              "subsystem": "demo-facility",
+              "node_id": "quest_entry_vent"
+            }
+          },
+          {
+            "role": "level",
+            "ref": {
+              "domain": "level_design",
+              "subsystem": "demo-facility",
+              "node_id": "area_vent"
+            }
+          }
+        ],
+        "organization": {
+          "review_status": "unreviewed_legacy"
+        },
+        "diagram_position": {
+          "x": 185,
+          "y": 365
+        },
+        "when": {
+          "op": "quest_state",
+          "quest": {
+            "domain": "quest",
+            "subsystem": "demo-facility",
+            "node_id": "quest_entry_vent"
+          },
+          "state": [
+            "available",
+            "active"
+          ]
+        },
+        "transitions": [
+          {
+            "target_beat_id": "beat_blackout",
+            "trigger": "advance",
+            "cut": "hard"
+          }
+        ],
+        "influences": [],
+        "effects": [],
+        "presentation": {
+          "priority": 65,
+          "badge": "捷径"
+        },
+        "quest": {
+          "function": "unresolved",
+          "method": "unresolved",
+          "failure_mode": "unresolved",
+          "goal": "",
+          "completion": "",
+          "failure": "",
+          "feedback": "",
+          "stakes": "",
+          "reward": ""
+        }
+      },
+      {
+        "id": "beat_blackout",
+        "label": "切断设施供电",
+        "kind": "side_quest",
+        "at": "site_generator",
+        "duration_seconds": 3,
+        "summary": "关闭动力系统，让摄像头和机房门禁失效。",
+        "participants": [
+          {
+            "role": "quest",
+            "ref": {
+              "domain": "quest",
+              "subsystem": "demo-facility",
+              "node_id": "quest_blackout"
+            }
+          },
+          {
+            "role": "event",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "ev_blackout"
+            }
+          },
+          {
+            "role": "objective",
+            "ref": {
+              "domain": "level_design",
+              "subsystem": "demo-facility",
+              "node_id": "obj_cutpower"
+            }
+          }
+        ],
+        "organization": {
+          "review_status": "unreviewed_legacy"
+        },
+        "diagram_position": {
+          "x": 575,
+          "y": 365
+        },
+        "when": {
+          "op": "quest_state",
+          "quest": {
+            "domain": "quest",
+            "subsystem": "demo-facility",
+            "node_id": "quest_blackout"
+          },
+          "state": [
+            "available",
+            "active",
+            "completed"
+          ]
+        },
+        "transitions": [
+          {
+            "target_beat_id": "beat_sabotage",
+            "trigger": "advance",
+            "cut": "hard"
+          }
+        ],
+        "influences": [],
+        "effects": [
+          {
+            "type": "set_flag",
+            "target": "power_down",
+            "value": true
+          },
+          {
+            "type": "open_route",
+            "target": "route_maintenance_server"
+          }
+        ],
+        "presentation": {
+          "priority": 80,
+          "badge": "支线"
+        },
+        "quest": {
+          "function": "unresolved",
+          "method": "unresolved",
+          "failure_mode": "unresolved",
+          "goal": "",
+          "completion": "",
+          "failure": "",
+          "feedback": "",
+          "stakes": "",
+          "reward": ""
+        }
+      },
+      {
+        "id": "beat_sabotage",
+        "label": "销毁服务器阵列",
+        "kind": "main_quest",
+        "at": "site_server",
+        "duration_seconds": 4,
+        "summary": "安放定时炸药并撤离核心区，爆炸会触发全设施警报。",
+        "participants": [
+          {
+            "role": "quest",
+            "ref": {
+              "domain": "quest",
+              "subsystem": "demo-facility",
+              "node_id": "quest_destroy"
+            }
+          },
+          {
+            "role": "event",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "ev_sabotage"
+            }
+          },
+          {
+            "role": "objective",
+            "ref": {
+              "domain": "level_design",
+              "subsystem": "demo-facility",
+              "node_id": "obj_sabotage"
+            }
+          }
+        ],
+        "organization": {
+          "review_status": "unreviewed_legacy"
+        },
+        "diagram_position": {
+          "x": 965,
+          "y": 365
+        },
+        "when": {
+          "op": "quest_state",
+          "quest": {
+            "domain": "quest",
+            "subsystem": "demo-facility",
+            "node_id": "quest_destroy"
+          },
+          "state": [
+            "available",
+            "active"
+          ]
+        },
+        "transitions": [
+          {
+            "target_beat_id": "beat_alarm",
+            "trigger": "advance",
+            "cut": "fade"
+          }
+        ],
+        "influences": [],
+        "effects": [
+          {
+            "type": "set_flag",
+            "target": "alarm",
+            "value": true
+          },
+          {
+            "type": "activate",
+            "target": "quest_escape"
+          }
+        ],
+        "presentation": {
+          "priority": 100,
+          "badge": "主线"
+        },
+        "quest": {
+          "function": "unresolved",
+          "method": "unresolved",
+          "failure_mode": "unresolved",
+          "goal": "",
+          "completion": "",
+          "failure": "",
+          "feedback": "",
+          "stakes": "",
+          "reward": ""
+        }
+      },
+      {
+        "id": "beat_alarm",
+        "label": "设施进入警报状态",
+        "kind": "world_change",
+        "at": "site_server",
+        "duration_seconds": 3,
+        "summary": "服务器爆破后红色警戒灯覆盖主楼，常规路线被封锁。",
+        "participants": [
+          {
+            "role": "event",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "ev_sabotage"
+            }
+          }
+        ],
+        "organization": {
+          "review_status": "unreviewed_legacy"
+        },
+        "diagram_position": {
+          "x": 185,
+          "y": 610
+        },
+        "when": {
+          "op": "flag_equals",
+          "flag": "alarm",
+          "value": true
+        },
+        "transitions": [
+          {
+            "target_beat_id": "beat_escape",
+            "trigger": "advance",
+            "cut": "hard"
+          }
+        ],
+        "influences": [],
+        "effects": [],
+        "presentation": {
+          "priority": 95,
+          "badge": "世界变化"
+        },
+        "narrative": {
+          "function": "unresolved",
+          "delivery": "unresolved",
+          "pacing": "unresolved",
+          "audience": "unresolved",
+          "information": "",
+          "viewpoint": "",
+          "emotional_tone": "",
+          "player_takeaway": ""
+        }
+      },
+      {
+        "id": "beat_escape",
+        "label": "沿后坡撤离",
+        "kind": "main_quest",
+        "at": "site_extract",
+        "duration_seconds": 4,
+        "summary": "警报触发后赶往后坡接应点，完成熄灯行动。",
+        "participants": [
+          {
+            "role": "quest",
+            "ref": {
+              "domain": "quest",
+              "subsystem": "demo-facility",
+              "node_id": "quest_escape"
+            }
+          },
+          {
+            "role": "event",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "ev_escape"
+            }
+          }
+        ],
+        "organization": {
+          "review_status": "unreviewed_legacy"
+        },
+        "diagram_position": {
+          "x": 575,
+          "y": 610
+        },
+        "when": {
+          "op": "quest_state",
+          "quest": {
+            "domain": "quest",
+            "subsystem": "demo-facility",
+            "node_id": "quest_escape"
+          },
+          "state": "active"
+        },
+        "transitions": [
+          {
+            "target_beat_id": "beat_facility_lore",
+            "trigger": "advance",
+            "cut": "fade"
+          }
+        ],
+        "influences": [],
+        "effects": [],
+        "presentation": {
+          "priority": 100,
+          "badge": "主线"
+        },
+        "quest": {
+          "function": "unresolved",
+          "method": "unresolved",
+          "failure_mode": "unresolved",
+          "goal": "",
+          "completion": "",
+          "failure": "",
+          "feedback": "",
+          "stakes": "",
+          "reward": ""
+        }
+      },
+      {
+        "id": "beat_facility_lore",
+        "label": "河谷设施档案",
+        "kind": "lore",
+        "at": "site_lobby",
+        "duration_seconds": 3,
+        "summary": "设施主管长期压缩安保预算，形成了多个可利用的防线缺口。",
+        "participants": [
+          {
+            "role": "location",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "loc_facility"
+            }
+          },
+          {
+            "role": "character",
+            "ref": {
+              "domain": "narrative",
+              "subsystem": "demo-facility",
+              "node_id": "char_director"
+            }
+          }
+        ],
+        "organization": {
+          "review_status": "unreviewed_legacy"
+        },
+        "diagram_position": {
+          "x": 965,
+          "y": 610
+        },
+        "transitions": [],
+        "influences": [],
+        "effects": [],
+        "presentation": {
+          "priority": 20,
+          "badge": "设定"
+        },
+        "narrative": {
+          "function": "unresolved",
+          "delivery": "unresolved",
+          "pacing": "unresolved",
+          "audience": "unresolved",
+          "information": "",
+          "viewpoint": "",
+          "emotional_tone": "",
+          "player_takeaway": ""
+        }
+      }
+    ],
+    "scenarios": [
+      {
+        "id": "briefing",
+        "label": "第一阶段 · 任务简报",
+        "chapter": 1,
+        "summary": "设施仍处于常态，玩家在山脊接收任务。",
+        "quest_states": {
+          "quest/demo-facility::quest_briefing": "active",
+          "quest/demo-facility::quest_entry_keycard": "locked",
+          "quest/demo-facility::quest_entry_vent": "locked",
+          "quest/demo-facility::quest_blackout": "locked",
+          "quest/demo-facility::quest_destroy": "locked",
+          "quest/demo-facility::quest_escape": "locked"
+        },
+        "flags": {
+          "power_down": false,
+          "alarm": false
+        }
+      },
+      {
+        "id": "infiltration",
+        "label": "第二阶段 · 潜入",
+        "chapter": 2,
+        "summary": "进入路线、断电支线同时开放，玩家可以选择正门或通风管。",
+        "quest_states": {
+          "quest/demo-facility::quest_briefing": "completed",
+          "quest/demo-facility::quest_entry_keycard": "active",
+          "quest/demo-facility::quest_entry_vent": "available",
+          "quest/demo-facility::quest_blackout": "available",
+          "quest/demo-facility::quest_destroy": "locked",
+          "quest/demo-facility::quest_escape": "locked"
+        },
+        "flags": {
+          "power_down": false,
+          "alarm": false
+        }
+      },
+      {
+        "id": "powerless",
+        "label": "第三阶段 · 熄灯",
+        "chapter": 3,
+        "summary": "动力系统已关闭，机房门禁和监控失效，主目标进入执行阶段。",
+        "quest_states": {
+          "quest/demo-facility::quest_briefing": "completed",
+          "quest/demo-facility::quest_entry_keycard": "completed",
+          "quest/demo-facility::quest_entry_vent": "failed",
+          "quest/demo-facility::quest_blackout": "completed",
+          "quest/demo-facility::quest_destroy": "active",
+          "quest/demo-facility::quest_escape": "locked"
+        },
+        "flags": {
+          "power_down": true,
+          "alarm": false
+        }
+      },
+      {
+        "id": "alarm",
+        "label": "第四阶段 · 警报撤离",
+        "chapter": 4,
+        "summary": "服务器阵列已爆破，设施进入红色警戒，撤离路线成为唯一主目标。",
+        "quest_states": {
+          "quest/demo-facility::quest_briefing": "completed",
+          "quest/demo-facility::quest_entry_keycard": "completed",
+          "quest/demo-facility::quest_entry_vent": "failed",
+          "quest/demo-facility::quest_blackout": "completed",
+          "quest/demo-facility::quest_destroy": "completed",
+          "quest/demo-facility::quest_escape": "active"
+        },
+        "flags": {
+          "power_down": true,
+          "alarm": true
+        }
+      }
+    ],
+    "blockout": {
+      "grid_size": 25,
+      "snap_enabled": true,
+      "objects": [
+        {
+          "id": "wb_lobby_floor",
+          "label": "大厅底板",
+          "primitive": "box",
+          "role": "space",
+          "position": {
+            "x": 500,
+            "y": 330,
+            "z": 0
+          },
+          "size": {
+            "x": 300,
+            "y": 220,
+            "z": 12
+          },
+          "rotation": 0,
+          "tone": "slate",
+          "note": "主路径在此分流，先验证三条路线的可读性。"
+        },
+        {
+          "id": "wb_north_wall",
+          "label": "北侧墙体",
+          "primitive": "box",
+          "role": "cover",
+          "position": {
+            "x": 500,
+            "y": 210,
+            "z": 0
+          },
+          "size": {
+            "x": 320,
+            "y": 20,
+            "z": 95
+          },
+          "rotation": 0,
+          "tone": "cyan"
+        },
+        {
+          "id": "wb_south_wall",
+          "label": "南侧墙体",
+          "primitive": "box",
+          "role": "cover",
+          "position": {
+            "x": 500,
+            "y": 450,
+            "z": 0
+          },
+          "size": {
+            "x": 320,
+            "y": 20,
+            "z": 95
+          },
+          "rotation": 0,
+          "tone": "cyan"
+        },
+        {
+          "id": "wb_entry_arch",
+          "label": "主入口",
+          "primitive": "arch",
+          "role": "traversal",
+          "position": {
+            "x": 345,
+            "y": 330,
+            "z": 0
+          },
+          "size": {
+            "x": 80,
+            "y": 26,
+            "z": 105
+          },
+          "rotation": 90,
+          "tone": "green"
+        },
+        {
+          "id": "wb_server_ramp",
+          "label": "核心区坡道",
+          "primitive": "ramp",
+          "role": "traversal",
+          "position": {
+            "x": 690,
+            "y": 330,
+            "z": 0
+          },
+          "size": {
+            "x": 120,
+            "y": 180,
+            "z": 70
+          },
+          "rotation": 90,
+          "tone": "green",
+          "note": "用于快速验证从大厅进入核心区的高差节奏。"
+        },
+        {
+          "id": "wb_cover_a",
+          "label": "中央掩体 A",
+          "primitive": "box",
+          "role": "cover",
+          "position": {
+            "x": 465,
+            "y": 315,
+            "z": 12
+          },
+          "size": {
+            "x": 70,
+            "y": 32,
+            "z": 50
+          },
+          "rotation": -18,
+          "tone": "cyan"
+        },
+        {
+          "id": "wb_cover_b",
+          "label": "中央掩体 B",
+          "primitive": "cylinder",
+          "role": "cover",
+          "position": {
+            "x": 560,
+            "y": 365,
+            "z": 12
+          },
+          "size": {
+            "x": 58,
+            "y": 58,
+            "z": 72
+          },
+          "rotation": 0,
+          "tone": "cyan"
+        },
+        {
+          "id": "wb_encounter_volume",
+          "label": "大厅遭遇体积",
+          "primitive": "volume",
+          "role": "hazard",
+          "position": {
+            "x": 520,
+            "y": 330,
+            "z": 12
+          },
+          "size": {
+            "x": 240,
+            "y": 170,
+            "z": 75
+          },
+          "rotation": 0,
+          "tone": "red",
+          "note": "警报状态下的主遭遇边界。"
+        }
+      ],
+      "terrain": {
+        "base_elevation": 0,
+        "control_points": [
+          {
+            "id": "terrain_west_ridge",
+            "label": "西侧山脊",
+            "x": 90,
+            "y": 220,
+            "elevation": 22,
+            "radius": 230
+          },
+          {
+            "id": "terrain_north_ridge",
+            "label": "北侧山岭",
+            "x": 620,
+            "y": 70,
+            "elevation": 15,
+            "radius": 260
+          },
+          {
+            "id": "terrain_valley",
+            "label": "中央河谷",
+            "x": 500,
+            "y": 430,
+            "elevation": -7,
+            "radius": 300
+          },
+          {
+            "id": "terrain_facility",
+            "label": "设施台地",
+            "x": 570,
+            "y": 300,
+            "elevation": 8,
+            "radius": 220
+          }
+        ]
+      }
+    }
+  }
+}

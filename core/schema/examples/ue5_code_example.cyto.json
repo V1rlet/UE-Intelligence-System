@@ -2,8 +2,23 @@
   "meta": {
     "domain": "ue5_code",
     "subsystem": "example",
+    "format_version": 2,
     "generated_at": "2026-07-02T05:30:00Z",
-    "generator": "handwritten-example"
+    "generator": "handwritten-example",
+    "provenance": {
+      "schema_version": 1,
+      "status": "unknown",
+      "source_kind": "curated_reference",
+      "source_roots": []
+    },
+    "coverage": {
+      "status": "unknown",
+      "discovered_files": null,
+      "consumed_files": null,
+      "skipped_files": null,
+      "failed_files": null,
+      "diagnostics": [{ "code": "handwritten-example-no-source-manifest" }]
+    }
   },
   "elements": {
     "nodes": [
