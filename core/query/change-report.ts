@@ -1,7 +1,7 @@
 // Pure, versioned graph diff + one-hop impact report. Graph files remain the canonical facts.
 import type { GraphFile, GraphNode, GraphEdge } from "../../adapters/adapter-interface.js";
 import { stableValueEqual } from "../../adapters/diff-lib.js";
-import { resolveCodeModule } from "./code-module.js";
+import { resolveCodeModule, UNASSIGNED_MODULE_LABEL } from "./code-module.js";
 
 export const CHANGE_REPORT_FORMAT_VERSION = 1 as const;
 
@@ -181,6 +181,18 @@ function assertSeparateIdentities(nodes: ReadonlyMap<string, unknown>, edges: Re
 	for (const id of nodes.keys()) if (edges.has(id)) throw new Error(`${label} 的节点与关系 id 冲突: ${id}`);
 }
 
+/** 悬垂关系端点会让一跳影响面给两图都不存在的节点产出幽灵 affected 行（module 记为
+ *  (unassigned)），且事后无法从报告本身检出——语义判断者必须在入口拒绝。 */
+function assertEdgesResolve(nodes: ReadonlyMap<string, unknown>, edges: ReadonlyMap<string, GraphEdge>, label: string): void {
+	for (const edge of edges.values()) {
+		for (const endpoint of [edge.data.source, edge.data.target]) {
+			if (!nodes.has(String(endpoint))) {
+				throw new Error(`${label} 存在端点未解析的关系: ${String(edge.data.id)} → ${String(endpoint)}`);
+			}
+		}
+	}
+}
+
 export function buildChangeReport(
 	baseline: GraphFile,
 	current: GraphFile,
@@ -193,6 +205,8 @@ export function buildChangeReport(
 	const currentEdges = byId(current.elements.edges, "当前关系");
 	assertSeparateIdentities(baselineNodes, baselineEdges, "基线");
 	assertSeparateIdentities(currentNodes, currentEdges, "当前快照");
+	assertEdgesResolve(baselineNodes, baselineEdges, "基线");
+	assertEdgesResolve(currentNodes, currentEdges, "当前快照");
 	const addedNodes = [...currentNodes].filter(([id]) => !baselineNodes.has(id)).map(([, node]) => nodeSummary(node));
 	const removedNodes = [...baselineNodes].filter(([id]) => !currentNodes.has(id)).map(([, node]) => nodeSummary(node));
 	const changedNodes = [...currentNodes].flatMap(([id, node]) => {
@@ -228,7 +242,7 @@ export function buildChangeReport(
 	const moduleCounts = new Map<string, { direct: Set<string>; affected: Set<string> }>();
 	const countNode = (id: string, bucket: "direct" | "affected") => {
 		const node = currentNodes.get(id) ?? baselineNodes.get(id);
-		const module = node ? resolveCodeModule(node.data) ?? "(unassigned)" : "(unassigned)";
+		const module = node ? resolveCodeModule(node.data) ?? UNASSIGNED_MODULE_LABEL : UNASSIGNED_MODULE_LABEL;
 		const counts = moduleCounts.get(module) ?? { direct: new Set<string>(), affected: new Set<string>() };
 		counts[bucket].add(id);
 		moduleCounts.set(module, counts);

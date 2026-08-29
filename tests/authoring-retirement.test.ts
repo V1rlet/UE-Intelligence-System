@@ -62,12 +62,11 @@ test("active graphs and annotations have one ue5_code owner", () => {
 	const annotationFiles = readdirSync(join(ROOT, "data", "annotations")).filter((name) => name.endsWith("_annotations.json"));
 	assert.deepEqual(annotationFiles, [], "legacy annotation arrays must not remain active beside reading-context");
 	const context = readJson<{ format_version?: number; domain?: string; revision?: number; annotations?: Array<{ subsystem?: string }> }>("data/reading-context/ue5_code.json");
-	assert.equal(context.format_version, 1);
+	// D-P3：reading-context 已迁移至 v2（行级锚）；磁盘活动文档必须是当前版本。
+	assert.equal(context.format_version, 2);
 	assert.equal(context.domain, "ue5_code");
 	assert.ok((context.revision ?? 0) >= 1);
-	assert.deepEqual([...new Set((context.annotations ?? []).map((entry) => entry.subsystem))].sort(), [
-		"framework-reference", "gameplay-framework-reference", "lyra-architecture-reference",
-	]);
+	assert.deepEqual(context.annotations, [], "unreviewed curated knowledge must not remain active");
 });
 
 test("retired and orphan annotations are preserved outside the active store with versioned manifests", () => {
@@ -88,4 +87,23 @@ test("legacy active annotations were recoverably migrated into reading-context",
 		assert.ok(file.archive_path && existsSync(join(ROOT, file.archive_path)), String(file.archive_path));
 		assert.ok(file.original_path && !existsSync(join(ROOT, file.original_path)), String(file.original_path));
 	}
+});
+
+test("curated reference graphs and annotations have a versioned, recoverable archive", () => {
+	const manifest = readJson<{
+		format_version: string;
+		entries: Array<{ original_path: string; archive_path: string; sha256: string }>;
+		reading_context: { annotations: number; favorites: number; favorites_verified_engine_ids: number; review_document: string };
+	}>("data/archive/curated-references-v1/migration-manifest.json");
+	assert.equal(manifest.format_version, "graphbrain.curated-reference-archive/1");
+	assert.equal(manifest.entries.length, 7);
+	for (const entry of manifest.entries) {
+		assert.equal(existsSync(join(ROOT, entry.original_path)), false);
+		assert.equal(existsSync(join(ROOT, entry.archive_path)), true);
+		assert.match(entry.sha256, /^[a-f0-9]{64}$/);
+	}
+	assert.equal(manifest.reading_context.annotations, 18);
+	assert.equal(manifest.reading_context.favorites, 18);
+	assert.equal(manifest.reading_context.favorites_verified_engine_ids, 18);
+	assert.equal(existsSync(join(ROOT, manifest.reading_context.review_document)), true);
 });

@@ -78,7 +78,7 @@ export function addAnnotation(
 	domain: string,
 	subsystem: string,
 	nodeId: string,
-	input: { type: AnnotationType; content: string; source_hash?: string },
+	input: { type: AnnotationType; content: string; source_hash?: string; anchor?: Annotation["anchor"] },
 	expectedRevision: number,
 ): AnnotationWriteResult {
 	if (!input.content?.trim()) throw new Error("标注内容不能为空");
@@ -94,6 +94,7 @@ export function addAnnotation(
 			content: input.content.trim(),
 			created_at: new Date().toISOString(),
 			...(input.source_hash ? { source_hash: input.source_hash } : {}),
+			...(input.anchor ? { anchor: input.anchor } : {}),
 		});
 	});
 	return result(document, subsystem);
@@ -104,7 +105,7 @@ export function updateAnnotation(
 	subsystem: string,
 	nodeId: string,
 	annId: string,
-	patch: { type?: AnnotationType; content?: string; source_hash?: string; stale?: boolean },
+	patch: { type?: AnnotationType; content?: string; source_hash?: string; stale?: boolean; anchor?: Annotation["anchor"] },
 	expectedRevision: number,
 ): AnnotationWriteResult {
 	const document = mutateReadingContext(domain, expectedRevision, (draft) => {
@@ -112,7 +113,8 @@ export function updateAnnotation(
 			.find((entry) => entry.subsystem === subsystem && entry.node_id === nodeId)
 			?.annotations.find((item) => item.id === annId);
 		if (!annotation) throw new Error(`标注不存在: ${nodeId} / ${annId}`);
-		if (patch.type) annotation.type = patch.type;
+		// 与其他字段一致用 !== undefined：truthiness 会静默吞掉非法空串并仍推进 revision。
+		if (patch.type !== undefined) annotation.type = patch.type;
 		if (patch.content !== undefined) {
 			if (!patch.content.trim()) throw new Error("标注内容不能为空");
 			annotation.content = patch.content.trim();
@@ -122,6 +124,9 @@ export function updateAnnotation(
 			if (patch.stale) annotation.stale = true;
 			else delete annotation.stale;
 		}
+		// D-P3：anchor 只能整体设置/移除（fingerprint 由服务端计算后传入，客户端不自报）。
+		if (patch.anchor !== undefined) annotation.anchor = patch.anchor;
+		else if ("anchor" in patch) delete annotation.anchor;
 		annotation.updated_at = new Date().toISOString();
 	});
 	return result(document, subsystem);

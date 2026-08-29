@@ -7,6 +7,8 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { dirname, extname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createApiRouter } from "../server/router.js";
+import { startLoreWatcher, stopLoreWatcher } from "../core/hooks/lore-watcher.js";
+import { htmlSecurityHeaders } from "./release-html-headers.js";
 
 const RELEASE_ROOT = dirname(fileURLToPath(import.meta.url));
 const DIST_ROOT = resolve(RELEASE_ROOT, "dist");
@@ -49,18 +51,23 @@ function serveFile(req: IncomingMessage, res: ServerResponse, file: string): voi
 	res.setHeader("Content-Length", String(info.size));
 	res.setHeader("X-Content-Type-Options", "nosniff");
 	res.setHeader("Cache-Control", file.includes(`${sep}assets${sep}`) ? "public, max-age=31536000, immutable" : "no-cache");
-	// 生产安全头：主查看器禁止被任意站点 iframe（点击劫持）；/embed.html 是 AFFiNE
-	// 只读嵌入路由，保持可嵌入。CSP 阻断任何潜在存储型 XSS 的脚本执行（第二层防线）。
 	if (extname(file).toLowerCase() === ".html") {
-		const isEmbed = file.endsWith(`${sep}embed.html`);
-		res.setHeader("Content-Security-Policy",
-			`default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; `
-			+ `img-src 'self' data:; font-src 'self'; connect-src 'self'; `
-			+ `${isEmbed ? "" : "frame-ancestors 'none'; "}base-uri 'self'; form-action 'none'`);
-		if (!isEmbed) res.setHeader("X-Frame-Options", "DENY");
+		for (const [header, value] of Object.entries(htmlSecurityHeaders())) res.setHeader(header, value);
 	}
 	if (req.method === "HEAD") res.end();
-	else createReadStream(file).pipe(res);
+	else {
+		// pipe 不转发源流错误：文件在 stat 后被删除/占用时，未处理的 'error' 事件会
+		// 直接击穿 NSSM 常驻进程；客户端中断时也要销毁源流释放句柄。
+		const stream = createReadStream(file);
+		stream.on("error", (error) => {
+			console.error("[release-server] static stream failed", error);
+			res.destroy();
+		});
+		res.on("close", () => {
+			if (!res.writableEnded) stream.destroy();
+		});
+		stream.pipe(res);
+	}
 }
 
 function serveStatic(req: IncomingMessage, res: ServerResponse): void {
@@ -102,16 +109,38 @@ const server = createServer((req, res) => {
 	});
 });
 
+server.on("error", (error) => {
+	console.error(`[release-server] listen on 127.0.0.1:${port} failed`, error);
+	process.exit(1);
+});
+
 server.listen(port, "127.0.0.1", () => {
 	console.log(`[release-server] http://127.0.0.1:${port}`);
 });
+
+// A2（修 F-B）：生产形态同样自动刷新图谱——此前 release-server 不启动 watcher，
+// Sabotage 的 Lore 提交在生产上永远不会触发提取。缺省启用；GRAPH_BRAIN_NO_WATCHER=1
+// 是部署验收（service-deploy 隔离环境）与排障的显式逃生阀。baseRoot 把 config/
+// state/logs/runner 锚回项目工作树（本文件被 esbuild 并入 server.mjs，模块自身的
+// import.meta.url 在 release 目录里）。与 dev 形态并存安全：runner 侧 hook.lock busy-skip。
+if (process.env.GRAPH_BRAIN_NO_WATCHER === "1") {
+	console.log("[release-server] GRAPH_BRAIN_NO_WATCHER=1：lore-watcher 未启动");
+} else {
+	startLoreWatcher({ baseRoot: PROJECT_ROOT });
+}
 
 let closing = false;
 function close(signal: string): void {
 	if (closing) return;
 	closing = true;
+	stopLoreWatcher();
 	console.log(`[release-server] ${signal}`);
+	// close() 只等空闲连接，keep-alive 会让它永远不返回；强制断开并兜底退出，
+	// 避免 NSSM 等待超时后硬杀导致日志丢失。
 	server.close(() => process.exit(0));
+	server.closeAllConnections();
+	const forceExit = setTimeout(() => process.exit(0), 5_000);
+	forceExit.unref();
 }
 
 process.once("SIGINT", () => close("SIGINT"));

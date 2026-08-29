@@ -2,6 +2,8 @@
 
 GraphBrain is a read-only UE code architecture viewer. Treat this boundary as a product invariant.
 
+The active coding and review contract is `docs/engineering-standard-v1.md` (format version 1). Its only exception registry is `config/engineering-standard-exceptions.json`; do not add source-local TypeScript suppressions or permanent waivers.
+
 ## Ownership
 
 - GraphBrain owns versioned `ue5_code` facts extracted from source and user annotations attached to those facts.

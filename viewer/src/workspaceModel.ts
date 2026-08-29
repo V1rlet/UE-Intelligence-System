@@ -11,8 +11,13 @@ export function isArchitectureKnowledge(entry: GraphCatalogEntry): boolean {
 	return entry.kind === "reference" || entry.kind === "mindmap";
 }
 
+/** One capability boundary for graph documents that the read-only catalog can open. */
+export function isBrowsableCodeGraph(entry: GraphCatalogEntry): boolean {
+	return entry.domain === "ue5_code" && entry.kind !== "mindmap";
+}
+
 export function isExistingSpec(entry: GraphCatalogEntry): boolean {
-	return entry.domain === "ue5_code" && !isArchitectureKnowledge(entry);
+	return isBrowsableCodeGraph(entry) && !isArchitectureKnowledge(entry);
 }
 
 export function isBusinessSpec(entry: GraphCatalogEntry): boolean {

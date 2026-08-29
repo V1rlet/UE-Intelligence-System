@@ -93,8 +93,8 @@ export async function resolveCodeFixture(): Promise<CodeFixture> {
 
 export class CdpClient {
 	private nextId = 1;
-	private pending = new Map<number, { resolve: (value: any) => void; reject: (error: Error) => void }>();
-	private listeners = new Map<string, Set<(params: any) => void>>();
+	private pending = new Map<number, { resolve: (value: unknown) => void; reject: (error: Error) => void }>();
+	private listeners = new Map<string, Set<(params: unknown) => void>>();
 
 	constructor(private readonly socket: WebSocket) {
 		socket.addEventListener("message", (event) => {
@@ -113,25 +113,26 @@ export class CdpClient {
 	}
 
 	on<T = unknown>(method: string, listener: (params: T) => void): () => void {
-		const listeners = this.listeners.get(method) ?? new Set<(params: any) => void>();
-		listeners.add(listener as (params: any) => void);
+		const listeners = this.listeners.get(method) ?? new Set<(params: unknown) => void>();
+		const wrapped = (params: unknown) => listener(params as T);
+		listeners.add(wrapped);
 		this.listeners.set(method, listeners);
 		return () => {
-			listeners.delete(listener as (params: any) => void);
+			listeners.delete(wrapped);
 			if (listeners.size === 0) this.listeners.delete(method);
 		};
 	}
 
-	send(method: string, params: Record<string, unknown> = {}): Promise<any> {
+	send<T = unknown>(method: string, params: Record<string, unknown> = {}): Promise<T> {
 		const id = this.nextId++;
 		this.socket.send(JSON.stringify({ id, method, params }));
-		return new Promise((resolveRequest, rejectRequest) => {
-			this.pending.set(id, { resolve: resolveRequest, reject: rejectRequest });
+		return new Promise<T>((resolveRequest, rejectRequest) => {
+			this.pending.set(id, { resolve: (value) => resolveRequest(value as T), reject: rejectRequest });
 		});
 	}
 
 	async evaluate<T = unknown>(expression: string): Promise<T> {
-		const response = await this.send("Runtime.evaluate", { expression, returnByValue: true, awaitPromise: true });
+		const response = await this.send<{ exceptionDetails?: { exception?: { description?: string; value?: unknown }; text?: string }; result?: { value?: T } }>("Runtime.evaluate", { expression, returnByValue: true, awaitPromise: true });
 		if (response.exceptionDetails) {
 			const exception = response.exceptionDetails.exception?.description ?? response.exceptionDetails.exception?.value;
 			throw new Error(String(exception ?? response.exceptionDetails.text ?? "页面脚本执行失败"));
@@ -223,7 +224,7 @@ export async function navigate(cdp: CdpClient, url: string, selector: string): P
 }
 
 export async function captureScreenshot(cdp: CdpClient, path: string): Promise<void> {
-	const result = await cdp.send("Page.captureScreenshot", { format: "png", captureBeyondViewport: false });
+	const result = await cdp.send<{ data: string }>("Page.captureScreenshot", { format: "png", captureBeyondViewport: false });
 	writeFileSync(path, result.data, "base64");
 	if (statSync(path).size < 20_000) throw new Error(`${path} 疑似空白截图`);
 }

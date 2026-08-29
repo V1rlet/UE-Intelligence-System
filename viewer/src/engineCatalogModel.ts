@@ -46,3 +46,19 @@ export interface CatalogSyncStatus {
 	error?: string;
 }
 
+/** docs_url 的单一收口：目录数据来自外部同步管线（Epic 目录 → 本地缓存 → 客户端），
+ *  不得直接信任为 href——只接受 http(s) 绝对地址，其余（javascript:/data:/相对路径）丢弃。 */
+export function safeDocsUrl(url: string | null | undefined): string | undefined {
+	if (typeof url !== "string" || !url) return undefined;
+	try {
+		const { protocol } = new URL(url);
+		return protocol === "http:" || protocol === "https:" ? url : undefined;
+	} catch {
+		return undefined;
+	}
+}
+
+export function normalizeEngineCatalogClasses(entries: EngineCatalogClass[]): EngineCatalogClass[] {
+	return entries.map((entry) => ({ ...entry, docs_url: safeDocsUrl(entry.docs_url) ?? "" }));
+}
+

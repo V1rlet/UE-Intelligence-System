@@ -11,6 +11,8 @@ test("the active shell exposes only read-only code architecture destinations", (
 	const app = read("viewer/src/App.tsx");
 	const home = read("viewer/components/home/HomeView.tsx");
 	const workspace = read("viewer/components/graph-view/GraphWorkspaceView.tsx");
+	const evidenceBadge = read("viewer/components/common/EvidenceStatusBadge.tsx");
+	const evidenceStatus = read("viewer/src/evidenceStatus.ts");
 	for (const destination of ['"home"', '"architecture"', '"graph"', '"api"', '"changes"']) {
 		assert.equal(app.includes(destination), true, `missing active destination ${destination}`);
 	}
@@ -20,14 +22,15 @@ test("the active shell exposes only read-only code architecture destinations", (
 	]) {
 		assert.equal((app + home + workspace).includes(retiredIdentifier), false, `retired identifier leaked: ${retiredIdentifier}`);
 	}
-	assert.equal(app.includes("只读代码事实"), true);
+	assert.equal(app.includes("EvidenceStatusBadge"), true, "the active shell must retain the canonical project evidence entry");
+	assert.equal(evidenceBadge.includes("只读代码事实"), true);
 	for (const label of [">总览<", ">探索<", ">变化<"]) assert.equal(app.includes(label), true, `missing top-level IA label ${label}`);
 	assert.equal(home.includes("ClaudeGameStudios"), true);
 	assert.equal(home.includes("relativeTime(entry.updated_at)"), false, "file mtime must not be presented as fact freshness");
 	assert.equal(home.includes("home-project-evidence"), true, "project trust evidence must live inside the primary workset card");
 	assert.equal(home.includes("home-trust-banner"), false, "duplicate project trust banner must stay retired");
-	assert.equal(home.includes("freshnessReason(entry)"), true, "the primary card must explain its freshness verdict");
-	assert.equal(home.includes("来源未验证"), true);
+	assert.equal(home.includes("resolveEvidenceStatus(entry)"), true, "the primary card must use the canonical freshness presentation boundary");
+	assert.equal(evidenceStatus.includes("来源未验证"), true);
 	assert.equal(home.includes("重新检查"), true);
 });
 

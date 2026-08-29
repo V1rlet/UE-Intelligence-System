@@ -100,7 +100,8 @@ export default function ApiDetailCard({ elements, fnId, favIds, onToggleFav, onJ
 					{fn.api!.companions!.map((c) => {
 						const targetFn = resolveCompanion(c);
 						return targetFn ? (
-							<a key={c} className="api-companion" onClick={() => onJumpFn(targetFn.id, targetFn.parent)}>{c}</a>
+							// button 而非无 href 的 <a>：锚点不可聚焦、无 Enter 激活路径（键盘可达性）。
+							<button type="button" key={c} className="api-companion" onClick={() => onJumpFn(targetFn.id, targetFn.parent)}>{c}</button>
 						) : (
 							<span key={c} className="api-companion missing" title="不在当前图谱中">{c}</span>
 						);

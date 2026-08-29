@@ -13,7 +13,16 @@ import {
 	syncEpicApiModules,
 } from "../adapters/ue5-code/epic-api-sync";
 import { resolveEngineClassElements, resolveEngineRoot } from "../adapters/ue5-code/engine-class-service";
-import { type ApiHandler, methodNotAllowed, readJsonBody, searchParamsOf, sendJson } from "./http";
+import {
+	type ApiHandler,
+	HttpInputError,
+	methodNotAllowed,
+	readJsonBody,
+	searchParamsOf,
+	sendHttpError,
+	sendInternalError,
+	sendJson,
+} from "./http";
 
 interface EpicSyncJobStatus {
 	job_id: string;
@@ -34,8 +43,40 @@ interface EpicSyncJobStatus {
 }
 
 const epicSyncJobs = new Map<string, EpicSyncJobStatus>();
+const epicSyncJobExpiryTimers = new Map<string, ReturnType<typeof setTimeout>>();
+const EPIC_SYNC_JOB_RETENTION_MS = 6 * 60 * 60 * 1000;
+const MAX_RETAINED_EPIC_SYNC_JOBS = 64;
 
-class QueryParameterError extends Error {}
+function forgetEpicSyncJob(jobId: string): void {
+	const timer = epicSyncJobExpiryTimers.get(jobId);
+	if (timer) clearTimeout(timer);
+	epicSyncJobExpiryTimers.delete(jobId);
+	epicSyncJobs.delete(jobId);
+}
+
+function pruneEpicSyncJobs(): void {
+	const finished = [...epicSyncJobs.values()]
+		.filter((job) => job.state === "completed" || job.state === "failed")
+		.sort((left, right) => Date.parse(left.finished_at ?? left.started_at) - Date.parse(right.finished_at ?? right.started_at));
+	for (const job of finished.slice(0, Math.max(0, finished.length - MAX_RETAINED_EPIC_SYNC_JOBS))) {
+		forgetEpicSyncJob(job.job_id);
+	}
+}
+
+function scheduleEpicSyncJobExpiry(job: EpicSyncJobStatus): void {
+	const existing = epicSyncJobExpiryTimers.get(job.job_id);
+	if (existing) clearTimeout(existing);
+	const timer = setTimeout(() => {
+		if (epicSyncJobs.get(job.job_id) === job && (job.state === "completed" || job.state === "failed")) {
+			forgetEpicSyncJob(job.job_id);
+		}
+	}, EPIC_SYNC_JOB_RETENTION_MS);
+	timer.unref();
+	epicSyncJobExpiryTimers.set(job.job_id, timer);
+	pruneEpicSyncJobs();
+}
+
+class QueryParameterError extends HttpInputError {}
 
 function integerQuery(
 	params: URLSearchParams,
@@ -54,6 +95,19 @@ function integerQuery(
 
 function createEpicSyncJobId(): string {
 	return `epic-sync-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+/** 子进程/文件系统错误文本里的本机绝对路径不得进入 GET 响应（错误分层不变式）：
+ *  仅保留文件名，完整原文进服务端日志。http(s) URL 不受影响。 */
+export function redactLocalPaths(message: string): string {
+	return message
+		// 盘符前不得是字母（排除 https:// 里的 "s:/"）。
+		.replace(/(?<![A-Za-z])[A-Za-z]:[\\/](?:[^\s:'"]|[\\/](?!\s))*/g, (path) => `…${path.replaceAll("\\", "/").split("/").pop() ?? ""}`)
+		.replace(/(?<![\w.])\/(?:home|Users|root|tmp|var|opt|mnt)\/[^\s:'"]*/g, (path) => `…/${path.split("/").pop() ?? ""}`);
+}
+
+function sanitizeSyncFailure(failure: { scope: string; module: string; error: string }): { scope: string; module: string; error: string } {
+	return { ...failure, error: redactLocalPaths(failure.error) };
 }
 
 /** 官方内容缓存健康摘要（P2b）：根目录龄期 + 模块缓存规模与最旧同步时间。 */
@@ -99,13 +153,14 @@ export const handleEngineCatalog: ApiHandler = ({ req, res, url }) => {
 	const params = searchParamsOf(req);
 	const engineRoot = resolveEngineRoot(params.get("source_root")?.split(";")[0] ?? undefined);
 	if (!engineRoot) {
-		sendJson(res, 500, { error: "未定位到 UE 5.8 引擎根目录" });
+		console.warn("[engine] engine root unresolved (GRAPH_BRAIN_ENGINE_ROOT unset, no .uproject hint)");
+		sendJson(res, 500, { error: "未定位到 UE 5.8 引擎根目录", code: "ENGINE_ROOT_UNRESOLVED" });
 		return true;
 	}
 	try {
 		sendJson(res, 200, engineCatalogPayload(getEngineApiCatalog(engineRoot)));
 	} catch (e) {
-		sendJson(res, 500, { error: (e as Error).message });
+		sendInternalError(res, e, "engine catalog request failed");
 	}
 	return true;
 };
@@ -126,7 +181,8 @@ export const handleEngineCatalogClasses: ApiHandler = ({ req, res, url }) => {
 		}
 		const engineRoot = resolveEngineRoot(params.get("source_root")?.split(";")[0] ?? undefined);
 		if (!engineRoot) {
-			sendJson(res, 500, { error: "未定位到 UE 5.8 引擎根目录" });
+			console.warn("[engine] engine root unresolved (GRAPH_BRAIN_ENGINE_ROOT unset, no .uproject hint)");
+			sendJson(res, 500, { error: "未定位到 UE 5.8 引擎根目录", code: "ENGINE_ROOT_UNRESOLVED" });
 			return true;
 		}
 		sendJson(res, 200, searchEngineApiClasses(engineRoot, {
@@ -138,7 +194,7 @@ export const handleEngineCatalogClasses: ApiHandler = ({ req, res, url }) => {
 			headerLimit,
 		}));
 	} catch (e) {
-		sendJson(res, e instanceof QueryParameterError ? 400 : 500, { error: (e as Error).message });
+		if (!sendHttpError(res, e)) sendInternalError(res, e, "engine catalog class query failed");
 	}
 	return true;
 };
@@ -194,9 +250,7 @@ export const handleEngineCatalogSync: ApiHandler = async ({ req, res, url }) => 
 				started_at: new Date().toISOString(),
 			};
 			epicSyncJobs.set(job.job_id, job);
-			for (const [id, oldJob] of epicSyncJobs) {
-				if (id !== job.job_id && Date.now() - Date.parse(oldJob.started_at) > 6 * 60 * 60 * 1000) epicSyncJobs.delete(id);
-			}
+			pruneEpicSyncJobs();
 			job.state = "running";
 			// 并发 3：4 并发全量同步时 Epic 限流明显（200 空壳页/连接失败），3 更稳
 			void syncEpicApiModules(targets, 3, undefined, (progress) => {
@@ -209,16 +263,20 @@ export const handleEngineCatalogSync: ApiHandler = async ({ req, res, url }) => 
 				job.state = "completed";
 				job.completed = batchResult.requested;
 				job.succeeded = batchResult.succeeded;
-				job.failed = batchResult.failed;
+				job.failed = batchResult.failed.map(sanitizeSyncFailure);
 				job.failed_count = batchResult.failed.length;
 				job.skipped_unpublished = batchResult.skipped_unpublished.length;
 				job.current = undefined;
 				job.finished_at = new Date().toISOString();
+				scheduleEpicSyncJobExpiry(job);
 			}).catch((error) => {
 				job.state = "failed";
-				job.error = String((error as Error).message ?? error);
+				// 完整错误进服务端日志；对外任务表只留脱敏文本（如缓存写失败的 EACCES 会带本机绝对路径）。
+				console.error("[engine-sync] batch failed", error);
+				job.error = redactLocalPaths(String((error as Error).message ?? error));
 				job.current = undefined;
 				job.finished_at = new Date().toISOString();
+				scheduleEpicSyncJobExpiry(job);
 			});
 			sendJson(res, 202, job);
 			return true;
@@ -226,7 +284,7 @@ export const handleEngineCatalogSync: ApiHandler = async ({ req, res, url }) => 
 		const result = await syncEpicApiModule(scope as "Runtime" | "Developer" | "Editor" | "Plugins", module);
 		sendJson(res, 200, result);
 	} catch (e) {
-		sendJson(res, 500, { error: (e as Error).message });
+		if (!sendHttpError(res, e)) sendInternalError(res, e, "engine catalog sync failed");
 	}
 	return true;
 };
@@ -255,7 +313,8 @@ export const handleEngineClass: ApiHandler = ({ req, res, url }) => {
 	const params = searchParamsOf(req);
 	const engineRoot = resolveEngineRoot(params.get("source_root")?.split(";")[0] ?? undefined);
 	if (!engineRoot) {
-		sendJson(res, 500, { error: "未定位到引擎根目录（可设 GRAPH_BRAIN_ENGINE_ROOT 环境变量）" });
+		console.warn("[engine] engine root unresolved (GRAPH_BRAIN_ENGINE_ROOT unset, no .uproject hint)");
+		sendJson(res, 500, { error: "未定位到引擎根目录（可设 GRAPH_BRAIN_ENGINE_ROOT 环境变量）", code: "ENGINE_ROOT_UNRESOLVED" });
 		return true;
 	}
 	try {
@@ -266,7 +325,7 @@ export const handleEngineClass: ApiHandler = ({ req, res, url }) => {
 		);
 		sendJson(res, "error" in result ? 404 : 200, result);
 	} catch (e) {
-		sendJson(res, 500, { error: (e as Error).message });
+		sendInternalError(res, e, "engine class request failed");
 	}
 	return true;
 };

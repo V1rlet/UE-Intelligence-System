@@ -1,0 +1,20 @@
+{
+  "format_version": "graphbrain-arch-baseline/1",
+  "subsystem": "project",
+  "generated_at": "2026-08-23T09:41:55.506Z",
+  "cycles": [
+    {
+      "nodes": [
+        "AActor",
+        "ACharacter",
+        "AController",
+        "APawn"
+      ],
+      "exampleCycle": [
+        "AActor",
+        "APawn",
+        "AActor"
+      ]
+    }
+  ]
+}

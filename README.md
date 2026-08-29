@@ -24,12 +24,13 @@ npm run viewer
 默认开发地址由 Vite 输出。常用检查：
 
 ```powershell
-npm run typecheck
-npm test
-npm run validate
-npm run build
-npm run check:bundle
+npm run check:fast       # 普通代码改动
+npm run check:data       # 格式、迁移、发布与回滚
+npm run check:release    # 构建、bundle 与浏览器冒烟
+npm run check:lifecycle  # 长时间 soak
 ```
+
+编码与评审遵循 [工程编码标准 v1](docs/engineering-standard-v1.md)。`check:fast` 首先执行标准门禁：未登记的显式 `any`、TypeScript 类型压制、过期/陈旧例外和分层边界穿透会直接失败；唯一例外入口是 `config/engineering-standard-exceptions.json`。规范迭代的审阅证据和迁移方案见 [2026-08-13 迭代方案](docs/engineering-standard-iteration-plan-2026-08-13.md)。
 
 常驻服务安全升级：
 
@@ -54,6 +55,17 @@ npm run data:prune -- --apply  # 确认后执行删除；旧日期/未知/损坏
 npm run analyze -- --graph ue5_code_project_ --cycles --coupling
 npm run annotations:scan -- ue5_code project
 ```
+
+Evidence 是对外唯一稳定的代码证据边界：
+
+```powershell
+npm run evidence:status
+npm run evidence:check
+npm run evidence:refresh
+npm run evidence:snapshot -- status
+```
+
+`evidence:check` 默认要求 fresh；stale/unverified 不能静默支持自动结论。ToolRegistry/CGS 只通过 Evidence API v1 适配器消费，不直读 `data/evidence` 或 GraphBrain 内部模块。
 
 提取器现在把图与变化报告写成不可变、SHA-256 内容寻址文件，完成 schema、引用与交叉关系校验后，只通过 `data/publications/ue5_code.json` 的一次 revision 切换发布。旧日期文件继续由集中兼容边界读取，不会被覆盖或猜测迁入清单。解析缓存是可重建加速层；reading-context 保持独立 revision 所有权，并只在事实发布成功后扫描陈旧度。
 
@@ -82,5 +94,6 @@ World Atlas 的历史归档仍在 `data/archive/world-atlas-v18/`，只作审计
 
 - [使用说明](docs/USAGE.md)
 - [架构与边界](docs/architecture.md)
+- [工程编码标准 v1](docs/engineering-standard-v1.md)
 - [数据格式](docs/schema.md)
 - [产品定位](docs/product-positioning.md)

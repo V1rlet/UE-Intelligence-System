@@ -14,6 +14,8 @@
 //         正向闭包（seed 依赖谁）不是"改动波及"，是"改动需要读懂什么"，不在本单元。
 // DATE: 2026-07-06
 
+import { resolveCodeModule, UNASSIGNED_MODULE_LABEL } from "./code-module.js";
+
 // ████████████████████████████████████████████████████████████████████████████
 //  类型与投影
 // ████████████████████████████████████████████████████████████████████████████
@@ -180,8 +182,9 @@ function shortestCycleIn(pg: ProjectedGraph, comp: Set<string>): string[] {
 	const prev = new Map<string, string>();
 	const queue: string[] = [start];
 	const seen = new Set<string>([start]);
-	while (queue.length > 0) {
-		const cur = queue.shift()!;
+	// 用递增头索引代替 shift()：shift 是 O(n)，大图上的 BFS/Brandes 会退化出 O(n²) 分量。
+	for (let head = 0; head < queue.length; head++) {
+		const cur = queue[head];
 		for (const nxt of pg.out.get(cur) ?? []) {
 			if (!comp.has(nxt)) continue;
 			if (nxt === start) {
@@ -213,8 +216,8 @@ export function computeBetweenness(pg: ProjectedGraph): Map<string, number> {
 		const sigma = new Map<string, number>([[s, 1]]);
 		const dist = new Map<string, number>([[s, 0]]);
 		const queue: string[] = [s];
-		while (queue.length > 0) {
-			const v = queue.shift()!;
+		for (let head = 0; head < queue.length; head++) {
+			const v = queue[head];
 			stack.push(v);
 			for (const w of pg.out.get(v) ?? []) {
 				if (!dist.has(w)) {
@@ -275,11 +278,22 @@ export interface CouplingReport {
 	groups: GroupCoupling[];
 }
 
+/** 分析单元的分组归属（单一实现，耦合/影响/正向闭包共用）：module 轴走
+ *  canonical 解析器（显式声明 > source_path 推断），system 轴只认显式声明，
+ *  无归属落 UNASSIGNED_MODULE_LABEL（与 change-report/evidence 同一口径，
+ *  见 code-module.ts 的三处消费关系说明）。不回退 layer——那是 project/engine
+ *  分层不是模块，混入后同一份事实在 change-report / evidence / 分析报告里
+ *  出现多种分组口径。 */
+function unitGroupOf(pg: ProjectedGraph, id: string, groupBy: "module" | "system"): string {
+	const data = pg.nodeById.get(id)?.data;
+	if (groupBy === "system") {
+		return typeof data?.system === "string" && data.system ? data.system : UNASSIGNED_MODULE_LABEL;
+	}
+	return resolveCodeModule((data ?? {}) as Record<string, unknown>) ?? UNASSIGNED_MODULE_LABEL;
+}
+
 export function couplingReport(pg: ProjectedGraph, groupBy: "module" | "system" = "module"): CouplingReport {
-	const groupOf = (id: string): string => {
-		const d = pg.nodeById.get(id)?.data;
-		return String((groupBy === "system" ? d?.system : d?.module) ?? d?.layer ?? "（未分组）");
-	};
+	const groupOf = (id: string): string => unitGroupOf(pg, id, groupBy);
 	const bc = computeBetweenness(pg);
 	const nodes: NodeCoupling[] = pg.units
 		.map((id) => ({
@@ -336,11 +350,14 @@ export interface ImpactReport {
 	totalAffected: number;
 }
 
-export function impactAnalysis(
+/** 反向/正向闭包共用实现：仅邻接方向不同（in = 改动波及谁，out = 改动需要读懂什么）。
+ *  分层填充、分组归属等易漂移细节只此一份。 */
+function closureByDirection(
 	pg: ProjectedGraph,
 	seedIds: string[],
-	groupBy: "module" | "system" = "module",
-): ImpactReport {
+	groupBy: "module" | "system",
+	adjacency: "in" | "out",
+): { seeds: string[]; unknownSeeds: string[]; byDepth: { depth: number; nodes: string[] }[]; affectedGroups: { group: string; count: number }[]; totalAffected: number } {
 	const seeds = [...new Set(seedIds)].filter((s) => pg.unitSet.has(s));
 	const unknownSeeds = [...new Set(seedIds)].filter((s) => !pg.unitSet.has(s));
 	const depth = new Map<string, number>(seeds.map((s) => [s, 0]));
@@ -350,7 +367,7 @@ export function impactAnalysis(
 		level++;
 		const next: string[] = [];
 		for (const u of frontier) {
-			for (const dep of pg.in.get(u) ?? []) {
+			for (const dep of (adjacency === "in" ? pg.in : pg.out).get(u) ?? []) {
 				if (!depth.has(dep)) {
 					depth.set(dep, level);
 					next.push(dep);
@@ -370,9 +387,8 @@ export function impactAnalysis(
 	const groupCounts = new Map<string, number>();
 	for (const [id, d] of depth) {
 		if (d === 0) continue;
-		const data = pg.nodeById.get(id)?.data;
-		const g = String((groupBy === "system" ? data?.system : data?.module) ?? data?.layer ?? "（未分组）");
-		groupCounts.set(g, (groupCounts.get(g) ?? 0) + 1);
+		const group = unitGroupOf(pg, id, groupBy);
+		groupCounts.set(group, (groupCounts.get(group) ?? 0) + 1);
 	}
 	return {
 		seeds,
@@ -383,6 +399,14 @@ export function impactAnalysis(
 			.sort((a, b) => b.count - a.count),
 		totalAffected: depth.size - seeds.length,
 	};
+}
+
+export function impactAnalysis(
+	pg: ProjectedGraph,
+	seedIds: string[],
+	groupBy: "module" | "system" = "module",
+): ImpactReport {
+	return closureByDirection(pg, seedIds, groupBy, "in");
 }
 
 // ████████████████████████████████████████████████████████████████████████████
@@ -402,48 +426,7 @@ export function forwardClosure(
 	seedIds: string[],
 	groupBy: "module" | "system" = "module",
 ): ForwardClosureReport {
-	const seeds = [...new Set(seedIds)].filter((s) => pg.unitSet.has(s));
-	const unknownSeeds = [...new Set(seedIds)].filter((s) => !pg.unitSet.has(s));
-	const depth = new Map<string, number>(seeds.map((s) => [s, 0]));
-	let frontier = [...seeds];
-	let level = 0;
-	while (frontier.length > 0) {
-		level++;
-		const next: string[] = [];
-		for (const u of frontier) {
-			for (const dep of pg.out.get(u) ?? []) {
-				if (!depth.has(dep)) {
-					depth.set(dep, level);
-					next.push(dep);
-				}
-			}
-		}
-		frontier = next;
-	}
-	const byDepth: { depth: number; nodes: string[] }[] = [];
-	for (const [id, d] of depth) {
-		if (d === 0) continue;
-		while (byDepth.length < d) byDepth.push({ depth: byDepth.length + 1, nodes: [] });
-		byDepth[d - 1].nodes.push(id);
-	}
-	for (const layer of byDepth) layer.nodes.sort();
-
-	const groupCounts = new Map<string, number>();
-	for (const [id, d] of depth) {
-		if (d === 0) continue;
-		const data = pg.nodeById.get(id)?.data;
-		const g = String((groupBy === "system" ? data?.system : data?.module) ?? data?.layer ?? "（未分组）");
-		groupCounts.set(g, (groupCounts.get(g) ?? 0) + 1);
-	}
-	return {
-		seeds,
-		unknownSeeds,
-		byDepth,
-		affectedGroups: [...groupCounts.entries()]
-			.map(([group, count]) => ({ group, count }))
-			.sort((a, b) => b.count - a.count),
-		totalAffected: depth.size - seeds.length,
-	};
+	return closureByDirection(pg, seedIds, groupBy, "out");
 }
 
 // ████████████████████████████████████████████████████████████████████████████
@@ -461,7 +444,8 @@ export interface CycleBaselineDiff {
 }
 
 export function diffCycles(baseline: CycleFinding[], current: CycleFinding[]): CycleBaselineDiff {
-	const key = (c: CycleFinding) => c.nodes.join(",");
+	// JSON 序列化做键：节点 id 含逗号时 join(",") 会产生碰撞，误判 add/remove。
+	const key = (c: CycleFinding) => JSON.stringify(c.nodes);
 	const baseKeys = new Set(baseline.map(key));
 	const currKeys = new Set(current.map(key));
 	return {
@@ -469,6 +453,29 @@ export function diffCycles(baseline: CycleFinding[], current: CycleFinding[]): C
 		removed: baseline.filter((c) => !currKeys.has(key(c))),
 		unchanged: current.filter((c) => baseKeys.has(key(c))),
 	};
+}
+
+/** 回路基线文件的单一解析边界：BOM 剥离 + 逐条形状校验，畸形输入稳定报错而非
+ *  在 diffCycles 里以裸 TypeError 崩溃。缺 cycles 字段按空基线处理（旧报告兼容）。 */
+export function parseCycleBaseline(content: string): CycleFinding[] {
+	const parsed: unknown = JSON.parse(content.replace(/^\uFEFF/, ""));
+	if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("回路基线必须是 JSON 对象");
+	const cycles = (parsed as { cycles?: unknown }).cycles ?? [];
+	if (!Array.isArray(cycles)) throw new Error("回路基线的 cycles 字段必须是数组");
+	const findings: CycleFinding[] = [];
+	for (const [index, entry] of cycles.entries()) {
+		if (entry === null || typeof entry !== "object") throw new Error(`回路基线 cycles[${index}] 必须是对象`);
+		const nodes = (entry as { nodes?: unknown }).nodes;
+		const exampleCycle = (entry as { exampleCycle?: unknown }).exampleCycle;
+		if (!Array.isArray(nodes) || nodes.some((item) => typeof item !== "string")) {
+			throw new Error(`回路基线 cycles[${index}].nodes 必须是字符串数组`);
+		}
+		if (!Array.isArray(exampleCycle) || exampleCycle.some((item) => typeof item !== "string")) {
+			throw new Error(`回路基线 cycles[${index}].exampleCycle 必须是字符串数组`);
+		}
+		findings.push({ nodes: nodes as string[], exampleCycle: exampleCycle as string[] });
+	}
+	return findings;
 }
 
 /** 变更文件清单 → 种子单元（按 source_path 尾段匹配；.cpp 归并同名 .h 的类） */

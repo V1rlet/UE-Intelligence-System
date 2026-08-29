@@ -9,7 +9,7 @@ import cytoscape, {
 import { useEffect, useRef, useState } from "react";
 import { ANIM, pulseNode, REDUCED_MOTION } from "../../src/motion";
 import { loadPref, savePref } from "../../src/uiPrefs";
-import { SHORTCUT_KEYS } from "../../src/shortcutCatalog";
+import { resolveGraphShortcut } from "../../src/appShortcuts";
 import {
 	completeProjectionInteractive,
 	hasActiveProjectionTrace,
@@ -26,8 +26,10 @@ import ViewportZoomControl from "./ViewportZoomControl";
 import { buildUeSpecCardSvg } from "./ueSpecCard";
 import { buildUmlSvg, type UmlNodeData } from "./umlNode";
 import {
+	ASSET_TYPE_RE,
 	bindSemanticRelationMotion,
 	decorateSemanticRelationEdge,
+	HOLD_RELATIONS,
 	orientCodeTypeRelationForReading,
 } from "./relationPresentation";
 import {
@@ -66,17 +68,6 @@ function animateOverviewViewport(cy: Core, elements: cytoscape.CollectionArgumen
 		duration: ANIM(200),
 		easing: "ease-out",
 	});
-}
-
-/** 键盘快捷键的输入场景守卫：焦点在表单控件/可编辑区时不劫持按键 */
-function isTypingTarget(t: EventTarget | null): boolean {
-	if (!(t instanceof HTMLElement)) return false;
-	return (
-		t instanceof HTMLInputElement ||
-		t instanceof HTMLTextAreaElement ||
-		t instanceof HTMLSelectElement ||
-		t.isContentEditable
-	);
 }
 
 export interface GraphElements {
@@ -224,9 +215,6 @@ function placeAddedNodes(cy: Core, addedIds: string[]): void {
 
 const CLASS_TYPES = new Set<string>(UE_SPEC_NODE_TYPES);
 
-const HOLD_RELATIONS = new Set(["composes", "aggregates", "depends_on"]);
-// UE 常见"数据资产"类型（持有它们的成员归入数据资产区）
-const ASSET_TYPE_RE = /InputAction|InputMappingContext|DataAsset|DataTable|CurveTable|SoundBase|Montage/;
 /** 规范卡片视图的元素变换：持有物件收进卡片，函数收进卡片，overrides 边重定向到类 */
 function toSpecCardElements(elements: GraphElements): GraphElements {
 	const nodeById = new Map(elements.nodes.map((n) => [String(n.data.id), n]));
@@ -316,6 +304,7 @@ function toSpecCardElements(elements: GraphElements): GraphElements {
 
 export default function GraphView({ elements, domain, onSelect, onNodeDblTap, layoutMode = "default", compactNodes = false, focusRequest, viewportKey, layoutRevision, heatmap, heatmapColor, cycleNodeIds }: Props) {
 	const containerRef = useRef<HTMLDivElement>(null);
+	const layersButtonRef = useRef<HTMLButtonElement>(null);
 	const cyRef = useRef<Core | null>(null);
 	// F6：缩放百分比指示 + 右键菜单状态
 	const [zoomPct, setZoomPct] = useState(100);
@@ -398,6 +387,7 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 	useEffect(() => {
 		if (!containerRef.current) return;
 		if (requiresFcose && !fcoseReady) return;
+		const keyboardSurface = containerRef.current;
 
 		// F5U2 增量：主构建依赖结构和文档身份（viewportKey）；同一文档内的 elements
 		// 变化由下方增量 effect 就地应用，切换文档或架构 scope 则重新布局。
@@ -415,7 +405,7 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 		const tracesProjection = isForest && hasActiveProjectionTrace();
 		const isHierarchy = layoutMode === "hierarchy";
 		const cy = cytoscape({
-			container: containerRef.current,
+			container: keyboardSurface,
 			elements: { nodes, edges: working.edges },
 			style: stylesheetFor(domain, !REDUCED_MOTION && nodes.length <= MOTION_NODE_BUDGET),
 			// 真正的布局在下方手动 run（同步），布局完成后接重叠分离再统一 fit
@@ -591,10 +581,44 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 			const node = cy.getElementById(id);
 			if (node.nonempty() && node.isNode()) focusNode(node, centerSelf);
 		};
-		cy.on("tap", "node", (evt) => focusNode(evt.target));
-		cy.on("tap", "edge", (evt) => onSelectRef.current(evt.target.data()));
+		const focusKeyboardSurface = () => keyboardSurface.focus({ preventScroll: true });
+		const openCanvasMenu = (x: number, y: number) => setCtxMenu({
+			x,
+			y,
+			items: [
+				{
+					label: "适配全图",
+					icon: "⊞",
+					hint: "F",
+					onClick: () => {
+						viewportModeRef.current = "overview";
+						animateOverviewViewport(cy, cy.elements(), 50);
+					},
+				},
+				{
+					label: "重置缩放 100%",
+					icon: "𝟙",
+					onClick: () =>
+						cy.zoom({ level: 1, renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } }),
+				},
+				{
+					label: "整理节点与连线",
+					icon: "🧹",
+					onClick: () => resolveNodeOverlaps(cy, { margin: 10, timeBudgetMs: 800 }),
+				},
+			],
+		});
+		cy.on("tap", "node", (evt) => {
+			focusKeyboardSurface();
+			focusNode(evt.target);
+		});
+		cy.on("tap", "edge", (evt) => {
+			focusKeyboardSurface();
+			onSelectRef.current(evt.target.data());
+		});
 		cy.on("tap", (evt) => {
 			if (evt.target === cy) {
+				focusKeyboardSurface();
 				onSelectRef.current(null);
 				clearFocus();
 			}
@@ -612,56 +636,53 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 		cy.on("cxttap", (evt) => {
 			if (evt.target !== cy) return;
 			const oe = evt.originalEvent as MouseEvent;
-			setCtxMenu({
-				x: oe.clientX,
-				y: oe.clientY,
-				items: [
-					{
-						label: "适配全图",
-						icon: "⊞",
-						hint: "F",
-						onClick: () => {
-							viewportModeRef.current = "overview";
-							animateOverviewViewport(cy, cy.elements(), 50);
-						},
-					},
-					{
-						label: "重置缩放 100%",
-						icon: "𝟙",
-						onClick: () =>
-							cy.zoom({ level: 1, renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } }),
-					},
-					{
-						label: "整理节点与连线",
-						icon: "🧹",
-						onClick: () => resolveNodeOverlaps(cy, { margin: 10, timeBudgetMs: 800 }),
-					},
-				],
-			});
+			focusKeyboardSurface();
+			openCanvasMenu(oe.clientX, oe.clientY);
 		});
 
-		// Esc 退出聚焦（与点背景等效）；F 适配全图、+/− 缩放（输入框内不劫持）
+		// 键盘归画布焦点所有：不会从顶栏、选择器或弹层穿透到后台视口。
 		const onKeyDown = (e: KeyboardEvent) => {
-			if (e.key === "Escape" && focused) {
+			const action = resolveGraphShortcut({
+				key: e.key,
+				altKey: e.altKey,
+				ctrlKey: e.ctrlKey,
+				metaKey: e.metaKey,
+				shiftKey: e.shiftKey,
+				defaultPrevented: e.defaultPrevented,
+			});
+			if (action === "exit" && focused) {
+				e.preventDefault();
+				e.stopPropagation();
 				clearFocus();
 				onSelectRef.current(null);
 				return;
 			}
-			if (isTypingTarget(e.target) || e.ctrlKey || e.metaKey || e.altKey) return;
-			if (e.key === "Enter" && focusedIdRef.current && onDblTapRef.current) {
+			if (action === "open" && focusedIdRef.current && onDblTapRef.current) {
 				e.preventDefault();
+				e.stopPropagation();
 				const focusedNode = cy.getElementById(focusedIdRef.current);
 				if (focusedNode.nonempty() && focusedNode.isNode()) onDblTapRef.current(focusedNode.data());
-			} else if (SHORTCUT_KEYS.graph.fit.some((key) => key === e.key)) {
+			} else if (action === "fit") {
+				e.preventDefault();
+				e.stopPropagation();
 				viewportModeRef.current = "overview";
 				animateOverviewViewport(cy, cy.elements(), 50);
-			} else if (SHORTCUT_KEYS.graph.zoomIn.some((key) => key === e.key)) {
+			} else if (action === "zoomIn") {
+				e.preventDefault();
+				e.stopPropagation();
 				zoomBy(VIEWPORT_POLICY.zoomStep);
-			} else if (SHORTCUT_KEYS.graph.zoomOut.some((key) => key === e.key)) {
+			} else if (action === "zoomOut") {
+				e.preventDefault();
+				e.stopPropagation();
 				zoomBy(1 / VIEWPORT_POLICY.zoomStep);
+			} else if (action === "menu") {
+				e.preventDefault();
+				e.stopPropagation();
+				const rect = keyboardSurface.getBoundingClientRect();
+				openCanvasMenu(rect.left + rect.width / 2, rect.top + rect.height / 2);
 			}
 		};
-		window.addEventListener("keydown", onKeyDown);
+		keyboardSurface.addEventListener("keydown", onKeyDown);
 
 		// 悬停邻域高亮（未处于 Focus 时生效）。控制器延后一帧清理，避免 compound
 		// 父子节点交错的 mouseout 把刚建立的直接邻域立即清掉。
@@ -709,10 +730,10 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 				previousSize = nextSize;
 			});
 		});
-		resizeObserver.observe(containerRef.current);
+		resizeObserver.observe(keyboardSurface);
 
 		return () => {
-			window.removeEventListener("keydown", onKeyDown);
+			keyboardSurface.removeEventListener("keydown", onKeyDown);
 			cancelAnimationFrame(zoomRaf);
 			cancelAnimationFrame(interactiveFrame);
 			cancelAnimationFrame(interactivePaintFrame);
@@ -856,11 +877,30 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 		viewportModeRef.current = "overview";
 		animateOverviewViewport(cy, cy.elements(), 50);
 	};
+	const closeLayers = (restoreFocus = false) => {
+		setLayersOpen(false);
+		if (restoreFocus) requestAnimationFrame(() => layersButtonRef.current?.focus());
+	};
 
 	return (
-		<div className="graph-wrap" data-rendered-nodes={elements.nodes.length} data-layout-revision={layoutRevision ?? "stable"} data-layout-capability={requiresFcose ? fcoseReady ? "fcose" : "loading-fcose" : sourceIsForest ? "forest" : "builtin"}>
+		<div className="graph-wrap" data-rendered-nodes={elements.nodes.length} data-layout-revision={layoutRevision ?? "stable"} data-layout-capability={requiresFcose ? fcoseReady ? "fcose" : "loading-fcose" : sourceIsForest ? "forest" : "builtin"} onKeyDown={(event) => {
+			if (event.key !== "Escape" || !layersOpen) return;
+			event.preventDefault();
+			event.stopPropagation();
+			closeLayers(true);
+		}}>
 			{/* 阻止浏览器原生右键菜单（cxttap 自定义菜单接管） */}
-			<div className="graph-canvas" ref={containerRef} onContextMenu={(e) => e.preventDefault()} />
+			<div
+				className="graph-canvas"
+				ref={containerRef}
+				role="region"
+				tabIndex={0}
+				aria-label={layoutMode === "hierarchy" ? "交互式代码架构图" : "交互式代码关系图"}
+				aria-keyshortcuts="Enter Escape Shift+F10 F Home + = - _"
+				aria-haspopup="menu"
+				aria-controls={ctxMenu ? "graph-canvas-menu" : undefined}
+				onContextMenu={(e) => e.preventDefault()}
+			/>
 			{elements.nodes.length === 0 ? (
 				<div className="graph-empty-state" role="status">
 					<span aria-hidden="true">◇</span>
@@ -871,7 +911,7 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 			{/* F9：重新勘测扫描线（keyed 重放，动画结束即隐形，不拦截指针） */}
 			{sweepSeq > 0 ? <div key={sweepSeq} className="scan-sweep" aria-hidden="true" /> : null}
 			{ctxMenu ? (
-				<ContextMenu x={ctxMenu.x} y={ctxMenu.y} items={ctxMenu.items} onClose={() => setCtxMenu(null)} />
+				<ContextMenu id="graph-canvas-menu" x={ctxMenu.x} y={ctxMenu.y} items={ctxMenu.items} onClose={() => setCtxMenu(null)} />
 			) : null}
 			<div className="graph-controls" data-zoom-pct={zoomPct}>
 				<button title="适配全图（F / 双击空白处）" aria-label="适配全图" onClick={fitAll}>⊞</button>
@@ -884,18 +924,21 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 					onClick={() => cyRef.current && resolveNodeOverlaps(cyRef.current, { margin: 10, timeBudgetMs: 800 })}
 				>🧹</button>
 				<button
+					ref={layersButtonRef}
 					className={`layers-btn${hops !== 1 || showFunctions ? " engaged" : ""}`}
 					title="图层与显示：聚焦跳数 / 规范卡片 / 函数节点"
 					aria-label="图层与显示选项"
 					aria-expanded={layersOpen}
+					aria-controls="graph-layers-popover"
 					onClick={() => setLayersOpen((o) => !o)}
 				>▤</button>
 			</div>
 			{layersOpen ? (
 				<>
-					<div className="popover-backdrop" onClick={() => setLayersOpen(false)} />
-					<div className="graph-popover layers-pop" role="dialog" aria-label="图层与显示选项">
-						<h4>聚焦跳数</h4>
+					{/* 背景关闭与 Escape 走同一条恢复焦点的路径：焦点落在被移除的背景上会丢失键盘位置。 */}
+					<div className="popover-backdrop" onClick={() => closeLayers(true)} />
+					<div id="graph-layers-popover" className="graph-popover layers-pop" role="dialog" data-app-shortcuts="block" aria-labelledby="graph-layers-popover-title">
+						<h4 id="graph-layers-popover-title">聚焦跳数</h4>
 						<div className="pop-seg" title="点击节点后高亮 N 跳邻域">
 							{[1, 2, 3].map((n) => (
 								<button key={n} className={hops === n ? "active" : ""} onClick={() => setHops(n)}>

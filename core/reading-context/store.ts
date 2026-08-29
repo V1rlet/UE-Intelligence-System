@@ -1,17 +1,31 @@
 // Canonical owner of user reading state. Legacy annotation/favorite stores are projections only.
 import { randomUUID } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { Ajv, type ValidateFunction } from "ajv";
 import addFormats from "ajv-formats";
 import { resolveGraphBrainProjectRoot } from "../source/project-root.js";
 import { withFileLock } from "../store/file-lock.js";
+import { renameDurableSync, writeFsyncedTemporary } from "../store/durable-write.js";
 
-export const READING_CONTEXT_FORMAT_VERSION = 1 as const;
+export const READING_CONTEXT_FORMAT_VERSION = 2 as const;
 
-export type AnnotationType = "gotcha" | "best_practice" | "design_decision" | "performance" | "reference";
-export type FavoriteKind = "class" | "function";
-export type FavoriteSource = "project" | "engine" | "unknown";
+/** Runtime capability declarations shared by persistence, HTTP validation and UI adapters. */
+export const ANNOTATION_TYPES = ["gotcha", "best_practice", "design_decision", "performance", "reference"] as const;
+export const FAVORITE_KINDS = ["class", "function"] as const;
+export const FAVORITE_SOURCES = ["project", "engine", "unknown"] as const;
+
+export type AnnotationType = (typeof ANNOTATION_TYPES)[number];
+export type FavoriteKind = (typeof FAVORITE_KINDS)[number];
+export type FavoriteSource = (typeof FAVORITE_SOURCES)[number];
+
+/** D-P3 行级锚（v2）：标注绑定的源文件行区间；fingerprint=该区间原始字节 sha256。
+ *  失效半径=该行区间：节点级 hash 失配时，锚区间内容未变则不算 stale。 */
+export interface ReadingAnnotationAnchor {
+	start_line: number;
+	end_line: number;
+	fingerprint: string;
+}
 
 export interface ReadingAnnotation {
 	id: string;
@@ -21,8 +35,8 @@ export interface ReadingAnnotation {
 	updated_at?: string;
 	source_hash?: string;
 	stale?: boolean;
+	anchor?: ReadingAnnotationAnchor;
 }
-
 export interface ReadingAnnotationEntry {
 	subsystem: string;
 	node_id: string;
@@ -92,7 +106,13 @@ export function validateReadingContext(document: unknown): string[] {
 export function loadReadingContext(domain: string, directory = READING_CONTEXT_DIR): ReadingContextDocument {
 	const path = readingContextFilePath(domain, directory);
 	if (!existsSync(path)) return emptyReadingContext();
-	const document = JSON.parse(readFileSync(path, "utf8").replace(/^\uFEFF/, "")) as ReadingContextDocument;
+	const parsed = JSON.parse(readFileSync(path, "utf8").replace(/^\uFEFF/, "")) as {
+		format_version?: number;
+	};
+	// v1 → v2 迁移边界（D-P3）：v1 条目没有 anchor 字段，v2 中 anchor 可选，
+	// 因此迁移 = 版本号提升，逐字段无损且幂等。旧文件在下次写回时自然落为 v2。
+	if (parsed.format_version === 1) parsed.format_version = READING_CONTEXT_FORMAT_VERSION;
+	const document = parsed as ReadingContextDocument;
 	const errors = validateReadingContext(document);
 	if (errors.length > 0) throw new Error(`阅读上下文不符合 schema: ${errors.join("; ")}`);
 	return document;
@@ -117,8 +137,12 @@ function writeDocument(document: ReadingContextDocument, directory = READING_CON
 	mkdirSync(directory, { recursive: true });
 	const destination = readingContextFilePath(document.domain, directory);
 	const temporary = `${destination}.tmp-${process.pid}-${randomUUID()}`;
-	writeFileSync(temporary, `${JSON.stringify(document, null, 2)}\n`, "utf8");
-	renameSync(temporary, destination);
+	try {
+		writeFsyncedTemporary(temporary, `${JSON.stringify(document, null, 2)}\n`);
+		renameDurableSync(temporary, destination);
+	} finally {
+		rmSync(temporary, { force: true });
+	}
 }
 
 function readingContextLockPath(directory: string): string {

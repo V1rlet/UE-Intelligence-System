@@ -15,6 +15,11 @@ import {
 
 export type GraphLoadMode = "projection" | "full";
 
+/** Full facts satisfy projection consumers; projections never satisfy full-fact consumers. */
+export function graphLoadModeSatisfied(loaded: GraphLoadMode | null, requested: GraphLoadMode): boolean {
+	return loaded === requested || (loaded === "full" && requested === "projection");
+}
+
 export interface LoadedGraphDocument {
 	graph: GraphFile;
 	mode: GraphLoadMode;

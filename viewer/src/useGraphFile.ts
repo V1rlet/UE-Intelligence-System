@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { loadGraphDocument, type GraphLoadMode } from "./loadGraphProjection.js";
+import { LatestRequestGate } from "./latestRequest.js";
+import { graphLoadModeSatisfied, loadGraphDocument, type GraphLoadMode } from "./loadGraphProjection.js";
 import { savePref } from "./uiPrefs.js";
 import type { GraphFile } from "./useGraphDocument.js";
 
@@ -54,6 +55,7 @@ export function useGraphFile({
 	const loadedGraphFileRef = useRef<string | null>(null);
 	const loadedGraphModeRef = useRef<GraphLoadMode | null>(null);
 	const handledReloadSeqRef = useRef(0);
+	const loadRequest = useRef(new LatestRequestGate());
 
 	// 回调经 ref 保存：effect 只依赖 currentFile/graphReloadSeq，不因回调重建而重复加载。
 	const onLoadStartRef = useRef(onLoadStart);
@@ -64,10 +66,23 @@ export function useGraphFile({
 	onLoadErrorRef.current = onLoadError;
 
 	useEffect(() => {
-		if (!currentFile) return;
+		if (!currentFile) {
+			handledReloadSeqRef.current = graphReloadSeq;
+			loadedGraphFileRef.current = null;
+			loadedGraphModeRef.current = null;
+			setGraph(null);
+			setLoadedGraphFile(null);
+			setLoadedGraphMode(null);
+			setCompatibility("current");
+			setGraphLoading(false);
+			setGraphLoadError(null);
+			return;
+		}
 		const sameFile = loadedGraphFileRef.current === currentFile;
 		const reloading = graphReloadSeq !== handledReloadSeqRef.current;
-		if (sameFile && loadedGraphModeRef.current === "full" && loadMode === "projection" && !reloading) {
+		if (sameFile && graphLoadModeSatisfied(loadedGraphModeRef.current, loadMode) && !reloading) {
+			setGraphLoading(false);
+			setGraphLoadError(null);
 			return;
 		}
 		handledReloadSeqRef.current = graphReloadSeq;
@@ -79,11 +94,15 @@ export function useGraphFile({
 			setGraph(null);
 			setLoadedGraphFile(null);
 			setLoadedGraphMode(null);
+			setCompatibility("current");
+			loadedGraphFileRef.current = null;
+			loadedGraphModeRef.current = null;
 		}
 		savePref("lastGraph", currentFile);
-		const controller = new AbortController();
+		const controller = loadRequest.current.start();
 		loadGraphDocument(currentFile, loadMode, { signal: controller.signal, context: "加载图谱" })
 			.then((loaded) => {
+				if (!loadRequest.current.isCurrent(controller)) return;
 				const g = loaded.graph;
 				if (!g?.elements || !Array.isArray(g.elements.nodes) || !Array.isArray(g.elements.edges)) {
 					throw new Error("图谱响应格式错误");
@@ -97,15 +116,15 @@ export function useGraphFile({
 				onLoadedRef.current(g);
 			})
 			.catch((e) => {
-				if ((e as Error).name !== "AbortError") {
+				if ((e as Error).name !== "AbortError" && loadRequest.current.isCurrent(controller)) {
 					setGraphLoadError((e as Error).message || String(e));
 					onLoadErrorRef.current((e as Error).message || String(e), currentFile);
 				}
 			})
 			.finally(() => {
-				if (!controller.signal.aborted) setGraphLoading(false);
+				if (loadRequest.current.finish(controller)) setGraphLoading(false);
 			});
-		return () => controller.abort();
+		return () => loadRequest.current.cancel();
 	}, [currentFile, graphReloadSeq, loadMode]);
 
 	const reloadGraph = useCallback(() => setGraphReloadSeq((seq) => seq + 1), []);

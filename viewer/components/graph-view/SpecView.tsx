@@ -5,12 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import { ueSpecTypeLabel, ueTypeLabel } from "../../../core/schema/ue-naming";
 import { ANIM, pulseNode, REDUCED_MOTION } from "../../src/motion";
 import { SVG_INK } from "../../src/design-tokens";
+import { hasAppShortcutBlocker } from "../../src/appShortcuts";
 import { SHORTCUT_KEYS } from "../../src/shortcutCatalog";
 import { stylesheetFor } from "../../styles/stylesheets";
 import { paginateSpecFunctions } from "../common/functionPartition";
 import { buildBpNodeSvg, type BpNodeInput } from "./bpNode";
 import type { GraphElements } from "./GraphView";
-import { bindSemanticRelationMotion, decorateSemanticRelationEdge } from "./relationPresentation";
+import { ASSET_TYPE_RE, bindSemanticRelationMotion, decorateSemanticRelationEdge, HOLD_RELATIONS } from "./relationPresentation";
 import resolveNodeOverlaps from "./resolveOverlaps";
 import SpecFunctionPager from "./SpecFunctionPager";
 import ViewportZoomControl from "./ViewportZoomControl";
@@ -26,9 +27,6 @@ import {
 	type SpecZonePages,
 } from "./specModel";
 import { boundedLocateZoom, clampManualZoom, clampOverviewZoom, fitZoomForBounds, VIEWPORT_POLICY } from "./viewportPolicy";
-
-const ASSET_TYPE_RE = /InputAction|InputMappingContext|DataAsset|DataTable|CurveTable|SoundBase|Montage/;
-const HOLD_RELATIONS = new Set(["composes", "aggregates", "depends_on"]);
 
 function specFitZoom(cy: Core, padding: number): number {
 	const bounds = cy.elements().boundingBox({ includeLabels: true, includeOverlays: false });
@@ -758,6 +756,9 @@ export default function SpecView({ elements, target, fnPage, onFnPage, zonePages
 				t instanceof HTMLSelectElement ||
 				(t instanceof HTMLElement && t.isContentEditable);
 			if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+			// 窗口级快捷键与 App 级共用同一阻挡契约：模态对话框/阻塞层打开时
+			// 不得操纵其背后隐藏的画布（键盘焦点表面不得越过阻挡层）。
+			if (hasAppShortcutBlocker(window.document)) return;
 			if (SHORTCUT_KEYS.graph.fit.some((key) => key === e.key)) {
 				setSpecOverview(cy, true);
 			}

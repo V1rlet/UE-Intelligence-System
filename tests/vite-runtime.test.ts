@@ -34,7 +34,6 @@ test("常驻服务只提供版本化生产 release，并在入口模块失败时
 	const deployer = readFileSync(resolve(ROOT, "tools/service-deploy.ts"), "utf8");
 	const recovery = readFileSync(resolve(ROOT, "viewer/public/bootstrap-recovery.js"), "utf8");
 	const index = readFileSync(resolve(ROOT, "viewer/index.html"), "utf8");
-	const embed = readFileSync(resolve(ROOT, "viewer/embed.html"), "utf8");
 	assert.equal(packageJson.scripts.serve, "tsx scripts/service-launcher.ts");
 	assert.match(installer, /npm run service:prepare/);
 	assert.match(installer, /npm run service:activate/);
@@ -51,16 +50,19 @@ test("常驻服务只提供版本化生产 release，并在入口模块失败时
 	assert.match(recovery, /vite:preloadError/);
 	assert.match(recovery, /GraphBrain 界面资源没有完成加载/);
 	assert.match(index, /bootstrap-recovery\.js/);
-	assert.match(embed, /bootstrap-recovery\.js/);
 });
 
-test("完整检查在生产构建后验证首屏与重型工作区的加载边界", () => {
+test("分层门禁把快速、数据协议、release 与生命周期验收分开", () => {
 	const packageJson = JSON.parse(readFileSync(resolve(ROOT, "package.json"), "utf8")) as {
 		scripts: Record<string, string>;
 	};
 	assert.equal(packageJson.scripts["check:bundle"], "node tools/bundle-boundary-check.mjs");
-	// D3（2026-08-07）：smoke 聚合已纳入 check 链末尾——构建产物就绪后再跑浏览器冒烟
-	assert.match(packageJson.scripts.check, /npm run build && npm run check:bundle(?: && npm run smoke)?$/);
+	assert.match(packageJson.scripts["check:fast"], /engineering-standard-gate.+layer-gate.+typecheck.+npm test.+validate/);
+	assert.match(packageJson.scripts["check:data"], /evidence-snapshot-v3\.test\.ts.+evidence:check/);
+	assert.equal(packageJson.scripts["check:release"], "npm run check:fast && npm run check:data && npm run build && npm run check:bundle && npm run smoke");
+	assert.equal(packageJson.scripts["check:lifecycle"], "npm run smoke:soak");
+	assert.equal(packageJson.scripts.check, "npm run check:release");
+	assert.doesNotMatch(packageJson.scripts["check:release"], /GB_SMOKE_SKIP/);
 });
 
 test("文件森林不静态导入只供力导向图使用的 fCoSE", () => {
@@ -73,6 +75,15 @@ test("文件森林不静态导入只供力导向图使用的 fCoSE", () => {
 
 test("浏览器门禁直接调用本地 tsx CLI，不经 shell 拼接参数", () => {
 	const runner = readFileSync(resolve(ROOT, "tests/smoke-runner.ts"), "utf8");
-	assert.match(runner, /spawnSync\(process\.execPath, \[TSX_CLI, script\]/);
+	assert.match(runner, /spawn\(process\.execPath, \[TSX_CLI, script\]/);
 	assert.doesNotMatch(runner, /shell:\s*true|shell:\s*process\.platform/);
+});
+
+test("默认浏览器门禁验证当前隔离生产构建，显式目标保留发布服务兼容路径", () => {
+	const runner = readFileSync(resolve(ROOT, "tests/smoke-runner.ts"), "utf8");
+	assert.match(runner, /process\.env\.GB_SMOKE_BASE\?\.trim\(\)/);
+	assert.match(runner, /assertCurrentBuild\(\)/);
+	assert.match(runner, /localPreview = await preview/);
+	assert.match(runner, /env: \{ \.\.\.process\.env, GB_SMOKE_BASE: base/);
+	assert.doesNotMatch(runner, /GB_SMOKE_BASE \?\? "http:\/\/127\.0\.0\.1:3030"/);
 });

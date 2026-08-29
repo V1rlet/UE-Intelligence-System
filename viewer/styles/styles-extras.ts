@@ -53,6 +53,7 @@ export const READABILITY_RULES: StyleRule[] = [
 	{ selector: "node:parent", style: { "font-size": 14, padding: "18px" } },
 	{ selector: "node[?architectureNode]", style: { "font-size": 15, "text-max-width": 220 } },
 	{ selector: "node[?architectureLayer]", style: { "font-size": 17, "text-max-width": 245 } },
+	{ selector: "node[?architectureContext]", style: { "border-style": "dashed", "border-width": 2, opacity: 0.68, "text-opacity": 0.82 } },
 	{
 		selector: "edge[?semanticRelation]",
 		style: {
@@ -188,4 +189,3 @@ export const INTERACTION_RULES: StyleRule[] = [
 		},
 	},
 ];
-

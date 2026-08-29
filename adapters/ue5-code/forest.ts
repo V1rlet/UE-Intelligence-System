@@ -18,7 +18,15 @@ export interface AnyEdge {
 export function findModuleName(headerPath: string, stopAt: string): string {
 	let dir = dirname(headerPath);
 	while (dir.length >= stopAt.length) {
-		const buildCs = readdirSync(dir).find((f) => f.endsWith(".Build.cs"));
+		// 祖先目录不可读（ACL/占用）只影响本文件的模块名判定：回退 "Unknown" 继续，
+		// 不让一个目录炸掉整次提取。
+		let names: string[];
+		try {
+			names = readdirSync(dir);
+		} catch {
+			names = [];
+		}
+		const buildCs = names.find((f) => f.endsWith(".Build.cs"));
 		if (buildCs) return basename(buildCs).replace(/\.Build\.cs$/i, "");
 		const parent = dirname(dir);
 		if (parent === dir) break;
@@ -35,6 +43,7 @@ export class ForestBuilder {
 	nodes: AnyNode[] = [];
 	edges: AnyEdge[] = [];
 	private dirSeen = new Set<string>();
+	private fileSeen = new Set<string>();
 
 	constructor(private rootLabel: string) {
 		this.nodes.push(this.makeFolder(`dir:${rootLabel}`, rootLabel));
@@ -68,6 +77,9 @@ export class ForestBuilder {
 			parentId = dirId;
 		}
 		const fileId = `file:${this.rootLabel}/${relNoExt}`;
+		// 重叠根/重复发现同一文件时跳过重复节点：重复 id 会被图谱校验整体拒绝。
+		if (this.fileSeen.has(fileId)) return;
+		this.fileSeen.add(fileId);
 		this.nodes.push({
 			data: {
 				id: fileId, label: basename(relNoExt), type: "file", layer: "project",

@@ -10,13 +10,13 @@ import {
 	mkdirSync,
 	readFileSync,
 	readdirSync,
-	renameSync,
 	rmSync,
 	statSync,
-	writeFileSync,
 } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { withFileLock } from "./file-lock.js";
+import { renameDurableSync, writeFsyncedTemporary } from "./durable-write.js";
+import { loadEvidencePublicationState } from "./evidence-publication.js";
 
 export const DATA_PUBLICATION_FORMAT_VERSION = 1 as const;
 export const MANAGED_GRAPH_PATTERN = /^ue5_code_[A-Za-z0-9_-]+__gbtx-[a-f0-9]{16}\.cyto\.json$/;
@@ -155,7 +155,13 @@ export function validateDataPublicationState(value: unknown): string[] {
 export function loadDataPublicationState(publicationsDirectory: string): DataPublicationState {
 	const path = dataPublicationStatePath(publicationsDirectory);
 	if (!existsSync(path)) return emptyDataPublicationState();
-	const value = JSON.parse(readFileSync(path, "utf8").replace(/^\uFEFF/, "")) as unknown;
+	let value: unknown;
+	try {
+		value = JSON.parse(readFileSync(path, "utf8").replace(/^\uFEFF/, ""));
+	} catch (error) {
+		// 损坏的 state 必须带文件路径抛出，否则现场只看到裸 SyntaxError 无法定位。
+		throw new Error(`invalid JSON in data publication state (${path}): ${(error as Error).message}`);
+	}
 	const errors = validateDataPublicationState(value);
 	if (errors.length > 0) throw new Error(`invalid data publication state: ${errors.join("; ")}`);
 	return value as DataPublicationState;
@@ -175,8 +181,8 @@ function atomicWriteJson(path: string, value: unknown): void {
 	mkdirSync(resolve(path, ".."), { recursive: true });
 	const temporary = `${path}.tmp-${process.pid}-${randomUUID()}`;
 	try {
-		writeFileSync(temporary, `${JSON.stringify(value, null, 2)}\n`, { encoding: "utf8", flag: "wx" });
-		renameSync(temporary, path);
+		writeFsyncedTemporary(temporary, `${JSON.stringify(value, null, 2)}\n`);
+		renameDurableSync(temporary, path);
 	} finally {
 		rmSync(temporary, { force: true });
 	}
@@ -227,9 +233,9 @@ function writeImmutable(directory: string, file: string, content: string, expect
 	}
 	const temporary = `${destination}.tmp-${process.pid}-${randomUUID()}`;
 	try {
-		writeFileSync(temporary, content, { encoding: "utf8", flag: "wx" });
+		writeFsyncedTemporary(temporary, content);
 		if (sha256(readFileSync(temporary)) !== expectedHash) throw new Error(`staged artifact hash mismatch: ${file}`);
-		renameSync(temporary, destination);
+		renameDurableSync(temporary, destination);
 		return true;
 	} finally {
 		rmSync(temporary, { force: true });
@@ -456,16 +462,28 @@ export interface DataPublicationPruneResult extends DataPublicationPrunePlan {
 
 /**
  * 保留集合：当前 generation、直接 rollback generation、以及仍被变化报告引用的
- * generation（其 change_report 引用自身 graph）。仅保留集合外的管理格式文件可删除。
+ * generation（其 change_report 引用自身 graph）。evidence v3 publication 钉住的
+ * v2 源代也必须保留——删除后 resolvePublishedEvidence 会持续抛
+ * EVIDENCE_SNAPSHOT_UNAVAILABLE，整个 evidence 读路径瘫痪。仅保留集合外的管理格式文件可删除。
  */
-function retainedPublicationFiles(state: DataPublicationState, subsystem: string): Set<string> {
+function retainedPublicationFiles(state: DataPublicationState, subsystem: string, publicationsDirectory: string): Set<string> {
 	const retained = new Set<string>();
-	const publication = state.publications.find((item) => item.subsystem === subsystem);
-	if (!publication) return retained;
 	const keep = (generation: PublishedGeneration): void => {
 		retained.add(generation.graph.file);
 		if (generation.change_report) retained.add(generation.change_report.file);
 	};
+	// evidence publication state 位于 data/evidence/publications；publications 目录的
+	// 父目录即 dataDir。state 损坏时 loadEvidencePublicationState 显式抛错，绝不带着
+	// 未知钉住关系继续 prune（fail closed）。
+	const evidenceState = loadEvidencePublicationState(resolve(publicationsDirectory, ".."));
+	const pinnedV2Ids = new Set(evidenceState.generations.map((generation) => generation.source_v2_generation_id));
+	for (const publication of state.publications) {
+		for (const generation of publication.generations) {
+			if (pinnedV2Ids.has(generation.id)) keep(generation);
+		}
+	}
+	const publication = state.publications.find((item) => item.subsystem === subsystem);
+	if (!publication) return retained;
 	const [current, previous, ...rest] = publication.generations;
 	if (current) keep(current);
 	if (previous) keep(previous);
@@ -516,7 +534,7 @@ export function activeCatalogGraphFiles(
  */
 export function planDataPublicationPrune(directories: PublicationDirectories, subsystem: string): DataPublicationPrunePlan {
 	const state = loadDataPublicationState(directories.publications);
-	const retained = retainedPublicationFiles(state, subsystem);
+	const retained = retainedPublicationFiles(state, subsystem, directories.publications);
 	// 只收集目标 subsystem 的已知 hash：其他 subsystem 的文件不在扫描范围内，
 	// 防止多 subsystem 场景下误删其活动 generation。
 	const prefix = `ue5_code_${subsystem}__gbtx-`;
@@ -536,7 +554,12 @@ export function planDataPublicationPrune(directories: PublicationDirectories, su
 	] as const) {
 		if (!existsSync(directory)) continue;
 		for (const file of readdirSync(directory).sort()) {
-			if (!file.endsWith(".json")) continue;
+			if (!file.endsWith(".json")) {
+				// 崩溃残留的 *.tmp-<pid>-<uuid> 暂存文件没有 .json 后缀，此前被静默跳过
+				// 并无限累积；显式列入人工审查，让操作者可以决定清理。
+				if (file.includes(".tmp-")) manualReview.push(`${file}：崩溃残留的临时写入文件，确认无进程写入后可删除`);
+				continue;
+			}
 			const path = join(directory, file);
 			if (pattern.test(file)) {
 				// 只评估目标 subsystem 的管理文件；其他 subsystem 的产物完全不动。

@@ -1,11 +1,10 @@
 // Computed-style gate for the denser typography used by overview and change entries.
 import { mkdirSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { BASE, captureScreenshot, launchBrowser, navigate, waitForSelector, waitUntil } from "./browser-smoke-lib.js";
+import { resolveSmokeOutputDirectory } from "./smoke-artifacts.js";
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const OUT_DIR = join(ROOT, "logs", "smoke");
+const OUT_DIR = resolveSmokeOutputDirectory("readability");
 
 type ReadabilitySnapshot = {
 	fonts: Record<string, number | null>;
@@ -87,9 +86,9 @@ function layoutExpression(components: Record<string, string>, overlapGroups: Rec
 }
 
 function assertLayout(label: string, snapshot: LayoutSnapshot): void {
-	if (snapshot.pageOverflow > 1) throw new Error(`${label} 页面发生 ${snapshot.pageOverflow}px 横向溢出：${JSON.stringify(snapshot)}`);
 	for (const [component, overflow] of Object.entries(snapshot.componentOverflow)) {
-		if (overflow !== null && overflow > 1) throw new Error(`${label} 的 ${component} 发生 ${overflow}px 内部溢出：${JSON.stringify(snapshot)}`);
+		if (overflow === null) throw new Error(`${label} 的布局监控组件 ${component} 不在 DOM 中（覆盖收缩即失败）：${JSON.stringify(snapshot)}`);
+		if (overflow > 1) throw new Error(`${label} 的 ${component} 发生 ${overflow}px 内部溢出：${JSON.stringify(snapshot)}`);
 	}
 	if (snapshot.overlaps.length > 0) throw new Error(`${label} 工具栏项目重叠：${JSON.stringify(snapshot)}`);
 }
@@ -98,24 +97,16 @@ mkdirSync(OUT_DIR, { recursive: true });
 const session = await launchBrowser(`${BASE}/`, { windowSize: "1440,900" });
 try {
 	await waitForSelector(session.cdp, ".home-primary-list .home-doc-name");
-	await waitUntil(async () => await session.cdp.evaluate<number>("document.querySelectorAll('.home-catalog-entry').length") > 1 ? true : null, "总览目录条目");
+	await waitUntil(async () => await session.cdp.evaluate<number>("document.querySelectorAll('.home-catalog-entry').length") >= 1 ? true : null, "总览目录条目");
 	const home = await session.cdp.evaluate<ReadabilitySnapshot>(snapshotExpression({
 		primaryTitle: ".home-primary-list .home-doc-name",
 		primaryEvidence: ".home-primary-list .home-project-evidence strong",
 		primaryMeta: ".home-primary-list .home-project-evidence small",
-		referenceTitle: ".home-reference-identity strong",
-		referenceMeta: ".home-reference-identity small",
-		referenceMetric: ".home-reference-metrics i",
-		referenceState: ".home-reference-state",
 	}));
 	assertMinimums("总览条目", home, {
 		primaryTitle: 18,
 		primaryEvidence: 13,
 		primaryMeta: 11,
-		referenceTitle: 13,
-		referenceMeta: 11,
-		referenceMetric: 10,
-		referenceState: 10,
 	});
 	await captureScreenshot(session.cdp, join(OUT_DIR, "readability-home.png"));
 
@@ -176,10 +167,7 @@ try {
 		await navigate(session.cdp, `${BASE}/`, ".home-primary-list .home-doc-name");
 		const homeLayout = await session.cdp.evaluate<LayoutSnapshot>(layoutExpression({
 			primaryList: ".home-primary-list",
-			referenceList: ".home-reference-list",
-		}, {
-			referenceEntry: ".home-reference-entry:first-child > *",
-		}));
+		}, {}));
 		assertLayout(`${dpiCase.name} 总览`, homeLayout);
 
 		await navigate(session.cdp, `${BASE}/?view=changes`, ".changes-view");

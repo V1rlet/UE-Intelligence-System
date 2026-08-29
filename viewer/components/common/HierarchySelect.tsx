@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { createPortal } from "react-dom";
+import { nextListboxOptionIndex } from "./listboxNavigation";
 
 export interface HierarchySelectOption {
 	value: string;
@@ -45,6 +46,7 @@ export default function HierarchySelect({
 }: Props) {
 	const id = useId();
 	const panelId = `hierarchy-select-${id}`;
+	const listboxId = `${panelId}-listbox`;
 	const triggerRef = useRef<HTMLButtonElement>(null);
 	const panelRef = useRef<HTMLDivElement>(null);
 	const searchRef = useRef<HTMLInputElement>(null);
@@ -52,7 +54,11 @@ export default function HierarchySelect({
 	const [query, setQuery] = useState("");
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [position, setPosition] = useState<PanelPosition | null>(null);
-	const selected = options.find((option) => option.value === value) ?? options[0];
+	// 闭合态的当前值必须呈现事实：value 非空但不在选项里（目录刷新移除了当前文档）
+	// 时显示"不在列表"而不是冒充第一项——展开列表里并没有选中它。
+	const exact = options.find((option) => option.value === value);
+	const selected = exact ?? options[0];
+	const valueMissing = !exact && value.trim() !== "";
 
 	const groupTones = useMemo(() => {
 		const tones = new Map<string, number>();
@@ -107,6 +113,7 @@ export default function HierarchySelect({
 	const close = useCallback((restoreFocus = false) => {
 		setOpen(false);
 		setQuery("");
+		setPosition(null);
 		if (restoreFocus) requestAnimationFrame(() => triggerRef.current?.focus());
 	}, []);
 
@@ -130,6 +137,10 @@ export default function HierarchySelect({
 			const target = event.target as Node;
 			if (!triggerRef.current?.contains(target) && !panelRef.current?.contains(target)) close();
 		};
+		const onFocusIn = (event: FocusEvent) => {
+			const target = event.target as Node;
+			if (!triggerRef.current?.contains(target) && !panelRef.current?.contains(target)) close();
+		};
 		const onKeyDown = (event: KeyboardEvent) => {
 			if (event.key === "Escape") {
 				event.preventDefault();
@@ -137,11 +148,13 @@ export default function HierarchySelect({
 			}
 		};
 		window.addEventListener("pointerdown", onPointerDown);
+		window.addEventListener("focusin", onFocusIn);
 		window.addEventListener("keydown", onKeyDown);
 		window.addEventListener("resize", updatePosition);
 		window.addEventListener("scroll", updatePosition, true);
 		return () => {
 			window.removeEventListener("pointerdown", onPointerDown);
+			window.removeEventListener("focusin", onFocusIn);
 			window.removeEventListener("keydown", onKeyDown);
 			window.removeEventListener("resize", updatePosition);
 			window.removeEventListener("scroll", updatePosition, true);
@@ -164,16 +177,15 @@ export default function HierarchySelect({
 
 	const onListKeyDown = (event: ReactKeyboardEvent) => {
 		if (!visibleOptions.length) return;
-		let next = activeIndex;
-		if (event.key === "ArrowDown") next = Math.min(visibleOptions.length - 1, activeIndex + 1);
-		else if (event.key === "ArrowUp") next = Math.max(0, activeIndex - 1);
-		else if (event.key === "Home") next = 0;
-		else if (event.key === "End") next = visibleOptions.length - 1;
-		else if (event.key === "Enter") {
+		const isSearchInput = event.target === searchRef.current;
+		if (event.key === "Enter") {
 			event.preventDefault();
 			choose(visibleOptions[activeIndex]);
 			return;
-		} else return;
+		}
+		if (isSearchInput && (event.key === "Home" || event.key === "End")) return;
+		const next = nextListboxOptionIndex(activeIndex, visibleOptions.length, event.key);
+		if (next === null) return;
 		event.preventDefault();
 		setActiveIndex(next);
 		requestAnimationFrame(() => panelRef.current?.querySelector<HTMLElement>(`[data-option-index='${next}']`)?.focus());
@@ -196,7 +208,7 @@ export default function HierarchySelect({
 			aria-label={label}
 			aria-haspopup="listbox"
 			aria-expanded={open}
-			aria-controls={open ? panelId : undefined}
+			aria-controls={open ? listboxId : undefined}
 			onClick={() => open ? close() : openPanel()}
 			onKeyDown={(event) => {
 				if (event.key === "ArrowDown" || event.key === "ArrowUp") {
@@ -206,23 +218,23 @@ export default function HierarchySelect({
 			}}
 		>
 			<span className="hierarchy-select-marker" aria-hidden="true" />
-			<span className="hierarchy-select-value"><small>{eyebrow}</small><b>{selected?.label ?? "未选择"}</b></span>
+			<span className="hierarchy-select-value"><small>{eyebrow}</small><b>{valueMissing ? "当前选择不在列表中" : selected?.label ?? "未选择"}</b></span>
 			{selected?.meta ? <span className="hierarchy-select-meta">{selected.meta}</span> : null}
 			<i className="hierarchy-select-chevron" aria-hidden="true" />
 		</button>
 
 		{open && position ? createPortal(
-			<div ref={panelRef} id={panelId} className={`hierarchy-select-panel${compact ? " is-compact" : ""}`} style={panelStyle} onKeyDown={onListKeyDown}>
+			<div ref={panelRef} id={panelId} className={`hierarchy-select-panel${compact ? " is-compact" : ""}`} data-app-shortcuts="block" style={panelStyle} onKeyDown={onListKeyDown}>
 				<header className="hierarchy-select-panel-head">
 					<span><small>分层选择</small><b>{label}</b></span>
-					<em>{visibleOptions.length} 项</em>
+					<em aria-live="polite" aria-atomic="true">{visibleOptions.length} 项</em>
 				</header>
 				{searchable ? <label className="hierarchy-select-search">
 					<span aria-hidden="true">⌕</span>
-					<input ref={searchRef} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={searchPlaceholder} aria-label={searchPlaceholder} />
+					<input ref={searchRef} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={searchPlaceholder} aria-label={searchPlaceholder} aria-controls={listboxId} />
 					{query ? <button type="button" aria-label="清除筛选" onClick={() => setQuery("")}>×</button> : null}
 				</label> : null}
-				<div className="hierarchy-select-list" role="listbox" aria-label={label} aria-activedescendant={visibleOptions[activeIndex] ? `${panelId}-option-${activeIndex}` : undefined}>
+				<div id={listboxId} className="hierarchy-select-list" role="listbox" aria-label={label}>
 					{groups.map((group) => {
 						const tone = group.name ? (groupTones.get(group.name) ?? 0) : 0;
 						return <section key={group.name ?? "__standalone"} className={`hierarchy-option-group${group.name ? "" : " is-root"}`} role="group" aria-label={group.name ?? "通用选项"} data-tone={tone}>
@@ -236,6 +248,7 @@ export default function HierarchySelect({
 									type="button"
 									role="option"
 									aria-selected={isSelected}
+									tabIndex={activeIndex === optionIndex ? 0 : -1}
 									className={`hierarchy-option${isSelected ? " is-selected" : ""}`}
 									data-active={activeIndex === optionIndex}
 									data-option-index={optionIndex}
@@ -251,7 +264,7 @@ export default function HierarchySelect({
 							})}
 						</section>;
 					})}
-					{visibleOptions.length === 0 ? <p className="hierarchy-select-empty">没有匹配选项</p> : null}
+					{visibleOptions.length === 0 ? <p className="hierarchy-select-empty" role="status">没有匹配选项</p> : null}
 				</div>
 			</div>,
 			document.body,

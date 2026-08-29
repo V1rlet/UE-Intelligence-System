@@ -1,0 +1,52 @@
+{
+  "format_version": "graphbrain-evidence-publication/1",
+  "domain": "ue5_code",
+  "revision": 5,
+  "updated_at": "2026-08-13T08:27:36.689Z",
+  "active": {
+    "mode": "v3",
+    "generation_id": "evidence-generation-b5853fa798c5a17bea80c71ad05ed52bf06fb875fdf144965f54ed008c5e1d53"
+  },
+  "compatibility_v2_generation_id": "generation-c510b2bf06071f7e18494449edec968e2695b274c661135d3c8c55283d81393c",
+  "generations": [
+    {
+      "id": "evidence-generation-b5853fa798c5a17bea80c71ad05ed52bf06fb875fdf144965f54ed008c5e1d53",
+      "published_at": "2026-08-13T08:27:36.689Z",
+      "source_v2_generation_id": "generation-c510b2bf06071f7e18494449edec968e2695b274c661135d3c8c55283d81393c",
+      "project": {
+        "file": "project__gbev3-e1f91a932600aaed.json",
+        "sha256": "e1f91a932600aaed953532a04fad50190a76971c00128058b830a49733f1b6af"
+      },
+      "engine": {
+        "file": "engine__gbev3-3f9cab5d098ca39e.json",
+        "sha256": "3f9cab5d098ca39e2a4782dfab8dced4fa42766494675be9bcd3980ba2c69641"
+      }
+    },
+    {
+      "id": "evidence-generation-b6968d507a1dd2a3b60dd65e4cab7827449f4ac3bfac5700cf7aec47e52293f1",
+      "published_at": "2026-08-13T08:26:41.333Z",
+      "source_v2_generation_id": "generation-d3fcd45e173523cb5d6aee6129adfb8c04a121fc63f0351a0f7261b58e101569",
+      "project": {
+        "file": "project__gbev3-4fb0b00e3feadf29.json",
+        "sha256": "4fb0b00e3feadf29ae7c69a52d9a8caf994d6132bb86fc4a374cc76e769e96bd"
+      },
+      "engine": {
+        "file": "engine__gbev3-adafa8ae6955a69a.json",
+        "sha256": "adafa8ae6955a69a04021f7c0e65fd7481198def4e0aff80e136edb07c456ffd"
+      }
+    },
+    {
+      "id": "evidence-generation-efe6a8ea748c18c8c1fbab503661ad99a60d9cff78699120294ea5e5c9cd975b",
+      "published_at": "2026-08-13T08:07:29.578Z",
+      "source_v2_generation_id": "generation-430e027448b2c8d3290f9347a1777debe5410d26b75f67cd6428b4274e3f7d7f",
+      "project": {
+        "file": "project__gbev3-bbe7fee1fb51cf25.json",
+        "sha256": "bbe7fee1fb51cf25d6c2ee9c271bd7167b6a724de53817c8c94d9e80f1d5bac7"
+      },
+      "engine": {
+        "file": "engine__gbev3-0e8516a891d93fe0.json",
+        "sha256": "0e8516a891d93fe016a580218afac7de30f5687e5b792068a1e9b0626ffa148e"
+      }
+    }
+  ]
+}

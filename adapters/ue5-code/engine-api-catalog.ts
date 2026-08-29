@@ -149,7 +149,15 @@ function buildIndex(engineRoot: string): CatalogIndex {
 	for (const scope of ["Runtime", "Developer", "Editor"] as const) {
 		const scopeRoot = join(engineRoot, "Engine", "Source", scope);
 		if (!existsSync(scopeRoot)) continue;
-		for (const entry of readdirSync(scopeRoot, { withFileTypes: true })) {
+		let scopeEntries;
+		try {
+			scopeEntries = readdirSync(scopeRoot, { withFileTypes: true });
+		} catch (error) {
+			// 不可读的 scope 目录（ACL/占用）只缩小索引范围，不让目录查询崩掉。
+			console.warn(`[engine-api-catalog] 跳过不可读目录 ${scopeRoot}: ${(error as Error).message}`);
+			continue;
+		}
+		for (const entry of scopeEntries) {
 			if (entry.isDirectory()) addModule(modules, engineRoot, scope, entry.name, join(scopeRoot, entry.name));
 		}
 	}
@@ -166,7 +174,13 @@ function buildIndex(engineRoot: string): CatalogIndex {
 			if (!entry.isDirectory()) continue;
 			const path = join(dir, entry.name);
 			if (entry.name === "Source") {
-				for (const moduleDir of readdirSync(path, { withFileTypes: true })) {
+				let moduleDirs;
+				try {
+					moduleDirs = readdirSync(path, { withFileTypes: true });
+				} catch {
+					continue;
+				}
+				for (const moduleDir of moduleDirs) {
 					if (!moduleDir.isDirectory()) continue;
 					const moduleRoot = join(path, moduleDir.name);
 					// 模块名以 *.Build.cs 文件名为准：不少插件的模块目录叫 Runtime/Editor，

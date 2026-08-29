@@ -100,6 +100,9 @@ try {
 	await cdp.evaluate("new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))");
 	if (interceptionError) throw interceptionError;
 
+	// F6 观察项：interactiveMs 的口径是「导航开始 → .change-row-card 出现 + 双 rAF」的墙钟，
+	// 含 CDP evaluate 调度往返、GC 时机与机器负载抖动——三轮实测 836→1417→461 ms，波动主要来自
+	// 环境而非代码回归。断言只做预算兜底（超预算才失败）；趋势观察以本文件 console 输出为准。
 	const initial = await cdp.evaluate<{ interactiveMs: number; rows: number; elements: number; longestTaskMs: number; summary: string; overflow: number }>(`({
 		interactiveMs: performance.now(),
 		rows: document.querySelectorAll('.change-row-card').length,

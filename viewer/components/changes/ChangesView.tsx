@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeReport, ChangeNodeSummary, ChangeEdgeSummary } from "../../../core/query/change-report";
 import {
 	normalizeChangeReportCatalogResponse,
@@ -10,6 +10,7 @@ import {
 } from "../../../core/query/change-report-query";
 import { ueNodeTypeShortLabel } from "../../../core/schema/ue-naming";
 import { apiFetchJson } from "../../src/apiFetch";
+import { LatestRequestGate } from "../../src/latestRequest";
 import {
 	DEFAULT_CHANGE_EVIDENCE_ROUTE,
 	normalizeChangeRouteForCatalog,
@@ -22,6 +23,7 @@ import {
 	type ChangeRouteTab,
 } from "../../src/appRoute";
 import AppIcon from "../common/AppIcon";
+import { handleRovingTabKeyDown, rovingTabStop } from "../common/rovingTabs";
 import { orientCodeTypeRelationForReading, relationPresentation } from "../graph-view/relationPresentation";
 
 type ChangeTab = ChangeRouteTab;
@@ -94,7 +96,7 @@ function NodeRows({ nodes, removed, evidenceByNode, nodeLabels, expandedId, onTo
 					<span className="change-identity"><strong>{node.label || node.id}</strong><code>{node.id}</code></span>
 					<span className="change-meta">{node.module ?? "未归属模块"}{node.source_path ? ` · ${node.source_path}` : ""}</span>
 					<span className="change-row-actions">
-						<button type="button" aria-expanded={expanded} onClick={() => onToggleEvidence(node.id)}>证据{evidenceCount ? ` ${evidenceCount}` : ""}</button>
+						<button type="button" aria-expanded={expanded} data-relation-count={relationEvidence.length} onClick={() => onToggleEvidence(node.id)}>证据{evidenceCount ? ` ${evidenceCount}` : ""}</button>
 						<button type="button" disabled={removed} title={removed ? "该节点不在当前快照中" : "在关系图中查看规范一跳邻域"} onClick={() => onOpenNode(node.id)}>{removed ? "已移除" : "看一跳"}</button>
 					</span>
 				</div>
@@ -138,6 +140,9 @@ export default function ChangesView({ route, diagnostics, onRouteChange, onRoute
 	const [reportSnapshot, setReportSnapshot] = useState<{ file: string; value: ChangeReport } | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
+	const [retrySequence, setRetrySequence] = useState(0);
+	const catalogRequest = useRef(new LatestRequestGate());
+	const reportRequest = useRef(new LatestRequestGate());
 	const selectedFile = catalog.reports.length > 0
 		? route.report && catalog.reports.some((entry) => entry.file === route.report) ? route.report : catalog.default_report ?? ""
 		: "";
@@ -156,19 +161,27 @@ export default function ChangesView({ route, diagnostics, onRouteChange, onRoute
 	});
 
 	useEffect(() => {
-		const controller = new AbortController();
+		const controller = catalogRequest.current.start();
 		setLoading(true);
+		setError("");
 		void apiFetchJson<unknown>("/api/change-reports", { signal: controller.signal }, { context: "读取变化目录" })
 			.then((response) => {
+				if (!catalogRequest.current.isCurrent(controller)) return;
 				const nextCatalog = normalizeChangeReportCatalogResponse(response);
 				setCatalog(nextCatalog);
 				if (nextCatalog.reports.length === 0) setLoading(false);
 			})
 			.catch((reason) => {
-				if ((reason as Error).name !== "AbortError") { setError((reason as Error).message); setLoading(false); }
+				if ((reason as Error).name !== "AbortError" && catalogRequest.current.isCurrent(controller)) {
+					setError((reason as Error).message);
+					setLoading(false);
+				}
+			})
+			.finally(() => {
+				catalogRequest.current.finish(controller);
 			});
-		return () => controller.abort();
-	}, []);
+		return () => catalogRequest.current.cancel();
+	}, [retrySequence]);
 
 	useEffect(() => {
 		if (catalog.reports.length === 0) return;
@@ -178,19 +191,24 @@ export default function ChangesView({ route, diagnostics, onRouteChange, onRoute
 
 	useEffect(() => {
 		if (!selectedFile) { setReportSnapshot(null); return; }
-		const controller = new AbortController();
+		const controller = reportRequest.current.start();
 		setLoading(true);
 		setError("");
 		void apiFetchJson<ChangeReport>(`/api/change-reports/${encodeURIComponent(selectedFile)}`, { signal: controller.signal }, { context: "读取变化报告" })
 			.then((value) => {
+				if (!reportRequest.current.isCurrent(controller)) return;
 				setReportSnapshot({ file: selectedFile, value });
-				setLoading(false);
 			})
 			.catch((reason) => {
-				if ((reason as Error).name !== "AbortError") { setError((reason as Error).message); setLoading(false); }
+				if ((reason as Error).name !== "AbortError" && reportRequest.current.isCurrent(controller)) {
+					setError((reason as Error).message);
+				}
+			})
+			.finally(() => {
+				if (reportRequest.current.finish(controller)) setLoading(false);
 			});
-		return () => controller.abort();
-	}, [selectedFile]);
+		return () => reportRequest.current.cancel();
+	}, [retrySequence, selectedFile]);
 
 	useEffect(() => {
 		if (!reportIndex) return;
@@ -238,7 +256,7 @@ export default function ChangesView({ route, diagnostics, onRouteChange, onRoute
 		</aside> : null}
 
 		{loading ? <div className="changes-state"><span className="loading-spinner" />正在整理变化证据…</div> : null}
-		{error ? <div className="changes-state error" role="alert"><AppIcon name="warning" />{error}</div> : null}
+		{error ? <div className="changes-state error" role="alert"><AppIcon name="warning" /><span><strong>变化证据读取失败</strong><small>{error}</small></span><button type="button" onClick={() => setRetrySequence((value) => value + 1)}>重新加载</button></div> : null}
 		{!loading && !error && catalog.reports.length === 0 ? <div className="changes-state empty"><AppIcon name="history" size={28} /><strong>还没有版本化变化报告</strong><p>先保留一份基线快照，再运行 <code>npm run build:change-report</code>。报告只读，不会改写代码图。</p></div> : null}
 
 		{report && selectedEntry && !loading ? <>
@@ -255,16 +273,16 @@ export default function ChangesView({ route, diagnostics, onRouteChange, onRoute
 				<article><span>一跳影响</span><b>{report.summary.affected_nodes.toLocaleString()}</b><small>{report.summary.affected_modules} 个模块；关系推导，非实现结论</small></article>
 			</section>
 
-			<div className="changes-tabs" role="tablist" aria-label="变化类别">
+			<div className="changes-tabs" role="tablist" aria-label="变化类别" onKeyDown={handleRovingTabKeyDown}>
 				{([
 					{ id: "added", label: "新增", nodes: report.summary.nodes.added, edges: report.summary.edges.added },
 					{ id: "changed", label: "修改", nodes: report.summary.nodes.changed, edges: report.summary.edges.changed },
 					{ id: "removed", label: "移除", nodes: report.summary.nodes.removed, edges: report.summary.edges.removed },
-				] as Array<{ id: ChangeTab; label: string; nodes: number; edges: number }>).map((item) => <button type="button" role="tab" aria-selected={tab === item.id} className={tab === item.id ? "active" : ""} onClick={() => selectTab(item.id)} key={item.id}><span>{item.label}</span><small>{item.nodes} 节点 · {item.edges} 关系</small></button>)}
-				<button type="button" role="tab" aria-selected={tab === "impact"} className={tab === "impact" ? "active" : ""} onClick={() => selectTab("impact")}><span>影响</span><small>{report.summary.affected_nodes} 个一跳节点</small></button>
+				] as Array<{ id: ChangeTab; label: string; nodes: number; edges: number }>).map((item) => <button id={`changes-tab-${item.id}`} type="button" role="tab" aria-controls="changes-tabpanel" aria-selected={tab === item.id} tabIndex={rovingTabStop(tab === item.id)} className={tab === item.id ? "active" : ""} onClick={() => selectTab(item.id)} key={item.id}><span>{item.label}</span><small>{item.nodes} 节点 · {item.edges} 关系</small></button>)}
+				<button id="changes-tab-impact" type="button" role="tab" aria-controls="changes-tabpanel" aria-selected={tab === "impact"} tabIndex={rovingTabStop(tab === "impact")} className={tab === "impact" ? "active" : ""} onClick={() => selectTab("impact")}><span>影响</span><small>{report.summary.affected_nodes} 个一跳节点</small></button>
 			</div>
 
-			<section className="changes-detail">
+			<section id="changes-tabpanel" className="changes-detail" role="tabpanel" aria-labelledby={`changes-tab-${tab}`}>
 				{changeData ? <>
 					<div className="changes-fact-toolbar" aria-label="变化事实筛选">
 						<div className="changes-fact-switch" role="group" aria-label="事实种类">

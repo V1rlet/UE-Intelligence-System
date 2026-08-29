@@ -4,6 +4,11 @@ import { RELATION_COLORS } from "../../src/design-tokens";
 
 export type RelationMotion = "emit" | "hold" | "flow" | "wire" | "type" | "related";
 
+/** 持有关系（决定 Spec 的"持有对象/数据资产"分区归属）与数据资产类型识别。
+ *  领域分类只有一个所有者：GraphView 与 SpecView 共用，两处副本会静默漂移。 */
+export const HOLD_RELATIONS = new Set(["composes", "aggregates", "depends_on"]);
+export const ASSET_TYPE_RE = /InputAction|InputMappingContext|DataAsset|DataTable|CurveTable|SoundBase|Montage/;
+
 export interface RelationPresentation {
 	icon: string;
 	motion: RelationMotion;

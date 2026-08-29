@@ -40,9 +40,124 @@
 	min-height: 0;
 }
 .mindmap-canvas > .async-state-root { flex: 1; min-width: 0; min-height: 0; }
+.mindmap-canvas.is-overview {
+	display: block;
+	overflow: auto;
+	padding: 88px clamp(18px,3vw,44px) 28px;
+	scrollbar-width: thin;
+}
 .mm-loading,
 .mm-error { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; color: var(--text-tertiary); font-size: 13px; text-align: center; }
 .mm-error { color: var(--text-red); }
+
+.architecture-current-source {
+	position: absolute;
+	z-index: 20;
+	left: 50%;
+	top: 82px;
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	max-width: min(760px, calc(100% - 32px));
+	padding: 7px 11px;
+	transform: translateX(-50%);
+	border: 1px solid color-mix(in srgb, var(--gb-cyan-75) 22%, transparent);
+	border-radius: var(--radius-md);
+	background: color-mix(in srgb, var(--gb-neutral-15) 88%, transparent);
+	color: var(--text-tertiary);
+	font-size: 11px;
+	pointer-events: none;
+}
+.architecture-current-source strong { color: var(--gb-cyan-85); white-space: nowrap; }
+
+.architecture-overview {
+	display: grid;
+	width: min(1180px,100%);
+	margin: 0 auto;
+	gap: 18px;
+}
+
+.architecture-overview-hero {
+	display: grid;
+	grid-template-columns: minmax(0,1fr) minmax(190px,240px);
+	align-items: stretch;
+	gap: 18px;
+	padding: clamp(22px,3vw,36px);
+	border: 1px solid color-mix(in srgb, var(--gb-cyan-75) 18%, var(--border-subtle));
+	border-radius: 18px;
+	background:
+		radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--gb-cyan-75) 12%, transparent), transparent 42%),
+		linear-gradient(135deg, color-mix(in srgb, var(--gb-violet-30) 78%, transparent), color-mix(in srgb, var(--gb-neutral-10) 92%, transparent));
+	box-shadow: 0 18px 54px color-mix(in srgb, var(--gb-neutral-00) 30%, transparent);
+}
+.architecture-overview-hero > div:first-child { display: flex; min-width: 0; flex-direction: column; justify-content: center; }
+.architecture-overview-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--gb-cyan-85); font: 650 10px var(--font-mono); letter-spacing: .11em; }
+.architecture-overview-hero h1 { margin: 9px 0 7px; color: var(--text-primary); font: 700 clamp(28px,3vw,42px)/1.08 var(--font-display); letter-spacing: -.035em; }
+.architecture-overview-hero p { max-width: 760px; margin: 0; color: var(--text-tertiary); font-size: 13px; line-height: 1.65; }
+.architecture-overview-total {
+	display: grid;
+	align-content: center;
+	justify-items: start;
+	padding: 18px 20px;
+	border: 1px solid color-mix(in srgb, var(--gb-cyan-75) 20%, transparent);
+	border-radius: 14px;
+	background: color-mix(in srgb, var(--gb-neutral-10) 64%, transparent);
+}
+.architecture-overview-total small { color: var(--text-muted); font: 10px var(--font-mono); letter-spacing: .08em; }
+.architecture-overview-total strong { margin-top: 4px; color: var(--text-primary); font: 700 clamp(34px,4vw,52px)/1 var(--font-mono); }
+.architecture-overview-total > span { margin-top: -22px; margin-left: 74px; color: var(--gb-cyan-85); font-size: 12px; }
+.architecture-overview-total b { margin-top: 18px; color: var(--text-tertiary); font: 500 11px var(--font-mono); }
+
+.architecture-scope-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+.architecture-scope-card {
+	position: relative;
+	display: grid;
+	min-width: 0;
+	min-height: 190px;
+	grid-template-columns: auto 1fr auto;
+	grid-template-rows: auto auto auto 1fr auto;
+	gap: 8px 10px;
+	padding: 18px;
+	overflow: hidden;
+	border: 1px solid color-mix(in srgb, var(--scope-tone,var(--gb-cyan-75)) 24%, var(--border-subtle));
+	border-radius: 14px;
+	background: linear-gradient(145deg, color-mix(in srgb, var(--scope-tone,var(--gb-cyan-75)) 8%, var(--gb-violet-20)), color-mix(in srgb, var(--gb-neutral-10) 82%, transparent));
+	color: var(--text-primary);
+	text-align: left;
+	transition: transform var(--motion-fast) var(--ease-out), border-color var(--motion-fast) var(--ease-out), background var(--motion-fast) var(--ease-out);
+}
+.architecture-scope-card[data-tone="1"] { --scope-tone: var(--gb-amber-75); }
+.architecture-scope-card[data-tone="2"] { --scope-tone: var(--gb-green-70); }
+.architecture-scope-card[data-tone="3"] { --scope-tone: var(--gb-violet-80c); }
+.architecture-scope-card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--scope-tone,var(--gb-cyan-75)) 55%, transparent); background: color-mix(in srgb, var(--scope-tone,var(--gb-cyan-75)) 11%, var(--gb-violet-20)); }
+.architecture-scope-card-index { color: var(--scope-tone,var(--gb-cyan-75)); font: 650 10px var(--font-mono); }
+.architecture-scope-card-kind { color: var(--text-muted); font: 10px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.architecture-scope-card-icon { color: var(--scope-tone,var(--gb-cyan-75)); }
+.architecture-scope-card > strong { grid-column: 1 / -1; overflow: hidden; color: var(--text-primary); font: 680 20px var(--font-display); text-overflow: ellipsis; white-space: nowrap; }
+.architecture-scope-card-metrics { grid-column: 1 / -1; color: var(--text-tertiary); font-size: 12px; }
+.architecture-scope-card-metrics b { color: var(--text-primary); font: 650 12px var(--font-mono); }
+.architecture-scope-card-metrics i { color: var(--text-muted); font-style: normal; }
+.architecture-scope-card-types,
+.architecture-scope-card-relations { grid-column: 1 / -1; display: flex; align-items: flex-start; align-content: flex-start; gap: 5px; flex-wrap: wrap; }
+.architecture-scope-card-types i,
+.architecture-scope-card-relations i { padding: 3px 7px; border-radius: 999px; background: color-mix(in srgb, var(--gb-violet-70) 10%, transparent); color: var(--text-tertiary); font: 10.5px var(--font-mono); font-style: normal; }
+.architecture-scope-card-relations i { color: color-mix(in srgb, var(--scope-tone,var(--gb-cyan-75)) 72%, var(--text-primary)); }
+.architecture-scope-card-open { grid-column: 1 / -1; display: inline-flex; min-height: 28px; align-items: center; justify-content: flex-end; gap: 6px; color: var(--scope-tone,var(--gb-cyan-75)); font-size: 11.5px; font-weight: 650; }
+
+.architecture-overview-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 14px 16px;
+	border: 1px solid var(--border-subtle);
+	border-radius: 12px;
+	background: color-mix(in srgb, var(--gb-violet-20) 74%, transparent);
+}
+.architecture-overview-footer > div { display: flex; min-width: 0; align-items: center; gap: 10px; color: var(--text-muted); font-size: 11px; }
+.architecture-overview-shortcuts { display: flex; flex: none; gap: 6px; }
+.architecture-overview-shortcuts button { min-height: 36px; padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--gb-cyan-75) 22%, var(--border-subtle)); border-radius: 8px; background: transparent; color: var(--gb-cyan-85); font-size: 11px; }
+.architecture-overview-shortcuts button:hover { background: color-mix(in srgb, var(--gb-cyan-75) 9%, transparent); }
 
 .architecture-commandbar {
 	position: absolute;
@@ -376,10 +491,29 @@
 @media (max-width: 1050px) {
 	.architecture-commandbar { grid-template-columns: minmax(0,1fr) auto auto; width: min(760px,calc(100% - 20px)); }
 	.architecture-compact-metrics { display: none; }
+	.architecture-scope-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+	.architecture-overview-footer { align-items: flex-start; flex-direction: column; }
 	.mindmap-execution-facts { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 760px) {
+	.mindmap-canvas.is-overview { padding: 68px 10px 12px; }
+	.architecture-overview { gap: 10px; }
+	.architecture-overview-hero { grid-template-columns: 1fr; gap: 12px; padding: 18px; border-radius: 14px; }
+	.architecture-overview-hero h1 { font-size: clamp(26px,8vw,34px); }
+	.architecture-overview-hero p { font-size: 12px; }
+	.architecture-overview-total { grid-template-columns: auto auto 1fr; align-items: baseline; gap: 5px; padding: 12px 14px; }
+	.architecture-overview-total small { grid-column: 1 / -1; }
+	.architecture-overview-total strong { margin: 0; font-size: 28px; }
+	.architecture-overview-total > span { margin: 0; }
+	.architecture-overview-total b { margin: 0; text-align: right; }
+	.architecture-scope-grid { grid-template-columns: 1fr; gap: 8px; }
+	.architecture-scope-card { min-height: 166px; padding: 15px; }
+	.architecture-overview-footer { padding: 12px; }
+	.architecture-overview-footer > div { align-items: flex-start; flex-direction: column; }
+	.architecture-overview-shortcuts { width: 100%; }
+	.architecture-overview-shortcuts button { flex: 1; min-height: 44px; }
+	.architecture-current-source { top: 66px; max-width: calc(100% - 18px); }
 	.architecture-commandbar { top: 8px; width: calc(100% - 16px); min-height: 50px; padding: 5px; border-radius: 11px; }
 	.architecture-scope-trigger { min-height: 40px; padding: 4px 8px; }
 	.architecture-scope-trigger small { display: none; }
@@ -408,6 +542,12 @@
 	.mindmap-selection { flex: none; min-width: 0; }
 	.mindmap-ports { flex: none; }
 	.mindmap-enter { align-self: flex-end; }
+}
+
+@media (max-width: 460px) {
+	.architecture-overview-footer .evidence-status-prefix,
+	.architecture-overview-footer .evidence-status-separator { display: none; }
+	.architecture-overview-shortcuts { flex-direction: column; }
 }
 
 @media (forced-colors: active) {

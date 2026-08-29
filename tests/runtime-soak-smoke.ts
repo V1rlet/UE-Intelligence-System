@@ -4,7 +4,6 @@
 
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import {
 	RUNTIME_STABILITY_FORMAT_VERSION,
 	analyzeRuntimeStability,
@@ -14,9 +13,9 @@ import {
 	type RuntimeStabilityReportV1,
 } from "../core/service/runtime-stability.js";
 import { BASE, delay, launchBrowser, navigate, resolveCodeFixture, waitForSelector } from "./browser-smoke-lib.js";
+import { resolveSmokeOutputDirectory } from "./smoke-artifacts.js";
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const REPORT = resolve(ROOT, "logs", "smoke", "runtime-soak.json");
+const REPORT = resolve(resolveSmokeOutputDirectory("runtime-soak"), "runtime-soak.json");
 
 function readInteger(name: string, fallback: number, min: number, max: number): number {
 	const raw = process.env[name];
@@ -83,6 +82,9 @@ try {
 		await delay(50);
 		const response = await cdp.send("Performance.getMetrics") as { metrics?: Array<{ name: string; value: number }> };
 		const metrics = new Map((response.metrics ?? []).map((metric) => [metric.name, metric.value]));
+		for (const name of ["JSHeapUsedSize", "Nodes", "JSEventListeners", "Documents"]) {
+			if (!metrics.has(name)) throw new Error(`Performance.getMetrics 缺少 ${name}：采样无效，拒绝以零值样本通过预算`);
+		}
 		samples.push({
 			cycle,
 			js_heap_used_bytes: metrics.get("JSHeapUsedSize") ?? 0,

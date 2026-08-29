@@ -3,22 +3,34 @@
 // post-commit-update.ts（runner）与 lore-watcher.ts 共用。日志失败不致命——
 // hook 链路的一切设施都必须比"用户的提交/常驻服务"更卑微。
 
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { appendFileSync, mkdirSync, renameSync, statSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const HOOKS_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 export const TSX_CLI = join(HOOKS_ROOT, "node_modules", "tsx", "dist", "cli.mjs");
 export const HOOK_LOG_PATH = join(HOOKS_ROOT, "logs", "hook.log");
 
+/** 打包形态（release-server 内嵌 watcher）里本模块被 esbuild 并入 server.mjs，
+ *  import.meta.url 派生的路径会漂移到 release 目录；由 startLoreWatcher({ baseRoot })
+ *  调用 setHooksRootBase 把日志、tsx CLI 与 runner cwd 锚回项目工作树。
+ *  dev/CLI 形态不调用，行为不变。 */
+let activeHooksRoot = HOOKS_ROOT;
+export function setHooksRootBase(baseDir: string): void {
+	activeHooksRoot = resolve(baseDir);
+}
+function hooksRoot(): string {
+	return activeHooksRoot;
+}
+
 /** 超过阈值滚动为 hook.log.1（覆盖旧归档）；常驻服务多日不重启也不至于无界增长 */
 const MAX_LOG_BYTES = 1024 * 1024;
 
-function rotateIfOversized(): void {
+function rotateIfOversized(logPath: string): void {
 	try {
-		if (statSync(HOOK_LOG_PATH).size > MAX_LOG_BYTES) {
-			renameSync(HOOK_LOG_PATH, HOOK_LOG_PATH + ".1");
+		if (statSync(logPath).size > MAX_LOG_BYTES) {
+			renameSync(logPath, logPath + ".1");
 		}
 	} catch {
 		/* 不存在或被占用都不致命 */
@@ -29,9 +41,10 @@ export function log(line: string): void {
 	const stamped = `[${new Date().toISOString()}] ${line}`;
 	console.log(stamped);
 	try {
-		mkdirSync(dirname(HOOK_LOG_PATH), { recursive: true });
-		rotateIfOversized();
-		appendFileSync(HOOK_LOG_PATH, stamped + "\n", "utf-8");
+		const logPath = join(hooksRoot(), "logs", "hook.log");
+		mkdirSync(dirname(logPath), { recursive: true });
+		rotateIfOversized(logPath);
+		appendFileSync(logPath, stamped + "\n", "utf-8");
 	} catch {
 		/* 日志不可写也不致命 */
 	}
@@ -47,9 +60,12 @@ export function logBlock(text: string): void {
  *  echo="on-error"：目标脚本自己写 hook.log（如 runner）时只在失败时回显，免得整块重复 */
 export function runTsx(script: string, args: string[], echo: "always" | "on-error" = "always"): number {
 	const r = spawnSync(process.execPath, [TSX_CLI, script, ...args], {
-		cwd: HOOKS_ROOT,
+		cwd: hooksRoot(),
 		encoding: "utf-8",
 		timeout: 10 * 60 * 1000,
+		// 默认 1 MiB maxBuffer 会在大输出提取时把 r.error 置为 ENOBUFS——子进程工作
+		// 成功却被当作失败；32 MiB 覆盖最坏日志量。
+		maxBuffer: 32 * 1024 * 1024,
 	});
 	const status = r.status ?? 1;
 	if (echo === "always" || status !== 0 || r.error) logBlock((r.stdout ?? "") + (r.stderr ?? ""));
@@ -72,4 +88,55 @@ export function runLore(repository: string, args: string[], exe?: string): strin
 		return null;
 	}
 	return r.stdout ?? "";
+}
+
+/** 异步子进程的公共骨架：spawn（不冻结宿主事件循环）+ 超时强杀 + 有界输出缓冲。
+ *  常驻宿主（vite dev server / release-server）里的 watcher 轮询必须走异步形态。 */
+async function runChildAsync(command: string[], options: { cwd?: string; timeoutMs: number }): Promise<{ status: number; output: string; spawnError: Error | null }> {
+	const child = spawn(command[0], command.slice(1), { cwd: options.cwd, windowsHide: true });
+	const chunks: string[] = [];
+	let buffered = 0;
+	const spawnErrors: Error[] = [];
+	const push = (chunk: string) => {
+		chunks.push(chunk);
+		buffered += chunk.length;
+		while (buffered > 2 * 1024 * 1024 && chunks.length > 1) buffered -= chunks.shift()!.length;
+	};
+	child.stdout?.on("data", (chunk) => push(String(chunk)));
+	child.stderr?.on("data", (chunk) => push(String(chunk)));
+	child.once("error", (error) => { spawnErrors.push(error); });
+	const timer = setTimeout(() => { child.kill("SIGKILL"); }, options.timeoutMs);
+	timer.unref?.();
+	const status = await new Promise<number>((resolveExit) => {
+		child.once("close", (code) => resolveExit(code ?? 1));
+		child.once("error", () => resolveExit(1));
+	});
+	clearTimeout(timer);
+	const spawnError = spawnErrors[0] ?? null;
+	return { status: spawnError ? 1 : status, output: chunks.join(""), spawnError };
+}
+
+/** runTsx 的异步孪生（常驻宿主专用；CLI/一次性进程仍用同步版）。
+ *  base：脚本/cwd 锚点，缺省 HOOKS_ROOT；打包宿主传项目工作树（见 setHooksRootBase）。 */
+export async function runTsxAsync(script: string, args: string[], echo: "always" | "on-error" = "always"): Promise<number> {
+	const base = hooksRoot();
+	const cli = join(base, "node_modules", "tsx", "dist", "cli.mjs");
+	const scriptArg = isAbsolute(script) ? script : join(base, script);
+	const result = await runChildAsync([process.execPath, cli, scriptArg, ...args], { cwd: base, timeoutMs: 10 * 60 * 1000 });
+	const status = result.status;
+	if (echo === "always" || status !== 0 || result.spawnError) logBlock(result.output);
+	if (result.spawnError) log(`  ! 子进程启动失败: ${result.spawnError.message}`);
+	return status;
+}
+
+/** runLore 的异步孪生；失败记日志并返回 null。 */
+export async function runLoreAsync(repository: string, args: string[], exe?: string): Promise<string | null> {
+	const loreExe = exe ?? process.env.GRAPH_BRAIN_LORE_EXE ?? "lore";
+	const result = await runChildAsync([loreExe, "--repository", repository, "-P", ...args], { timeoutMs: 60 * 1000 });
+	if (result.spawnError || result.status !== 0) {
+		const detail = result.spawnError?.message ?? `exit ${result.status}: ${result.output.trim() || "(无输出)"}`;
+		log(`  ! lore ${args.join(" ")} 失败: ${detail}`);
+		return null;
+	}
+	return result.output;
 }

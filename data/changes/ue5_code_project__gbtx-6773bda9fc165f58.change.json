@@ -1,0 +1,180 @@
+{
+  "format_version": 1,
+  "domain": "ue5_code",
+  "subsystem": "project",
+  "generated_at": "2026-08-13T06:40:42.719Z",
+  "generator": "graphbrain/change-report@1",
+  "baseline": {
+    "file": "ue5_code_project__gbtx-fd3a75730751bbce.cyto.json",
+    "generated_at": "2026-08-09T18:43:07.414Z",
+    "fingerprint": "4f842c7f0931d646bb534af0c18a250d28190addc83903e34dec6c52e8da5838"
+  },
+  "current": {
+    "file": "ue5_code_project__gbtx-0482415c651aa614.cyto.json",
+    "generated_at": "2026-08-13T06:40:42.523Z",
+    "fingerprint": "0a34ed21b24914ef9720f001e3ebdf6f8b59f1be6997e6e42aa52efa26a6480f"
+  },
+  "summary": {
+    "nodes": {
+      "added": 14,
+      "removed": 0,
+      "changed": 0
+    },
+    "edges": {
+      "added": 2,
+      "removed": 0,
+      "changed": 0
+    },
+    "direct_nodes": 14,
+    "affected_nodes": 1,
+    "affected_modules": 1
+  },
+  "changes": {
+    "added_nodes": [
+      {
+        "id": "ESabotageInputClassification",
+        "label": "ESabotageInputClassification",
+        "type": "uenum",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputEvent.h"
+      },
+      {
+        "id": "ESabotageInputContext",
+        "label": "ESabotageInputContext",
+        "type": "uenum",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputEvent.h"
+      },
+      {
+        "id": "ESabotageInputInhibitState",
+        "label": "ESabotageInputInhibitState",
+        "type": "uenum",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputEvent.h"
+      },
+      {
+        "id": "file:Source/Sabotage/Core/SabotageInputEvent",
+        "label": "SabotageInputEvent",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputEvent.h"
+      },
+      {
+        "id": "file:Source/Sabotage/Core/SabotageInputForwardingCore",
+        "label": "SabotageInputForwardingCore",
+        "type": "file",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputForwardingCore.h"
+      },
+      {
+        "id": "FSabotageInputEvent",
+        "label": "FSabotageInputEvent",
+        "type": "ustruct",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputEvent.h"
+      },
+      {
+        "id": "FSabotageInputEvent::CreateWithTimestamp",
+        "label": "CreateWithTimestamp",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputEvent.h"
+      },
+      {
+        "id": "FSabotageInputForwardingCore",
+        "label": "FSabotageInputForwardingCore",
+        "type": "ustruct",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputForwardingCore.h"
+      },
+      {
+        "id": "FSabotageInputForwardingCore::ClearGateFrame",
+        "label": "ClearGateFrame",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputForwardingCore.h"
+      },
+      {
+        "id": "FSabotageInputForwardingCore::GetInhibitState",
+        "label": "GetInhibitState",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputForwardingCore.h"
+      },
+      {
+        "id": "FSabotageInputForwardingCore::HasGateFrame",
+        "label": "HasGateFrame",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputForwardingCore.h"
+      },
+      {
+        "id": "FSabotageInputForwardingCore::ProcessDiscreteInput",
+        "label": "ProcessDiscreteInput",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputForwardingCore.h"
+      },
+      {
+        "id": "FSabotageInputForwardingCore::SetGateFrame",
+        "label": "SetGateFrame",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputForwardingCore.h"
+      },
+      {
+        "id": "FSabotageInputForwardingCore::SetInhibitState",
+        "label": "SetInhibitState",
+        "type": "ufunction",
+        "module": "Sabotage",
+        "source_path": "Sabotage/Core/SabotageInputForwardingCore.h"
+      }
+    ],
+    "removed_nodes": [],
+    "changed_nodes": [],
+    "added_edges": [
+      {
+        "id": "dir:Source/Sabotage/Core--contains-->file:Source/Sabotage/Core/SabotageInputEvent",
+        "source": "dir:Source/Sabotage/Core",
+        "target": "file:Source/Sabotage/Core/SabotageInputEvent",
+        "relation": "contains"
+      },
+      {
+        "id": "dir:Source/Sabotage/Core--contains-->file:Source/Sabotage/Core/SabotageInputForwardingCore",
+        "source": "dir:Source/Sabotage/Core",
+        "target": "file:Source/Sabotage/Core/SabotageInputForwardingCore",
+        "relation": "contains"
+      }
+    ],
+    "removed_edges": [],
+    "changed_edges": []
+  },
+  "impact": {
+    "direct_node_ids": [
+      "ESabotageInputClassification",
+      "ESabotageInputContext",
+      "ESabotageInputInhibitState",
+      "FSabotageInputEvent",
+      "FSabotageInputEvent::CreateWithTimestamp",
+      "FSabotageInputForwardingCore",
+      "FSabotageInputForwardingCore::ClearGateFrame",
+      "FSabotageInputForwardingCore::GetInhibitState",
+      "FSabotageInputForwardingCore::HasGateFrame",
+      "FSabotageInputForwardingCore::ProcessDiscreteInput",
+      "FSabotageInputForwardingCore::SetGateFrame",
+      "FSabotageInputForwardingCore::SetInhibitState",
+      "file:Source/Sabotage/Core/SabotageInputEvent",
+      "file:Source/Sabotage/Core/SabotageInputForwardingCore"
+    ],
+    "affected_node_ids": [
+      "dir:Source/Sabotage/Core"
+    ],
+    "modules": [
+      {
+        "module": "Sabotage",
+        "direct": 14,
+        "affected": 1
+      }
+    ]
+  }
+}

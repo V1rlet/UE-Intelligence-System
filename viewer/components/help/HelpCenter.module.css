@@ -16,7 +16,7 @@
 
 .center {
 	display: grid;
-	grid-template-rows: auto auto minmax(0, 1fr) auto;
+	grid-template-rows: auto auto auto minmax(0, 1fr) auto;
 	width: min(540px, calc(100vw - var(--rail-size)));
 	height: 100%;
 	border-left: 1px solid color-mix(in srgb, var(--gb-violet-70) 28%, transparent);
@@ -28,7 +28,7 @@
 
 .head {
 	display: grid;
-	grid-template-columns: 40px minmax(0, 1fr) 34px;
+	grid-template-columns: 40px minmax(0, 1fr) 40px;
 	align-items: center;
 	gap: var(--sp-4);
 	padding: 18px 18px 15px;
@@ -61,8 +61,8 @@
 
 .close {
 	display: grid;
-	width: 32px;
-	height: 32px;
+	width: 40px;
+	height: 40px;
 	place-items: center;
 	border: 1px solid var(--border-default);
 	border-radius: 9px;
@@ -95,7 +95,8 @@
 }
 .search:focus-within { border-color: var(--gb-violet-60); box-shadow: 0 0 0 2px color-mix(in srgb, var(--gb-violet-60) 18%, transparent); }
 .search input { flex: 1; min-height: 36px; border: 0; outline: 0; background: transparent; color: var(--text-primary); }
-.search button { border: 0; background: transparent; color: var(--text-tertiary); font-size: 18px; }
+.search button { display: grid; width: 36px; height: 36px; place-items: center; border: 0; border-radius: 7px; background: transparent; color: var(--text-tertiary); font-size: 18px; }
+.search button:hover { background: color-mix(in srgb, var(--gb-cyan-75) 7%, transparent); color: var(--text-primary); }
 .searchResults { display: grid; gap: 8px; }
 .searchResults > p { margin: 0 0 4px; color: var(--text-tertiary); font-size: 11px; }
 .searchResults > button {
@@ -113,7 +114,7 @@
 .searchResults strong { color: var(--text-primary); }
 
 .tabs button {
-	min-height: 36px;
+	min-height: 40px;
 	border: 1px solid transparent;
 	border-radius: 8px;
 	background: transparent;

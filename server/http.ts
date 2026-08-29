@@ -20,6 +20,31 @@ export interface ApiContext {
 
 export type ApiHandler = (ctx: ApiContext) => Promise<boolean> | boolean;
 
+export class HttpError extends Error {
+	constructor(
+		public readonly status: number,
+		message: string,
+		public readonly code?: string,
+	) {
+		super(message);
+		this.name = "HttpError";
+	}
+}
+
+export class HttpInputError extends HttpError {
+	constructor(message: string, code = "INVALID_REQUEST") {
+		super(400, message, code);
+		this.name = "HttpInputError";
+	}
+}
+
+export class HttpPayloadTooLargeError extends HttpError {
+	constructor(message = "请求体超过 1 MiB 限制") {
+		super(413, message, "PAYLOAD_TOO_LARGE");
+		this.name = "HttpPayloadTooLargeError";
+	}
+}
+
 export function sendJson(res: ServerResponse, status: number, payload: unknown): void {
 	res.statusCode = status;
 	res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -27,27 +52,54 @@ export function sendJson(res: ServerResponse, status: number, payload: unknown):
 	res.end(JSON.stringify(payload));
 }
 
+/** Send only errors intentionally classified at the HTTP boundary. */
+export function sendHttpError(res: ServerResponse, error: unknown): boolean {
+	if (!(error instanceof HttpError)) return false;
+	sendJson(res, error.status, {
+		error: error.message,
+		...(error.code ? { code: error.code } : {}),
+	});
+	return true;
+}
+
+/** Operational failures stay server errors and do not leak filesystem details. */
+export function sendInternalError(res: ServerResponse, error: unknown, context: string): void {
+	console.error(`[GraphBrain] ${context}`, error);
+	sendJson(res, 500, { error: "GraphBrain 内部错误", code: "INTERNAL_ERROR" });
+}
+
 export function readJsonBody(req: IncomingMessage): Promise<Record<string, unknown>> {
 	return new Promise((resolvePromise, reject) => {
-		let raw = "";
+		// 逐块 toString 会在多字节 UTF-8 字符跨块边界时产生 U+FFFD（中文标注持久损坏），
+		// 必须聚合原始 Buffer 后一次性解码。
+		const chunks: Buffer[] = [];
 		let bytes = 0;
 		let rejected = false;
 		req.on("data", (chunk) => {
 			if (rejected) return;
-			bytes += Buffer.isBuffer(chunk) ? chunk.length : Buffer.byteLength(String(chunk));
+			const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk), "utf8");
+			bytes += buffer.length;
 			if (bytes > 1024 * 1024) {
 				rejected = true;
-				reject(new Error("请求体超过 1 MiB 限制"));
+				reject(new HttpPayloadTooLargeError());
+				// 排空剩余请求体（不销毁 socket），保持连接可用于发送 413 响应。
+				req.resume?.();
 				return;
 			}
-			raw += chunk;
+			chunks.push(buffer);
 		});
 		req.on("end", () => {
 			if (rejected) return;
 			try {
-				const parsed = raw ? JSON.parse(raw) : {};
+				let parsed: unknown;
+				try {
+					const raw = Buffer.concat(chunks).toString("utf8");
+					parsed = raw ? JSON.parse(raw) : {};
+				} catch {
+					throw new HttpInputError("JSON 请求体格式错误");
+				}
 				if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-					throw new Error("JSON 请求体必须是对象");
+					throw new HttpInputError("JSON 请求体必须是对象");
 				}
 				resolvePromise(parsed as Record<string, unknown>);
 			} catch (e) {
@@ -72,9 +124,10 @@ export function isTrustedMutation(req: IncomingMessage): boolean {
 	try {
 		const parsed = new URL(origin);
 		const originHost = parsed.host.toLowerCase();
-		const loopback = originHost === "127.0.0.1" || originHost === "127.0.0.1:3030"
-			|| originHost === "localhost" || originHost === "localhost:3030"
-			|| originHost === "[::1]" || originHost === "[::1]:3030";
+		const hostname = parsed.hostname.toLowerCase();
+		// Node 的 URL.hostname 对 IPv6 字面量保留方括号（"[::1]"），浏览器实现则剥离；
+		// 两种形式都接受，避免任一端的回环来源被误拒。
+		const loopback = hostname === "127.0.0.1" || hostname === "localhost" || hostname === "::1" || hostname === "[::1]";
 		if (!loopback) return false;
 		if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return false;
 		return originHost === String(req.headers.host ?? "").toLowerCase();

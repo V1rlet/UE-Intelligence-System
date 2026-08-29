@@ -10,6 +10,7 @@ import {
 	findCycles,
 	forwardClosure,
 	impactAnalysis,
+	parseCycleBaseline,
 	projectGraph,
 	resolveSeedsFromFiles,
 	type CouplingReport,
@@ -19,9 +20,11 @@ import {
 	type GraphShape,
 	type ImpactReport,
 } from "./analysis.js";
+import { checkGraphReferences, checkGraphSchema, type GraphShape as ValidatedGraphShape } from "../schema/graph-checks.js";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const GRAPHS_DIR = join(ROOT, "data", "graphs");
+const PUBLICATIONS_FILE = join(ROOT, "data", "publications", "ue5_code.json");
 
 function optionValue(name: string): string | null {
 	const index = process.argv.indexOf(name);
@@ -42,14 +45,50 @@ function resolveGraphPath(input: string): string {
 	return join(GRAPHS_DIR, match);
 }
 
-function main(): void {
+/** 图文件的单一加载边界：schema + 引用完整性校验后进入分析（未知 JSON 不裸转型）。 */
+function loadGraphFile(graphPath: string): GraphShape {
+	const parsed: unknown = JSON.parse(readFileSync(graphPath, "utf8").replace(/^\uFEFF/, ""));
+	const schemaErrors = checkGraphSchema(parsed);
+	if (schemaErrors.length > 0) throw new Error(`代码图不符合 schema（${basename(graphPath)}）: ${schemaErrors.slice(0, 3).join("; ")}`);
+	const graph = parsed as ValidatedGraphShape;
+	const referenceErrors = checkGraphReferences(graph);
+	if (referenceErrors.length > 0) throw new Error(`代码图引用不完整（${basename(graphPath)}）: ${referenceErrors.slice(0, 3).join("; ")}`);
+	return parsed as GraphShape;
+}
+
+/** D1 跨代趋势：按发布代次时间序输出 单元/依赖对/回路 计数（只读，不落盘）。 */
+function runTrend(subsystem: string): void {
+	const state = JSON.parse(readFileSync(PUBLICATIONS_FILE, "utf-8")) as {
+		publications?: Array<{ subsystem?: string; generations?: Array<{ id: string; published_at?: string | null; graph: { file: string } }> }>;
+	};
+	const generations = state.publications?.find((item) => item.subsystem === subsystem)?.generations ?? [];
+	if (generations.length === 0) throw new Error(`publication 中没有 ${subsystem} 的历史代次`);
+	console.log(`跨代趋势（${subsystem}，${generations.length} 个代次，旧→新）`);
+	console.log("generation | published | units | pairs | cycles");
+	for (const generation of [...generations].reverse()) {
+		const graphPath = join(GRAPHS_DIR, generation.graph.file);
+		if (!existsSync(graphPath)) {
+			console.log(`${generation.id.replace("generation-", "").slice(0, 12)}… | ${generation.published_at?.slice(0, 10) ?? "?"} | 缺失文件 ${generation.graph.file}`);
+			continue;
+		}
+		const shape = loadGraphFile(graphPath);
+		const projected = projectGraph(shape);
+		const cycles = findCycles(projected);
+		console.log(`${generation.id.replace("generation-", "").slice(0, 12)}… | ${generation.published_at?.slice(0, 10) ?? "?"} | ${projected.units.length} | ${projected.pairCount} | ${cycles.length}`);
+	}
+}
+
+ function main(): void {
+	if (hasFlag("--trend")) {
+		runTrend(optionValue("--subsystem") ?? "project");
+		return;
+	}
 	const graphArg = optionValue("--graph");
 	if (!graphArg) {
-		throw new Error("用法: analyze --graph <文件|前缀> [--cycles] [--coupling] [--impact <id,..>] [--impact-files <file,..>] [--forward-closure <id,..>] [--cycle-baseline <path>] [--group-by module|system] [--out <目录>]");
+		throw new Error("用法: analyze --graph <文件|前缀> [--trend] [--cycles] [--coupling] [--impact <id,..>] [--forward-closure <id,..>] [--cycle-baseline <path>] [--group-by module|system] [--out <目录>]");
 	}
-
 	const graphPath = resolveGraphPath(graphArg);
-	const graph = JSON.parse(readFileSync(graphPath, "utf-8").replace(/^\uFEFF/, "")) as GraphShape;
+	const graph = loadGraphFile(graphPath);
 	const meta = (graph.meta ?? {}) as Record<string, unknown>;
 	if (meta.domain !== "ue5_code") {
 		throw new Error(`GraphBrain 只分析 ue5_code 图，收到 ${String(meta.domain ?? "未声明")}`);
@@ -106,9 +145,11 @@ function main(): void {
 
 	let cycleDiff: CycleBaselineDiff | null = null;
 	const baselinePath = optionValue("--cycle-baseline");
-	if (cycles && baselinePath && existsSync(baselinePath)) {
-		const baselineFile = JSON.parse(readFileSync(baselinePath, "utf-8")) as { cycles?: CycleFinding[] };
-		cycleDiff = diffCycles(baselineFile.cycles ?? [], cycles);
+	if (cycles && baselinePath) {
+		// 显式指定的基线必须存在：路径打错时静默跳过会把"回路回归信号"变成空输出。
+		if (!existsSync(baselinePath)) throw new Error(`回路基线文件不存在: ${baselinePath}`);
+		const baselineFile = parseCycleBaseline(readFileSync(baselinePath, "utf-8"));
+		cycleDiff = diffCycles(baselineFile, cycles);
 		console.log(`回路变化: +${cycleDiff.added.length} / -${cycleDiff.removed.length}`);
 	}
 

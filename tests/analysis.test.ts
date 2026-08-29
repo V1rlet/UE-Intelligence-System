@@ -1,6 +1,7 @@
 // Graph Brain / core/query - 图分析算法库测试：投影、回路、耦合、影响面、正向闭包、基线比较、文件种子。
 
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
 	couplingReport,
@@ -8,11 +9,13 @@ import {
 	findCycles,
 	forwardClosure,
 	impactAnalysis,
+	parseCycleBaseline,
 	projectGraph,
 	resolveSeedsFromFiles,
 	type CycleFinding,
 	type GraphShape,
 } from "../core/query/analysis.js";
+import { UNASSIGNED_MODULE_LABEL } from "../core/query/code-module.js";
 
 /** A→B→C→A 循环 + D→E→F 直线链。 */
 function cyclicGraph(): GraphShape {
@@ -124,4 +127,47 @@ test("resolveSeedsFromFiles matches basenames and folds .cpp to .h", () => {
 	assert.deepEqual(resolveSeedsFromFiles(graph, ["Source/B.cpp"]), ["B"]);
 	// 未知文件不产生种子。
 	assert.deepEqual(resolveSeedsFromFiles(graph, ["Missing.h"]), []);
+});
+
+test("parseCycleBaseline validates shape at the boundary and tolerates a missing cycles field", () => {
+	const findings = parseCycleBaseline("\uFEFF" + JSON.stringify({
+		cycles: [{ nodes: ["A", "B"], exampleCycle: ["A", "B", "A"] }],
+	}));
+	assert.deepEqual(findings, [{ nodes: ["A", "B"], exampleCycle: ["A", "B", "A"] }]);
+	// 旧报告无 cycles 字段 → 空基线（全部视为新增回路）。
+	assert.deepEqual(parseCycleBaseline("{}"), []);
+	assert.throws(() => parseCycleBaseline("[]"), /回路基线必须是 JSON 对象/);
+	assert.throws(() => parseCycleBaseline(JSON.stringify({ cycles: "nope" })), /cycles 字段必须是数组/);
+	assert.throws(() => parseCycleBaseline(JSON.stringify({ cycles: [{ nodes: "A" }] })), /nodes 必须是字符串数组/);
+	assert.throws(() => parseCycleBaseline(JSON.stringify({ cycles: [{ nodes: ["A"], exampleCycle: 3 }] })), /exampleCycle 必须是字符串数组/);
+});
+
+test("analysis grouping resolves modules canonically instead of mixing in layer", () => {
+	const graph: GraphShape = {
+		meta: { domain: "ue5_code", subsystem: "project", format_version: 2 },
+		elements: {
+			nodes: [
+				// 无显式 module：canonical 解析器按 source_path 的 Source/Runtime/<Module> 推断。
+				{ data: { id: "UFull", type: "uclass", layer: "engine", source_path: "Runtime/Engine/Classes/Engine/Full.h" } },
+				// 既无 module 也推不出路径：未分组——layer（project/engine）不是模块，不得冒充分组。
+				{ data: { id: "UBare", type: "uclass", layer: "engine" } },
+			],
+			edges: [{ data: { id: "e", source: "UFull", target: "UBare", relation: "depends_on" } }],
+		},
+	};
+	const pg = projectGraph(graph);
+	const report = couplingReport(pg, "module");
+	assert.ok(report.groups.some((g) => g.group === "Engine"), "source_path 推断出 Engine 模块");
+	assert.ok(!report.groups.some((g) => g.group === "engine" || g.group === "project"), "layer 不得成为分组口径");
+	assert.ok(report.groups.some((g) => g.group === UNASSIGNED_MODULE_LABEL));
+});
+
+test("无模块归属的呈现标签三处消费同源（F2 回归）", () => {
+	// analysis 的运行时分组、change-report 的持久化 modules[].module 必须同一常量；
+	// 已发布报告里的历史值 "(unassigned)" 不得漂移（数据格式冻结）。
+	assert.equal(UNASSIGNED_MODULE_LABEL, "(unassigned)");
+	const source = readFileSync(new URL("../core/query/change-report.ts", import.meta.url), "utf8");
+	assert.ok(source.includes("resolveCodeModule(node.data) ?? UNASSIGNED_MODULE_LABEL"), "change-report 必须引用统一常量而非内联字符串");
+	const analysisSource = readFileSync(new URL("../core/query/analysis.ts", import.meta.url), "utf8");
+	assert.ok(!analysisSource.includes("（未分组）"), "analysis 不得再保留旧中文标签副本");
 });

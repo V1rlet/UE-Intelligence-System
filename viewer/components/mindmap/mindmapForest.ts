@@ -71,25 +71,64 @@ export function buildLayeredArchitectureGraph(elements: GraphElements): GraphEle
 	for (const [parent, childIds] of children) children.set(parent, sortIds(childIds));
 
 	const positions = new Map<string, { x: number; y: number }>();
-	const columnGap = 330;
-	const rowGap = 132;
-	let nextRow = 0;
-	const place = (id: string, depth: number): number => {
-		const childIds = children.get(id) ?? [];
-		let row: number;
-		if (childIds.length === 0) {
-			row = nextRow;
-			nextRow += 1;
-		} else {
-			const childRows = childIds.map((childId) => place(childId, depth + 1));
-			row = childRows.reduce((total, childRow) => total + childRow, 0) / childRows.length;
-		}
-		positions.set(id, { x: depth * columnGap, y: row * rowGap });
-		return row;
-	};
-	for (const rootId of sortIds([...rootIds])) {
+	const columnGap = 270;
+	const rowGap = 106;
+	const componentGap = 48;
+	const nodeWidth = 210;
+	const nodeHeight = 76;
+	const componentLayouts: Array<{
+		rootId: string;
+		positions: Map<string, { x: number; y: number }>;
+		width: number;
+		height: number;
+	}> = [];
+	const placeComponent = (rootId: string) => {
+		const localPositions = new Map<string, { x: number; y: number }>();
+		let nextRow = 0;
+		const place = (id: string, depth: number): number => {
+			const childIds = children.get(id) ?? [];
+			let row: number;
+			if (childIds.length === 0) {
+				row = nextRow;
+				nextRow += 1;
+			} else {
+				const childRows = childIds.map((childId) => place(childId, depth + 1));
+				row = childRows.reduce((total, childRow) => total + childRow, 0) / childRows.length;
+			}
+			localPositions.set(id, { x: depth * columnGap, y: row * rowGap });
+			return row;
+		};
 		place(rootId, 0);
-		nextRow += 0.6;
+		const values = [...localPositions.values()];
+		const maxX = Math.max(0, ...values.map((position) => position.x));
+		const maxY = Math.max(0, ...values.map((position) => position.y));
+		componentLayouts.push({
+			rootId,
+			positions: localPositions,
+			width: maxX + nodeWidth,
+			height: maxY + nodeHeight,
+		});
+	};
+	for (const rootId of sortIds([...rootIds])) placeComponent(rootId);
+
+	// A single vertical root list made disconnected architecture previews fit at
+	// unreadable 12–13% zoom. Pack immutable tree components onto deterministic
+	// shelves instead. The graph still owns every id and edge; these coordinates
+	// are disposable presentation state derived entirely from the same input.
+	const totalArea = componentLayouts.reduce((sum, component) => sum + (component.width + componentGap) * (component.height + componentGap), 0);
+	const targetWidth = Math.max(960, Math.min(1760, Math.sqrt(totalArea) * 1.4));
+	let cursorX = 0;
+	let cursorY = 0;
+	let shelfHeight = 0;
+	for (const component of componentLayouts) {
+		if (cursorX > 0 && cursorX + component.width > targetWidth) {
+			cursorX = 0;
+			cursorY += shelfHeight + componentGap;
+			shelfHeight = 0;
+		}
+		for (const [id, position] of component.positions) positions.set(id, { x: cursorX + position.x, y: cursorY + position.y });
+		cursorX += component.width + componentGap;
+		shelfHeight = Math.max(shelfHeight, component.height);
 	}
 
 	return {

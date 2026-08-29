@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import AppIcon from "../common/AppIcon";
 import { useDialogFocus } from "../common/useDialogFocus";
 import { shortcutHelpGroups } from "../../src/shortcutCatalog";
 import styles from "./HelpCenter.module.css";
+import { handleRovingTabKeyDown, rovingTabStop } from "../common/rovingTabs";
 
 export type HelpSection = "current" | "workflow" | "shortcuts";
 
@@ -47,7 +48,7 @@ const FLOW = [
 ];
 
 export default function HelpCenter({ initialSection, view, onClose }: Props) {
-	const dialogRef = useDialogFocus<HTMLElement>();
+	const dialogRef = useDialogFocus<HTMLElement>(true, onClose, 'input[aria-label="搜索帮助内容"]');
 	const [section, setSection] = useState<HelpSection>(initialSection);
 	const [query, setQuery] = useState("");
 	const context = useMemo(() => currentHelp(view), [view]);
@@ -63,22 +64,16 @@ export default function HelpCenter({ initialSection, view, onClose }: Props) {
 		return normalized ? all.filter((item) => `${item.title} ${item.detail}`.toLocaleLowerCase().includes(normalized)).slice(0, 24) : [];
 	}, [context, query, shortcuts]);
 
-	useEffect(() => {
-		const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") onClose(); };
-		window.addEventListener("keydown", onKey, true);
-		return () => window.removeEventListener("keydown", onKey, true);
-	}, [onClose]);
-
 	return <div className={styles.centerMask} onClick={onClose}>
 		<section ref={dialogRef} className={styles.center} role="dialog" aria-modal="true" aria-label="帮助中心" onClick={(event) => event.stopPropagation()}>
 			<header className={styles.head}><span className={styles.mark}><AppIcon name="library" size={19} /></span><div><small>只读代码架构查看器</small><h2>帮助中心</h2></div><button type="button" className={styles.close} onClick={onClose} aria-label="关闭帮助中心（Esc）">✕</button></header>
 			<label className={styles.search}><span aria-hidden="true">⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索视图、流程或快捷键…" aria-label="搜索帮助内容" />{query ? <button type="button" onClick={() => setQuery("")} aria-label="清空帮助搜索">×</button> : null}</label>
-			<nav className={styles.tabs} role="tablist" aria-label="帮助内容">
-				<button type="button" role="tab" aria-selected={section === "current"} className={section === "current" ? styles.active : ""} onClick={() => setSection("current")}>当前页面</button>
-				<button type="button" role="tab" aria-selected={section === "workflow"} className={section === "workflow" ? styles.active : ""} onClick={() => setSection("workflow")}>事实流</button>
-				<button type="button" role="tab" aria-selected={section === "shortcuts"} className={section === "shortcuts" ? styles.active : ""} onClick={() => setSection("shortcuts")}>快捷键</button>
+			<nav className={styles.tabs} role="tablist" aria-label="帮助内容" onKeyDown={handleRovingTabKeyDown}>
+				<button id="help-tab-current" type="button" role="tab" aria-controls="help-tabpanel" aria-selected={section === "current"} tabIndex={rovingTabStop(section === "current")} className={section === "current" ? styles.active : ""} onClick={() => setSection("current")}>当前页面</button>
+				<button id="help-tab-workflow" type="button" role="tab" aria-controls="help-tabpanel" aria-selected={section === "workflow"} tabIndex={rovingTabStop(section === "workflow")} className={section === "workflow" ? styles.active : ""} onClick={() => setSection("workflow")}>事实流</button>
+				<button id="help-tab-shortcuts" type="button" role="tab" aria-controls="help-tabpanel" aria-selected={section === "shortcuts"} tabIndex={rovingTabStop(section === "shortcuts")} className={section === "shortcuts" ? styles.active : ""} onClick={() => setSection("shortcuts")}>快捷键</button>
 			</nav>
-			<div className={styles.body} role="tabpanel">
+			<div id="help-tabpanel" className={styles.body} role="tabpanel" aria-labelledby={`help-tab-${section}`}>
 				{query.trim() ? <div className={styles.searchResults} aria-live="polite"><p>{results.length ? `找到 ${results.length} 条帮助` : "没有匹配的帮助内容"}</p>{results.map((item, index) => <button key={`${item.section}:${index}:${item.detail}`} type="button" onClick={() => { setSection(item.section); setQuery(""); }}><small>{item.section === "current" ? "当前页面" : item.section === "workflow" ? "事实流" : "快捷键"}</small><strong>{item.title}</strong><span>{item.detail}</span></button>)}</div> : null}
 				{!query.trim() && section === "current" ? <div className={styles.current}><p className={styles.contextLabel}>{context.label}</p><h3>{context.title}</h3><p className={styles.contextSummary}>{context.summary}</p><ol className={styles.nextSteps}>{context.steps.map((step, index) => <li key={step}><span>{index + 1}</span><p>{step}</p></li>)}</ol><div className={styles.principle}><AppIcon name="review" size={17} /><p><b>代码事实唯一归属</b><span>图、类详情、API 与标注都通过稳定 ID 指向同一份 ue5_code 事实。</span></p></div></div> : null}
 				{!query.trim() && section === "workflow" ? <div className={styles.workflows}><p className={styles.sectionIntro}>GraphBrain 的边界到“读懂代码事实”为止。</p><section className={styles.workflowCard}><header><AppIcon name="graph" size={18} /><h3>只读代码事实流</h3></header><ol>{FLOW.map((step, index) => <li key={step}><span>{index + 1}</span>{step}</li>)}</ol></section><p className={styles.sharedNote}><b>职责边界：</b>ClaudeGameStudios 拥有架构方案、关卡设计、编码规划、评审和交付；GraphBrain 不复制这些状态。</p></div> : null}

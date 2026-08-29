@@ -5,3 +5,6 @@ dist/
 .DS_Store
 data/cache/
 data/api-catalog/
+/logs/runs/
+/logs/usage-summary.json
+/logs/usage-summary.json.lock

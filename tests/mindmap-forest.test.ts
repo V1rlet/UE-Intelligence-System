@@ -46,6 +46,16 @@ test("layered architecture keeps all code relations while deriving an acyclic la
 	);
 });
 
+test("disconnected architecture facts are packed into a readable deterministic plane", () => {
+	const ids = Array.from({ length: 24 }, (_, index) => `Node-${String(index).padStart(2, "0")}`);
+	const packed = buildLayeredArchitectureGraph({ nodes: ids.map((id) => ({ data: { id, label: id, type: "uclass" } })), edges: [] });
+	const positions = packed.nodes.map((node) => node.position!);
+	const width = Math.max(...positions.map((position) => position.x)) - Math.min(...positions.map((position) => position.x)) + 210;
+	const height = Math.max(...positions.map((position) => position.y)) - Math.min(...positions.map((position) => position.y)) + 76;
+	assert.ok(width / height > .55 && width / height < 2.8, `unexpected packed aspect ratio: ${width}×${height}`);
+	assert.ok(new Set(positions.map((position) => `${position.x}:${position.y}`)).size === ids.length);
+});
+
 test("code relation semantics share one icon and motion registry", () => {
 	assert.deepEqual(mindmapRelationPresentation("creates"), { icon: "◆", motion: "emit", label: "创建" });
 	assert.equal(mindmapRelationPresentation("composes").icon, mindmapRelationPresentation("owns").icon);

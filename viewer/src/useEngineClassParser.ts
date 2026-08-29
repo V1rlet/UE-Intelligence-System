@@ -42,6 +42,11 @@ export interface EngineClassParserState {
 	parsingClassNames: Set<string>;
 }
 
+interface ParseRequest {
+	promise: Promise<boolean>;
+	controller: AbortController;
+}
+
 function mergeElements(previous: GraphElements, increment: GraphElements): GraphElements {
 	const nodeById = new Map(previous.nodes.map((node) => [String(node.data.id), node]));
 	for (const node of increment.nodes ?? []) {
@@ -68,16 +73,22 @@ export function useEngineClassParser({
 	const [engineFetch, setEngineFetch] = useState<EngineFetchState>({ state: "idle" });
 	const [engineElements, setEngineElements] = useState<GraphElements>({ nodes: [], edges: [] });
 	const [parsingClassNames, setParsingClassNames] = useState<Set<string>>(new Set());
-	const parseRequests = useRef(new Map<string, Promise<boolean>>());
+	const parseRequests = useRef(new Map<string, ParseRequest>());
 	const sourceGeneration = useRef(0);
 	const sourceRoot = graphSourceRootQuery(graph?.meta);
 
 	useEffect(() => {
 		sourceGeneration.current += 1;
+		for (const request of parseRequests.current.values()) request.controller.abort();
 		parseRequests.current.clear();
 		setEngineElements({ nodes: [], edges: [] });
 		setParsingClassNames(new Set());
 		setEngineFetch({ state: "idle" });
+		return () => {
+			sourceGeneration.current += 1;
+			for (const request of parseRequests.current.values()) request.controller.abort();
+			parseRequests.current.clear();
+		};
 	}, [sourceRoot]);
 
 	// 标识符形态即给入口（拼写/是否存在交服务端精确校验，会就地报错）；
@@ -103,8 +114,10 @@ export function useEngineClassParser({
 		const generation = sourceGeneration.current;
 		const key = `${sourceRoot}\u0000${name}\u0000${sourcePath ?? ""}`;
 		const pending = parseRequests.current.get(key);
-		if (pending) return pending;
-		const request = (async () => {
+		if (pending) return pending.promise;
+		const controller = new AbortController();
+		let request!: ParseRequest;
+		const promise = (async () => {
 			setParsingClassNames((current) => new Set(current).add(name));
 			setEngineFetch({ state: "loading" });
 			try {
@@ -112,15 +125,20 @@ export function useEngineClassParser({
 				if (sourceRoot) params.set("source_root", sourceRoot);
 				if (sourcePath) params.set("source_path", sourcePath);
 				const queryString = params.size > 0 ? `?${params}` : "";
-				const body = await apiFetchJson<GraphElements & { error?: string }>(`/api/engine-class/${encodeURIComponent(name)}${queryString}`);
+				const body = await apiFetchJson<GraphElements & { error?: string }>(
+					`/api/engine-class/${encodeURIComponent(name)}${queryString}`,
+					{ signal: controller.signal },
+				);
 				if (generation !== sourceGeneration.current) return false;
 				mergeIncrement(body);
 				return true;
 			} catch (e) {
-				if (generation === sourceGeneration.current) setEngineFetch({ state: "error", msg: String(e) });
+				if ((e as Error).name !== "AbortError" && generation === sourceGeneration.current) {
+					setEngineFetch({ state: "error", msg: String(e) });
+				}
 				return false;
 			} finally {
-				parseRequests.current.delete(key);
+				if (parseRequests.current.get(key) === request) parseRequests.current.delete(key);
 				if (generation === sourceGeneration.current) {
 					const sameClassPending = [...parseRequests.current.keys()].some((requestKey) => requestKey.startsWith(`${sourceRoot}\u0000${name}\u0000`));
 					if (!sameClassPending) setParsingClassNames((current) => {
@@ -132,8 +150,9 @@ export function useEngineClassParser({
 				}
 			}
 		})();
+		request = { promise, controller };
 		parseRequests.current.set(key, request);
-		return request;
+		return promise;
 	};
 
 	return { engineFetch, setEngineFetch, engineCandidate, parseEngineClass, engineElements, parsedClassNames, parsingClassNames };

@@ -11,7 +11,7 @@
 //      引擎文件挂入森林 Engine 子树
 //   3. 生命周期链叠加 + inheritance_chain 附着（Spec 页追溯跳转的数据源）
 
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { type Dirent, existsSync, readFileSync, readdirSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import {
 	SOURCE_PROVENANCE_SCHEMA_VERSION,
@@ -62,9 +62,19 @@ export interface ExtractWithCacheResult {
 //  目录辅助
 // ████████████████████████████████████████████████████████████████████████████
 
+/** 单个不可读目录（Windows ACL/OneDrive 占位/被占用）只降级为跳过，不炸整次提取。 */
+function safeReaddir(root: string): Dirent[] {
+	try {
+		return readdirSync(root, { withFileTypes: true });
+	} catch (error) {
+		console.warn(`  跳过不可读目录 ${root}: ${(error as Error).message}`);
+		return [];
+	}
+}
+
 function findHeaders(root: string): string[] {
 	const results: string[] = [];
-	for (const entry of readdirSync(root, { withFileTypes: true })) {
+	for (const entry of safeReaddir(root)) {
 		const p = join(root, entry.name);
 		if (entry.isDirectory()) results.push(...findHeaders(p));
 		else if (entry.name.endsWith(".h") && !entry.name.endsWith(".generated.h")) results.push(p);
@@ -75,12 +85,28 @@ function findHeaders(root: string): string[] {
 /** 递归收集 *.Build.cs（模块构建规则，作为第三种文件叶入森林） */
 function findBuildRules(root: string): string[] {
 	const results: string[] = [];
-	for (const entry of readdirSync(root, { withFileTypes: true })) {
+	for (const entry of safeReaddir(root)) {
 		const p = join(root, entry.name);
 		if (entry.isDirectory()) results.push(...findBuildRules(p));
 		else if (entry.name.endsWith(".Build.cs")) results.push(p);
 	}
 	return results;
+}
+
+/** B2：解析 *.Build.cs 的依赖模块名（Public/Private/Additional/DynamicallyLoaded
+ *  DependencyModuleNames 的 AddRange 数组与单个 .Add 调用），去重后返回。 */
+export function parseBuildCsDependencies(content: string): string[] {
+	const names = new Set<string>();
+	const rangeRe = /(?:Public|Private|Additional|DynamicallyLoaded)DependencyModuleNames\s*\.\s*AddRange\s*\(\s*new\s+string\[\]\s*\{\s*([^}]*?)\s*\}/gi;
+	for (const match of content.matchAll(rangeRe)) {
+		for (const raw of match[1].split(",")) {
+			const name = raw.trim().replace(/^["']|["']$/g, "");
+			if (name) names.add(name);
+		}
+	}
+	const singleRe = /(?:Public|Private|Additional|DynamicallyLoaded)DependencyModuleNames\s*\.\s*Add\s*\(\s*"(\w+)"\s*\)/gi;
+	for (const match of content.matchAll(singleRe)) names.add(match[1]);
+	return [...names];
 }
 
 // ████████████████████████████████████████████████████████████████████████████
@@ -303,6 +329,8 @@ export function extractClassGraphWithCache(
 	const sourceSnapshot = buildSourceSnapshot(roots);
 	const consumedSourcePaths = new Set<string>();
 	const canonicalSourcePath = (path: string) => resolve(path).replaceAll("\\", "/");
+	// B2：Build.cs 解析出的模块依赖（module -> 目标模块名集合），组图后生成模块级 depends_on 子图。
+	const buildModuleDeps = new Map<string, Set<string>>();
 
 	// 根目录集合变化 → 旧缓存整体作废（缓存内 sourcePath 相对各自根，混用会错位）
 	if (prior && JSON.stringify(prior.roots) !== JSON.stringify(cache.roots)) {
@@ -315,16 +343,29 @@ export function extractClassGraphWithCache(
 	const usageByClass = new Map<string, Map<string, Set<string>>>();
 	const bindingsByClass = new Map<string, ParsedDelegateBinding[]>();
 	const forests: ForestBuilder[] = [];
+	const usedRootLabels = new Set<string>();
 
 	for (const root of roots) {
 		const abs = resolve(root);
-		const forest = new ForestBuilder(basename(abs));
+		// 多根场景（项目 Source + 插件 Source）会撞出相同 basename → 相同 dir:/file: id，
+		// 图谱校验将拒绝发布；给重复根标签加序号后缀消歧。
+		let rootLabel = basename(abs);
+		if (usedRootLabels.has(rootLabel)) {
+			let suffix = 2;
+			while (usedRootLabels.has(`${rootLabel}-${suffix}`)) suffix++;
+			rootLabel = `${rootLabel}-${suffix}`;
+		}
+		usedRootLabels.add(rootLabel);
+		const forest = new ForestBuilder(rootLabel);
 		forests.push(forest);
 
 		for (const header of findHeaders(abs)) {
 			consumedSourcePaths.add(canonicalSourcePath(header));
 			const key = header.replaceAll("\\", "/");
-			const headerHash = hashContent(readFileSync(header, "utf-8"));
+			// 只读一次：哈希与解析共用同一内容，文件在两次读取之间变化不会把
+			// "新哈希 + 旧解析"写进缓存（否则缓存命中会永久供应过期事实）。
+			const headerContent = readFileSync(header, "utf-8");
+			const headerHash = hashContent(headerContent);
 			const cppPath = header.replace(/\.h$/i, ".cpp");
 			if (existsSync(cppPath)) consumedSourcePaths.add(canonicalSourcePath(cppPath));
 			const cppHash = hashFile(cppPath);
@@ -340,7 +381,7 @@ export function extractClassGraphWithCache(
 			if (fresh) {
 				stats.projectParsed++;
 				// 纯 C++ F/E/I/S 等文件级类型也必须成为可跳转的一等 Spec 节点。
-				classes = parseHeader(header, abs, { includePlainCpp: true });
+				classes = parseHeader(header, abs, { includePlainCpp: true, content: headerContent });
 				usageJson = {};
 				bindingsJson = {};
 				for (const c of classes) {
@@ -387,24 +428,64 @@ export function extractClassGraphWithCache(
 					: {}),
 			});
 			if (fresh && isModuleEntry) console.log(`  模块入口: ${rel}（模块 ${module}）`);
-
 			if (fresh && classes.length > 0) {
 				console.log(`解析 ${rel}: ${classes.map((c) => `${c.name}(${c.kind}, ${c.functions.length} fn, ${c.properties.length} prop${c.delegates.length ? `, ${c.delegates.length} delegate` : ""})`).join(", ")}`);
 			}
-		}
 
-		// Build.cs 第三种文件叶（无 classes，双击不进 Spec）
+		}
+		// Build.cs 第三种文件叶（无 classes，双击不进 Spec）+ B2 模块依赖解析
 		for (const buildCs of findBuildRules(abs)) {
 			consumedSourcePaths.add(canonicalSourcePath(buildCs));
 			const rel = relative(abs, buildCs).replaceAll("\\", "/");
 			const moduleName = basename(buildCs).replace(/\.Build\.cs$/i, "");
+			let content = "";
+			try {
+				content = readFileSync(buildCs, "utf-8");
+			} catch {
+				/* 不可读的构建规则只损失依赖边，不影响代码事实 */
+			}
+			if (content) {
+				const deps = parseBuildCsDependencies(content);
+				if (deps.length > 0) {
+					const bucket = buildModuleDeps.get(moduleName) ?? new Set<string>();
+					for (const dep of deps) bucket.add(dep);
+					buildModuleDeps.set(moduleName, bucket);
+				}
+			}
 			forest.addFile(rel, {
 				module: moduleName,
 				file_kind: "build_rules",
 				entry_of: moduleName,
 				description: `模块构建规则：定义「${moduleName}」的依赖（模块图 depends_on 边的数据源），非 C++ 源码`,
 			});
-			console.log(`  构建规则: ${rel}`);
+			console.log(`  构建规则: ${rel}${content ? `（${parseBuildCsDependencies(content).length} 依赖）` : ""}`);
+		}
+
+		for (const file of sourceSnapshot.files) {
+			if (file.root_index !== sourceSnapshot.roots.indexOf(abs.replaceAll("\\", "/"))) continue;
+			if (consumedSourcePaths.has(canonicalSourcePath(file.absolute_path))) continue;
+			if (!/\.(?:cpp|cc|cxx|c)$/i.test(file.relative_path)) continue;
+			consumedSourcePaths.add(canonicalSourcePath(file.absolute_path));
+			const key = file.absolute_path.replaceAll("\\", "/");
+			const tuContent = readFileSync(file.absolute_path, "utf-8");
+			const tuHash = hashContent(tuContent);
+			const hit = prior?.project_files[key];
+			let classes: ParsedClass[];
+			if (hit && hit.hash === tuHash && hit.cpp_hash === "" ) {
+				stats.projectCached++;
+				classes = hit.classes;
+			} else {
+				stats.projectParsed++;
+				classes = parseHeader(file.absolute_path, abs, { includePlainCpp: true, content: tuContent });
+			}
+			cache.project_files[key] = { hash: tuHash, cpp_hash: "", classes, usage: {}, bindings: {}, is_module_entry: false };
+			const module = findModuleName(file.absolute_path, abs);
+			for (const c of classes) entries.push({ ...c, module, layer: "project" });
+			const rel = relative(abs, file.absolute_path).replaceAll("\\", "/");
+			forest.addFile(rel, { module, classes: classes.map((c) => c.name) });
+			if (classes.length > 0 && hit?.hash !== tuHash) {
+				console.log(`  standalone TU: ${rel}: ${classes.map((c) => `${c.name}(${c.kind})`).join(", ") || "(无类型定义)"}`);
+			}
 		}
 	}
 
@@ -441,7 +522,8 @@ export function extractClassGraphWithCache(
 			}
 			while (queue.length > 0) {
 				const name = queue.pop()!;
-				if (projectNames.has(name) || engineParsed.has(name) || name in cache.engine_classes) continue;
+				// Object.hasOwn：原型链上的 toString/constructor 等键会让 in 误判"已解析"。
+				if (projectNames.has(name) || engineParsed.has(name) || Object.hasOwn(cache.engine_classes, name)) continue;
 
 				const cached = priorEngine?.[name];
 				let hit: { cls: ParsedClass; headerPath: string } | null;
@@ -463,11 +545,18 @@ export function extractClassGraphWithCache(
 						cache.engine_classes[name] = null;
 						continue;
 					}
-					cache.engine_classes[name] = {
-						header: hit.headerPath.replaceAll("\\", "/"),
-						hash: hashFile(hit.headerPath)!,
-						cls: hit.cls,
-					};
+					const engineHash = hashFile(hit.headerPath);
+					if (engineHash === null) {
+						// 解析后文件随即消失（竞态）：本轮使用解析结果，但不落缓存，
+						// 避免 hash:null 在未来被当作有效命中。
+						console.warn(`  引擎头文件解析后消失，跳过缓存: ${hit.headerPath}`);
+					} else {
+						cache.engine_classes[name] = {
+							header: hit.headerPath.replaceAll("\\", "/"),
+							hash: engineHash,
+							cls: hit.cls,
+						};
+					}
 					console.log(`  引擎解析 ${name}: ${relative(engineSourceRoot, hit.headerPath).replaceAll("\\", "/")}（${hit.cls.functions.length} fn, ${hit.cls.properties.length} prop, ${hit.cls.delegates.length} delegate）`);
 				}
 				engineParsed.set(name, hit);
@@ -527,12 +616,53 @@ export function extractClassGraphWithCache(
 		],
 	};
 	const graph = buildGraph(entries, subsystem, usageByClass, bindingsByClass, { provenance, coverage });
+	// 森林边的度数累计走 id 索引：对每条边线性 find 是 O(边×节点)，大森林上退化明显。
+	const nodeById = new Map(graph.elements.nodes.map((node) => [String(node.data.id), node]));
 	for (const forest of forests) {
 		graph.elements.nodes.push(...(forest.nodes as (typeof graph.elements.nodes)[number][]));
+		for (const node of forest.nodes) nodeById.set(String(node.data.id), node as (typeof graph.elements.nodes)[number]);
 		graph.elements.edges.push(...(forest.edges as (typeof graph.elements.edges)[number][]));
 		for (const e of forest.edges) {
-			graph.elements.nodes.find((n) => n.data.id === e.data.source)!.data.metrics.out_degree++;
-			graph.elements.nodes.find((n) => n.data.id === e.data.target)!.data.metrics.in_degree++;
+			const source = nodeById.get(String(e.data.source));
+			const target = nodeById.get(String(e.data.target));
+			if (source) source.data.metrics.out_degree++;
+			if (target) target.data.metrics.in_degree++;
+		}
+	}
+
+	// —— B2：模块级 depends_on 子图（Build.cs 数据源；stub 节点 = 外部/未提取模块） ——
+	const ensureModuleNode = (moduleName: string): string => {
+		const id = `module:${moduleName}`;
+		if (!nodeById.has(id)) {
+			const node = {
+				data: {
+					id,
+					label: moduleName,
+					type: "module",
+					domain: "ue5_code",
+					metrics: { in_degree: 0, out_degree: 0 },
+				},
+			} as unknown as (typeof graph.elements.nodes)[number];
+			graph.elements.nodes.push(node);
+			nodeById.set(id, node);
+		}
+		return id;
+	};
+	for (const [moduleName, deps] of buildModuleDeps) {
+		const sourceId = ensureModuleNode(moduleName);
+		for (const dep of deps) {
+			const targetId = ensureModuleNode(dep);
+			const edgeId = `${sourceId}--depends_on-->${targetId}`;
+			if (nodeById.has(edgeId)) continue;
+			const edge = {
+				data: { id: edgeId, source: sourceId, target: targetId, relation: "depends_on", domain: "ue5_code" },
+			} as unknown as (typeof graph.elements.edges)[number];
+			graph.elements.edges.push(edge);
+			nodeById.set(edgeId, edge as never);
+			const sourceNode = nodeById.get(sourceId) as { data: { metrics?: { out_degree: number; in_degree: number } } } | undefined;
+			const targetNode = nodeById.get(targetId) as { data: { metrics?: { out_degree: number; in_degree: number } } } | undefined;
+			if (sourceNode?.data.metrics) sourceNode.data.metrics.out_degree++;
+			if (targetNode?.data.metrics) targetNode.data.metrics.in_degree++;
 		}
 	}
 

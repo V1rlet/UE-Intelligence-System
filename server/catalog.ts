@@ -17,7 +17,9 @@ import { activeCatalogGraphFiles, sha256 } from "../core/store/data-publication.
 
 type StoredCatalogEntry = Omit<GraphCatalogEntry,
 	"freshness" | "freshness_reason" | "source_file_count" | "source_files_newer" | "latest_source_at"
-> & { source_fingerprint_algorithm: string | null; source_fingerprint_value: string | null };
+>;
+
+const MAX_CATALOG_DIAGNOSTICS = 50;
 
 const graphCatalogCache = new Map<string, { mtimeMs: number; size: number; entry: StoredCatalogEntry }>();
 
@@ -52,12 +54,18 @@ function buildCatalogPreview(elements?: { nodes?: unknown[]; edges?: unknown[] }
 	return { format_version: 1, nodes, edges };
 }
 
-function catalogCapabilities(elements?: { nodes?: unknown[]; edges?: unknown[] }): GraphCatalogEntry["capabilities"] {
+function catalogCapabilities(graph?: { elements?: { nodes?: unknown[]; edges?: unknown[] }; meta?: { coverage?: { status?: unknown } } }): GraphCatalogEntry["capabilities"] {
+	const elements = graph?.elements;
 	const hasForestFacts = (elements?.nodes ?? []).some((item) => {
 		const type = String((item as { data?: { type?: unknown } }).data?.type ?? "");
 		return type === "folder" || type === "file";
 	});
-	return hasForestFacts ? { file_forest_projection: GRAPH_PROJECTION_FORMAT_VERSION } : {};
+	const capabilities: GraphCatalogEntry["capabilities"] = hasForestFacts ? { file_forest_projection: GRAPH_PROJECTION_FORMAT_VERSION } : {};
+	// B1：coverage=complete 表示提取器消费了全部发现的源文件（含 standalone TU）。
+	if (graph?.meta?.coverage?.status === "complete") {
+		capabilities.standalone_translation_units = 1;
+	}
+	return capabilities;
 }
 
 interface SourceScan {
@@ -93,16 +101,20 @@ export function withRuntimeFreshness(entry: StoredCatalogEntry): GraphCatalogEnt
 		return { ...entry, freshness: "unverified", freshness_reason: "missing-generated-at", source_file_count: null, source_files_newer: null, latest_source_at: null };
 	}
 	try {
-		const inventory = discoverSourceInputs(entry.source_root.split(";").filter(Boolean));
+		const roots = entry.source_root.split(";").filter(Boolean);
+		if (roots.some((root) => !existsSync(root))) {
+			return { ...entry, freshness: "unverified", freshness_reason: "missing-source-root", source_file_count: null, source_files_newer: null, latest_source_at: null };
+		}
+		const inventory = discoverSourceInputs(roots);
 		if (inventory.diagnostics.length > 0) throw new Error(inventory.diagnostics.map((item) => item.code).join(", "));
 		const scan = scanSourceTimes(inventory.files, generatedMs);
 		if (entry.provenance_status === "verified") {
-			if (entry.source_fingerprint_algorithm !== SOURCE_FINGERPRINT_ALGORITHM || !entry.source_fingerprint_value) {
+			if (entry.source_fingerprint?.algorithm !== SOURCE_FINGERPRINT_ALGORITHM || !entry.source_fingerprint.value) {
 				return { ...entry, freshness: "unverified", freshness_reason: "unsupported-fingerprint-algorithm", source_file_count: scan.count, source_files_newer: scan.newer, latest_source_at: scan.latestMs ? new Date(scan.latestMs).toISOString() : null };
 			}
 			const snapshot = fingerprintSourceInventory(inventory);
 			if (!snapshot.fingerprint) throw new Error("source fingerprint failed");
-			const matches = snapshot.fingerprint.value === entry.source_fingerprint_value;
+			const matches = snapshot.fingerprint.value === entry.source_fingerprint.value;
 			return {
 				...entry,
 				freshness: matches ? "current" : "stale",
@@ -174,6 +186,10 @@ export function graphCatalogEntries(graphsDir: string): GraphCatalogEntry[] {
 			const provenance = graph.meta?.provenance as Record<string, unknown> | undefined;
 			const fingerprint = provenance?.fingerprint as Record<string, unknown> | undefined;
 			const coverage = graph.meta?.coverage as Record<string, unknown> | undefined;
+			const rawDiagnostics = Array.isArray(coverage?.diagnostics)
+				? coverage.diagnostics.filter((item): item is { code: string; path?: string; message?: string } =>
+					Boolean(item && typeof item === "object" && typeof (item as { code?: unknown }).code === "string"))
+				: [];
 			const generatedAt = typeof graph.meta?.generated_at === "string" ? graph.meta.generated_at : null;
 			const entry: StoredCatalogEntry = {
 				file,
@@ -198,10 +214,18 @@ export function graphCatalogEntries(graphsDir: string): GraphCatalogEntry[] {
 				coverage_consumed_files: typeof coverage?.consumed_files === "number" ? coverage.consumed_files : null,
 				coverage_skipped_files: typeof coverage?.skipped_files === "number" ? coverage.skipped_files : null,
 				coverage_failed_files: typeof coverage?.failed_files === "number" ? coverage.failed_files : null,
+				coverage_diagnostics: rawDiagnostics.slice(0, MAX_CATALOG_DIAGNOSTICS).map((item) => ({
+					code: item.code,
+					...(typeof item.path === "string" ? { path: item.path } : {}),
+					...(typeof item.message === "string" ? { message: item.message } : {}),
+				})),
+				coverage_diagnostics_truncated: Math.max(0, rawDiagnostics.length - MAX_CATALOG_DIAGNOSTICS),
 				preview: buildCatalogPreview(graph.elements),
-				capabilities: catalogCapabilities(graph.elements),
-				source_fingerprint_algorithm: typeof fingerprint?.algorithm === "string" ? fingerprint.algorithm : null,
-				source_fingerprint_value: typeof fingerprint?.value === "string" ? fingerprint.value : null,
+				capabilities: catalogCapabilities(graph),
+				source_fingerprint: fingerprint?.algorithm === SOURCE_FINGERPRINT_ALGORITHM
+					&& typeof fingerprint.value === "string" && typeof fingerprint.file_count === "number"
+					? { algorithm: SOURCE_FINGERPRINT_ALGORITHM, value: fingerprint.value, file_count: fingerprint.file_count }
+					: null,
 			};
 			graphCatalogCache.set(path, { mtimeMs: stat.mtimeMs, size: stat.size, entry });
 			entries.push(withRuntimeFreshness(entry));

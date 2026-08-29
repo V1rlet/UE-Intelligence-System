@@ -100,7 +100,7 @@ for (const [f, info] of refs) {
 
 // 入口/特殊文件：不作为孤儿判定
 const ENTRY_PATTERN = /(vite\.config|service-launcher|release-server|install-service|(^|[\\/])(main|embed)\.tsx?$|bootstrap-recovery)/;
-const CLI_PATTERN = /(tools[\\/]|scripts[\\/]|core[\\/]hooks[\\/](scan-stale|lore-watcher|post-commit-update|install-git-hook)|core[\\/]annotation[\\/]scan-stale|adapters[\\/]ue5-code[\\/](extract-classes|epic-api-sync|build-architecture-references|build-architecture-mindmap))/;
+const CLI_PATTERN = /(tools[\\/]|scripts[\\/]|core[\\/]hooks[\\/](scan-stale|lore-watcher|post-commit-update|install-git-hook)|core[\\/]annotation[\\/]scan-stale|adapters[\\/]ue5-code[\\/](extract-classes|epic-api-sync))/;
 
 console.log("=== 文件级孤儿（无任何同仓 import 引用，且非入口/CLI main）===");
 const orphans: string[] = [];

@@ -11,6 +11,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { ueHeaderStemForType } from "../../core/schema/ue-naming.js";
+import { BoundedCache } from "./bounded-cache.js";
 import { parseHeader, type ParsedClass } from "./header-parser.js";
 
 /** 从 .uproject 的 EngineAssociation 推导本机引擎根目录 */
@@ -40,7 +41,8 @@ export function findUproject(sourceDir: string): string | null {
 
 export class EngineResolver {
 	private index: Map<string, string[]> | null = null;
-	private parsedFiles = new Map<string, ParsedClass[]>();
+	// 头文件解析缓存必须有界：常驻服务里随浏览类数量无限增长（淘汰只损失一次重解析）。
+	private parsedFiles = new BoundedCache<string, ParsedClass[]>(512);
 	readonly engineSourceRoot: string;
 	readonly engineRoot: string;
 

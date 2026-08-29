@@ -3,7 +3,7 @@
 // side 指面板贴靠的屏幕侧："right"（详情/Spec 面板，手柄在左缘，向左拖变宽）、
 // "left"（API 导航，手柄在右缘，向右拖变宽）。拖动中给 body 挂 col-resize 光标类。
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { loadPref, savePref } from "./uiPrefs";
 
 export type PanelSide = "left" | "right";
@@ -43,6 +43,10 @@ export function usePanelWidth(key: string, defaults: { width: number; min: numbe
 	});
 	const widthRef = useRef(width);
 	widthRef.current = width;
+	// 拖拽中途宿主面板卸载（路由切换/聚焦目标解析关闭面板）时，window 监听与
+	// body 光标类必须由创建者清理——否则监听永久泄漏且 col-resize 光标卡死全页。
+	const teardownRef = useRef<(() => void) | null>(null);
+	useEffect(() => () => teardownRef.current?.(), []);
 
 	const onResizeStart = useCallback(
 		(e: React.MouseEvent) => {
@@ -58,8 +62,11 @@ export function usePanelWidth(key: string, defaults: { width: number; min: numbe
 				window.removeEventListener("mousemove", onMove);
 				window.removeEventListener("mouseup", onUp);
 				document.body.classList.remove("resizing-x");
+				teardownRef.current = null;
 				savePref(`panelWidth.${key}`, widthRef.current);
 			};
+			teardownRef.current?.();
+			teardownRef.current = onUp;
 			window.addEventListener("mousemove", onMove);
 			window.addEventListener("mouseup", onUp);
 		},

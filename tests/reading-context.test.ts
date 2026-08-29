@@ -23,7 +23,9 @@ test("legacy reading data migrates losslessly without inventing favorite source"
 	const migrated = migrateLegacyReadingContext([
 		{subsystem: "project", entries: [{node_id: "AThing", domain: "ue5_code", annotations: [annotation]}]},
 	], [{ node_id: "AThing::Run", added_at: "2026-01-02T00:00:00.000Z" }], "2026-01-03T00:00:00.000Z");
-	assert.equal(migrated.format_version, 1);
+	// 旧数据迁移进"当前"格式（D-P3 起 READING_CONTEXT_FORMAT_VERSION = 2）：
+	// 迁移产物必须始终是最新版本，而不是停留在旧版本号。
+	assert.equal(migrated.format_version, 2);
 	assert.equal(migrated.revision, 1);
 	assert.deepEqual(migrated.annotations[0], { subsystem: "project", node_id: "AThing", annotations: [annotation] });
 	assert.deepEqual(migrated.favorites[0], {

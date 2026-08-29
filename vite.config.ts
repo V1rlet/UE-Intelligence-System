@@ -58,22 +58,19 @@ export default defineConfig({
 			"react/jsx-dev-runtime",
 			"cytoscape",
 			"cytoscape-fcose",
-			"mermaid",
 		],
 		holdUntilCrawlEnd: false,
 	},
 	// 3010=AFFiNE、3021=CytoscapeViewer、3022=本机已有 node 服务占用，取 3030 并固定
 	server: { port: 3030, strictPort: true },
-	// 多页入口：主查看器 + /embed 只读嵌入页（P4U5）
+	// Single viewer entry; retired surfaces are served by centralized 410 adapters.
 	build: {
-		// Mermaid's unsupported diagram grammars remain separate lazy chunks. The
-		// shipped sequence-diagram path and the overview shell are guarded by
-		// tools/bundle-boundary-check.mjs, so the generic 500 kB warning is noise.
+		// Deferred Cytoscape workspaces are guarded by the bundle boundary check;
+		// the generic 500 kB warning does not describe the initial shell budget.
 		chunkSizeWarningLimit: 700,
 		rollupOptions: {
 			input: {
 				main: resolve(ROOT, "viewer/index.html"),
-				embed: resolve(ROOT, "viewer/embed.html"),
 			},
 		},
 	},

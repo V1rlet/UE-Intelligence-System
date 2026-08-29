@@ -4,8 +4,9 @@
 // （logs/hook.lock）共用同一能力，避免两份含义重叠的锁实现漂移。锁文件记录 owner pid 与
 // 开始时间；占用者死亡或超过最大事务时长时允许恢复，其余情况拒绝并发持有。
 
-import { closeSync, existsSync, mkdirSync, openSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
+import { randomUUID } from "node:crypto";
 
 export interface FileLockRecord {
 	pid: number;
@@ -25,6 +26,14 @@ export interface FileLockOptions {
 	busyMessage?: (lockPath: string) => string;
 	/** 恢复陈旧锁时回调，记录恢复原因（死 pid / 超时） */
 	onRecover?: (reason: string) => void;
+}
+
+export class FileLockBusyError extends Error {
+	readonly code = "FILE_LOCK_BUSY";
+	constructor(readonly lockPath: string, message?: string) {
+		super(message ?? `already locked (${lockPath})`);
+		this.name = "FileLockBusyError";
+	}
 }
 
 function defaultSerialize(record: FileLockRecord): string {
@@ -58,8 +67,10 @@ function readLock(lockPath: string, parse: NonNullable<FileLockOptions["parse"]>
 
 /**
  * 恢复死进程或超过最大事务时长的陈旧锁；返回锁是否已可重新获取。
- * 记录解析失败时按文件 mtime 判定过期；并发恢复下文件已被移除时返回 true
- * （锁已失效，调用方应重试原子获取），绝不抛 ENOENT。
+ * 记录解析失败时按文件 mtime 判定过期。恢复通过原子 rename 认领：多个进程同时
+ * 观察到同一陈旧锁时只有 rename 成功者真正移除锁，其余竞争者拿到 ENOENT 后重试
+ * 原子获取——避免"读取陈旧记录 → 无条件 rmSync"把新持有者刚创建的锁删掉，
+ * 导致两进程同时持锁。绝不抛 ENOENT。
  */
 export function recoverStaleFileLock(
 	lockPath: string,
@@ -79,8 +90,19 @@ export function recoverStaleFileLock(
 	const expired = !Number.isFinite(startedMs) || Date.now() - startedMs >= staleMs;
 	const ownerDead = Boolean(record && !processExists(record.pid));
 	if (!expired && !ownerDead) return false;
-	rmSync(lockPath, { force: true });
-	onRecover?.(ownerDead ? `dead pid ${record!.pid}` : `older than ${staleMs} ms`);
+	const claim = `${lockPath}.recover-${process.pid}-${randomUUID()}`;
+	try {
+		renameSync(lockPath, claim);
+	} catch {
+		// ENOENT：已被并发恢复者认领；其他错误：调用方重试原子获取或按 busy 处理。
+		return true;
+	}
+	try {
+		rmSync(claim, { force: true });
+	} catch {
+		/* 认领文件清理是尽力而为，不阻碍恢复语义 */
+	}
+	onRecover?.(ownerDead && record ? `dead pid ${record.pid}` : `older than ${staleMs} ms`);
 	return true;
 }
 
@@ -89,6 +111,39 @@ export function recoverStaleFileLock(
  * busy=skip 时返回 null（调用方自行决定是否跳过）。锁在 action 结束后确定性释放。
  */
 export function withFileLock<T>(lockPath: string, action: () => T, options: FileLockOptions = {}): T | null {
+	const handle = acquireFileLock(lockPath, options);
+	if (handle === null) return null;
+	try {
+		return action();
+	} finally {
+		releaseFileLock(handle, lockPath, options.parse ?? defaultParse);
+	}
+}
+
+/**
+ * withFileLock 的异步孪生：action 可 await，锁在异步 action 结束后才释放。
+ * 获取/释放与同步版本共用同一组原语——两个版本不得各自演化出不同的归属校验语义。
+ * 服务端处理器里的长耗时子进程必须走这里：spawnSync 式同步等待会把整个
+ * 单线程事件循环（静态资源/健康探测/其余 API）冻到 action 结束。
+ */
+export async function withFileLockAsync<T>(lockPath: string, action: () => Promise<T>, options: FileLockOptions = {}): Promise<T | null> {
+	const handle = acquireFileLock(lockPath, options);
+	if (handle === null) return null;
+	try {
+		return await action();
+	} finally {
+		releaseFileLock(handle, lockPath, options.parse ?? defaultParse);
+	}
+}
+
+interface LockHandle {
+	descriptor: number;
+	/** 本次获取写入的 started_at 令牌；释放时用于归属校验。 */
+	acquiredToken: string;
+}
+
+/** 获取并写入锁记录；busy=skip 且锁被占用时返回 null，busy=throw 时抛 FileLockBusyError。 */
+function acquireFileLock(lockPath: string, options: FileLockOptions): LockHandle | null {
 	const staleMs = options.staleMs ?? 10 * 60 * 1000;
 	const busy = options.busy ?? "throw";
 	const parse = options.parse ?? defaultParse;
@@ -103,32 +158,35 @@ export function withFileLock<T>(lockPath: string, action: () => T, options: File
 			if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
 			if (attempt === 0 && recoverStaleFileLock(lockPath, staleMs, parse, options.onRecover)) continue;
 			if (busy === "skip") return null;
-			throw new Error(options.busyMessage?.(lockPath) ?? `already locked (${lockPath})`);
+			throw new FileLockBusyError(lockPath, options.busyMessage?.(lockPath));
 		}
 	}
 	if (descriptor === null) {
 		if (busy === "skip") return null;
-		throw new Error(options.busyMessage?.(lockPath) ?? `already locked (${lockPath})`);
+		throw new FileLockBusyError(lockPath, options.busyMessage?.(lockPath));
 	}
+	const startedAt = new Date().toISOString();
 	try {
-		try {
-			writeFileSync(descriptor, serialize({ pid: process.pid, started_at: new Date().toISOString() }), "utf8");
-		} catch (error) {
-			closeSync(descriptor);
-			descriptor = null;
+		writeFileSync(descriptor, serialize({ pid: process.pid, started_at: startedAt }), "utf8");
+	} catch (error) {
+		closeSync(descriptor);
+		rmSync(lockPath, { force: true });
+		throw error;
+	}
+	return { descriptor, acquiredToken: startedAt };
+}
+
+/** 关闭描述符并按归属校验释放：仅当锁文件仍属于本进程（pid 与本次获取写入的
+ *  started_at 令牌都匹配）时才删除。若 action 超过 staleMs 且被后继进程接管
+ *  （恢复竞态），不得删除后继持有者的锁——否则跨进程互斥失效。 */
+function releaseFileLock(handle: LockHandle, lockPath: string, parse: NonNullable<FileLockOptions["parse"]>): void {
+	closeSync(handle.descriptor);
+	try {
+		const owner = readLock(lockPath, parse);
+		if (owner && owner.pid === process.pid && owner.started_at === handle.acquiredToken) {
 			rmSync(lockPath, { force: true });
-			throw error;
 		}
-		return action();
-	} finally {
-		if (descriptor !== null) closeSync(descriptor);
-		// 归属校验：仅当锁文件仍属于本进程时才删除。若 action 超过 staleMs 且被
-		// 后继进程接管（恢复竞态），此处不得删除后继持有者的锁——否则跨进程互斥失效。
-		try {
-			const owner = readLock(lockPath, parse);
-			if (owner && owner.pid === process.pid) rmSync(lockPath, { force: true });
-		} catch {
-			/* 锁已被恢复/移除：不再干预 */
-		}
+	} catch {
+		/* 锁已被恢复/移除：不再干预 */
 	}
 }

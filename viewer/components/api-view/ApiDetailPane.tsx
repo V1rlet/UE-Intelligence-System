@@ -212,7 +212,9 @@ export default function ApiDetailPane({
 				{/* 标注 */}
 				<div className="api-detail-section">
 					<div className="api-detail-section-head">标注</div>
-					<AnnotationPanel nodeId={selectedFn.id} domain={domain} subsystem={subsystem} onJumpToNode={onJumpToNode} />
+					{/* onRevertSelection：拒绝丢弃草稿时还原本视图的函数选中——
+					    onJumpToNode 会跳去关系图工作区，起不到还原作用反而丢草稿。 */}
+					<AnnotationPanel nodeId={selectedFn.id} domain={domain} subsystem={subsystem} onJumpToNode={onJumpToNode} onRevertSelection={onSelectFn} />
 				</div>
 
 				{/* 引擎 API：星标类 */}

@@ -3,11 +3,11 @@ import { lazy } from "react";
 import { AsyncSurface } from "../common/AsyncSurface";
 import Legend from "./Legend";
 import DetailInspector from "./DetailInspector";
+import PanelResizer from "../api-view/PanelResizer";
 import type { GraphFile } from "../../src/useGraphDocument";
 import type { PanelWidthState } from "../../src/usePanelWidth";
 import type { GraphElements } from "./GraphView";
 import type { FocusRequest, SpecTarget, SpecZoneKey, SpecZonePages } from "./specModel";
-import type { MermaidEntry } from "../mermaid/MermaidModal";
 import type { CodeSource } from "../../src/codeWorkspaceModel";
 import type { EngineCatalogState } from "../../src/useEngineCatalog";
 
@@ -53,8 +53,6 @@ export interface GraphWorkspaceSpec {
 	onToggleFav: (id: string) => void;
 	onLocateFn: (fnId: string, parentId: string) => void;
 	onShowInApi: (fnId: string) => void;
-	mermaidFor: (ids: (string | null)[]) => MermaidEntry[];
-	onOpenMermaid: (entry: MermaidEntry) => void;
 	onJumpToNode: (id: string) => void;
 }
 
@@ -79,20 +77,9 @@ export interface GraphWorkspaceViewProps {
 	onExit: () => void;
 }
 
-function PanelResizer({ state, label }: { state: PanelWidthState; label: string }) {
-	return <div
-		className="panel-resizer"
-		role="separator"
-		tabIndex={0}
-		aria-orientation="vertical"
-		aria-label={label}
-		aria-valuemin={state.min}
-		aria-valuemax={state.max}
-		aria-valuenow={state.width}
-		title="拖动或使用方向键调整面板宽度"
-		onMouseDown={state.onResizeStart}
-		onKeyDown={state.onResizeKeyDown}
-	/>;
+/** 分隔条 UI 收敛到共享 PanelResizer（与 API 视图同一条键盘/ARIA 契约）。 */
+function WorkspacePanelResizer({ state, label }: { state: PanelWidthState; label: string }) {
+	return <PanelResizer state={state} label={label} title="拖动或使用方向键调整面板宽度" />;
 }
 
 export default function GraphWorkspaceView({ data, spec, canvas, engine, panels, onExit }: GraphWorkspaceViewProps) {
@@ -100,7 +87,7 @@ export default function GraphWorkspaceView({ data, spec, canvas, engine, panels,
 	const {
 		specTarget, hoverId, specSelectedId, fnPage, specZonePages, focusRequest,
 		onFnPage, onZonePage, onHover, onSelectSpecNode, onOpenSpec, onCloseSpec,
-		favIds, onToggleFav, onLocateFn, onShowInApi, mermaidFor, onOpenMermaid, onJumpToNode,
+		favIds, onToggleFav, onLocateFn, onShowInApi, onJumpToNode,
 	} = spec;
 	const { selected, onSelect, onGraphDblTap } = canvas;
 	const showEngineLayer = !specTarget && codeSource === "engine";
@@ -125,7 +112,7 @@ export default function GraphWorkspaceView({ data, spec, canvas, engine, panels,
 				/>
 			</AsyncSurface>
 		</div>
-		<PanelResizer state={panels.specPanel} label="调整类详情宽度" />
+		<WorkspacePanelResizer state={panels.specPanel} label="调整类详情宽度" />
 		<AsyncSurface label="正在打开类详情" detail="类详情面板没有成功打开。" icon="graph" variant="panel" style={{ width: panels.specPanel.width }} resetKey={`spec-panel:${currentFile ?? ""}:${specTarget.id}`} onExit={onCloseSpec}>
 			<ReadonlySpecPanel
 				elements={specElements}
@@ -141,8 +128,6 @@ export default function GraphWorkspaceView({ data, spec, canvas, engine, panels,
 				onToggleFav={onToggleFav}
 				onJumpFn={onLocateFn}
 				onShowInApi={onShowInApi}
-				mermaidEntries={mermaidFor([specTarget.id, specSelectedId])}
-				onOpenMermaid={onOpenMermaid}
 				onJumpToNode={onJumpToNode}
 				onClose={onCloseSpec}
 			/>
@@ -173,7 +158,7 @@ export default function GraphWorkspaceView({ data, spec, canvas, engine, panels,
 			</AsyncSurface>
 			<Legend domain={domain} presentTypes={legend.types} presentRelations={legend.relations} presentLayers={legend.layers} />
 		</div>
-		{selected ? <><PanelResizer state={panels.detailPanel} label="调整代码事实详情宽度" />
+		{selected ? <><WorkspacePanelResizer state={panels.detailPanel} label="调整代码事实详情宽度" />
 		<aside className="detail-panel detail-panel-demand" style={{ width: panels.detailPanel.width }}>
 			<button type="button" className="detail-panel-close" aria-label="关闭代码事实检视器" onClick={() => onSelect(null)}>×</button>
 			<DetailInspector
@@ -183,12 +168,10 @@ export default function GraphWorkspaceView({ data, spec, canvas, engine, panels,
 				domain={domain}
 				subsystem={subsystem}
 				favIds={favIds}
-				mermaidFor={mermaidFor}
 				onToggleFav={onToggleFav}
 				onLocateFn={onLocateFn}
 				onShowInApi={onShowInApi}
 				onJumpToNode={onJumpToNode}
-				onOpenMermaid={onOpenMermaid}
 			/>
 		</aside></> : null}
 	</>;

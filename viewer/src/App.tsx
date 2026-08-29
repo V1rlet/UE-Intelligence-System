@@ -4,23 +4,27 @@ import { lazy, useCallback, useEffect, useMemo, useRef, useState, type CSSProper
 import { graphSourceRootQuery } from "../../core/schema/graph-version";
 import { useGraphDocument } from "./useGraphDocument";
 import { useGraphFile } from "./useGraphFile";
+import { graphLoadModeSatisfied } from "./loadGraphProjection";
 import { useForestNavigation } from "./useForestNavigation";
 import { useSpecNavigation } from "./useSpecNavigation";
 import { useEngineClassParser } from "./useEngineClassParser";
 import { useEngineCatalog } from "./useEngineCatalog";
 import useFavorites from "../components/api-view/useFavorites";
 import AppIcon from "../components/common/AppIcon";
+import EvidenceStatusBadge from "../components/common/EvidenceStatusBadge";
 import HierarchySelect, { type HierarchySelectOption } from "../components/common/HierarchySelect";
 import { AsyncLoading, AsyncSurface } from "../components/common/AsyncSurface";
 import ToastHost, { toast } from "../components/common/Toast";
 import { useDialogFocus } from "../components/common/useDialogFocus";
+import { handleRovingTabKeyDown, rovingTabStop } from "../components/common/rovingTabs";
 import type { HelpSection } from "../components/help/HelpCenter";
-import type { MermaidEntry } from "../components/mermaid/MermaidModal";
 import HomeView from "../components/home/HomeView";
 import { FN_PAGE_SIZE, type SpecTarget } from "../components/graph-view/specModel";
 import { specFunctionPageIndex } from "../components/common/functionPartition";
 import { usePanelWidth } from "./usePanelWidth";
-import { selectExistingSpec } from "./workspaceModel";
+import { isBrowsableCodeGraph, selectExistingSpec } from "./workspaceModel";
+import { appHistoryCommand, type AppHistoryWriteMode } from "./appHistory";
+import { hasAppShortcutBlocker, resolveAppShortcut } from "./appShortcuts";
 import { UE_SPEC_NODE_TYPES } from "../../core/schema/ue-naming";
 import {
 	buildAppSearch,
@@ -40,10 +44,11 @@ import {
 	type CodeSource,
 	type CodeWorkspaceState,
 } from "./codeWorkspaceModel";
+import { recordViewerWorkspace, viewerWorkspaceUsage } from "./localUsage";
+import { confirmDiscardUnsavedChanges, guardedWorkspaceSwitch, hasUnsavedChanges } from "./unsavedChanges";
 
 const ApiReferenceView = lazy(() => import("../components/api-view/ApiReferenceView"));
 const GraphWorkspaceView = lazy(() => import("../components/graph-view/GraphWorkspaceView"));
-const MermaidModal = lazy(() => import("../components/mermaid/MermaidModal"));
 const ArchitectureWorkspace = lazy(() => import("../components/mindmap/ArchitectureWorkspace"));
 const ChangesView = lazy(() => import("../components/changes/ChangesView"));
 const HelpCenter = lazy(() => import("../components/help/HelpCenter"));
@@ -71,30 +76,59 @@ function mergeChangeRouteDiagnostics(current: ChangeRouteDiagnostic[], incoming:
 export default function App() {
 	const initialLink = useMemo(readDeepLink, []);
 	const [view, setView] = useState<AppView>(initialLink.view);
+	const recordedWorkspacesRef = useRef(new Set<string>());
 	const [routeIssue, setRouteIssue] = useState(initialLink.issue);
+	const historyWriteModeRef = useRef<AppHistoryWriteMode>("replace");
+	const navigateView = useCallback((nextView: AppView) => {
+		// 工作区切换会卸载标注面板等编辑器：有未保存草稿时先征得确认，
+		// 否则探测基础设施只是死代码（beforeunload 只能拦标签页级离开）。
+		if (!confirmDiscardUnsavedChanges()) return;
+		setRouteIssue(null);
+		setView((current) => {
+			if (current !== nextView) historyWriteModeRef.current = "push";
+			return nextView;
+		});
+	}, []);
 	const [architectureScope, setArchitectureScope] = useState(initialLink.architectureScope ?? "root");
 	const [codeWorkspace, setCodeWorkspace] = useState<CodeWorkspaceState>({ source: initialLink.codeSource, lens: initialLink.codeLens });
 	const { source: codeSource, lens: codeLens } = codeWorkspace;
+	useEffect(() => {
+		const event = viewerWorkspaceUsage(view, codeLens);
+		if (recordedWorkspacesRef.current.has(event)) return;
+		recordedWorkspacesRef.current.add(event);
+		recordViewerWorkspace(event);
+	}, [codeLens, codeSource, view]);
 	const [selected, setSelected] = useState<Record<string, unknown> | null>(null);
 	const [classChooser, setClassChooser] = useState<string[] | null>(null);
-	const [mermaidOpen, setMermaidOpen] = useState<MermaidEntry | null>(null);
 	const [helpSection, setHelpSection] = useState<HelpSection | null>(null);
 	const [apiEntryRequest, setApiEntryRequest] = useState<{ id: string; seq: number } | null>(null);
 	const [forceFullGraph, setForceFullGraph] = useState(Boolean(initialLink.spec || initialLink.focus));
 	const [forestBranch, setForestBranch] = useState<string | null>(initialLink.forestBranch);
 	const [changeEvidenceRoute, setChangeEvidenceRoute] = useState<ChangeEvidenceRoute>(initialLink.changes);
 	const [changeRouteDiagnostics, setChangeRouteDiagnostics] = useState<ChangeRouteDiagnostic[]>(initialLink.changeDiagnostics);
+	const [routeRestoreVersion, setRouteRestoreVersion] = useState(0);
 	const searchInputRef = useRef<HTMLInputElement>(null);
-	const classChooserDialogRef = useDialogFocus<HTMLDivElement>();
+	const classChooserDialogRef = useDialogFocus<HTMLDivElement>(Boolean(classChooser), () => setClassChooser(null));
 	const pendingSpecRef = useRef<SpecTarget | null>(initialLink.spec ? { id: initialLink.spec } : null);
 	const pendingSpecSourceRef = useRef<"project" | "engine" | "auto">(initialLink.codeSource === "engine" ? "engine" : "project");
 	const pendingFocusRef = useRef<string | null>(initialLink.focus);
+	const currentPageLabel = view === "home"
+		? "代码事实总览"
+		: view === "architecture"
+			? "代码架构"
+			: view === "changes"
+				? "代码变化"
+				: codeLensCapabilities().find((lens) => lens.id === codeLens)?.label ?? "代码探索";
+
+	useEffect(() => {
+		window.document.title = `${helpSection ? "帮助中心" : currentPageLabel} · GraphBrain`;
+	}, [currentPageLabel, helpSection]);
 
 	const specNav = useSpecNavigation({});
 	const document = useGraphDocument({ deepLink: initialLink });
 	const {
-		graphList, graphCatalog, listLoaded, refreshGraphCatalog, catalogError,
-		currentFile, setCurrentFile, mermaidFor,
+		graphList, graphCatalog, listLoaded, catalogRefreshing, refreshGraphCatalog, catalogError,
+		currentFile, setCurrentFile,
 	} = document;
 	const currentCatalogEntry = graphCatalog.find((entry) => entry.file === currentFile) ?? null;
 	const supportsForestProjection = currentCatalogEntry?.capabilities?.file_forest_projection === 1;
@@ -120,7 +154,7 @@ export default function App() {
 		onLoaded: () => undefined,
 		onLoadError: (message) => toast(`加载代码图失败：${message}`, "error"),
 	});
-	const graphModeSatisfied = graphLoadMode === "projection" || graphFile.loadedGraphMode === "full";
+	const graphModeSatisfied = graphLoadModeSatisfied(graphFile.loadedGraphMode, graphLoadMode);
 	const graph = graphFile.loadedGraphFile === currentFile && graphModeSatisfied ? graphFile.graph : null;
 	const { graphLoading, graphLoadError, reloadGraph } = graphFile;
 	const forest = useForestNavigation({ graph, displayGraph: graph, graphKey: currentFile, branch: forestBranch, onBranchChange: setForestBranch });
@@ -161,17 +195,36 @@ export default function App() {
 		for (const edge of displayElements?.edges ?? []) if (edge.data.relation) relations.add(String(edge.data.relation));
 		return { types, relations, layers };
 	}, [displayElements]);
+	const toggleWorkspaceFavorite = useCallback((id: string) => {
+		const facts = codeSource === "engine" ? engine.engineElements : graph?.elements;
+		const data = facts?.nodes.find((node) => String(node.data.id) === id)?.data as Record<string, unknown> | undefined;
+		if (data?.type !== "ufunction") {
+			toast(`无法更新 ${id} 的快速入口：缺少函数事实`, "error");
+			return;
+		}
+		void toggleFavorite(id, {
+			kind: "function",
+			source: codeSource === "engine" ? "engine" : "project",
+			...(data.label ? { label: String(data.label) } : {}),
+			...(data.parent ? { parent_id: String(data.parent) } : {}),
+			...(data.module ? { module: String(data.module) } : {}),
+			...(data.source_path ? { source_path: String(data.source_path) } : {}),
+		});
+	}, [codeSource, engine.engineElements, graph?.elements, toggleFavorite]);
 
 	const openDocument = useCallback((file: string, destination: AppView = "code") => {
-		setCurrentFile(file);
-		setForestBranch(null);
-		setView(destination);
-		setSelected(null);
-		specNav.closeSpec();
+		// 文件切换会卸载整个图谱工作区（含标注面板）：必须过未保存守卫（F3）。
+		guardedWorkspaceSwitch(() => {
+			setCurrentFile(file);
+			setForestBranch(null);
+			setView(destination);
+			setSelected(null);
+			specNav.closeSpec();
+		});
 	}, [setCurrentFile, specNav.closeSpec]);
 
 	const openWorkspaceSpec = useCallback((target: SpecTarget, source: "project" | "engine") => {
-		setView("code");
+		navigateView("code");
 		setCodeWorkspace({ source, lens: "relations" });
 		specNav.openSpec(target);
 		const facts = source === "engine" ? engine.engineElements : graph?.elements;
@@ -179,7 +232,7 @@ export default function App() {
 		if (source === "engine" && !exists && /^[A-Z][A-Za-z0-9_]{2,}$/.test(target.id)) {
 			void engine.parseEngineClass(target.id, target.sourcePath);
 		}
-	}, [engine.parseEngineClass, graph, specNav.openSpec]);
+	}, [engine.parseEngineClass, graph, navigateView, specNav.openSpec]);
 	const openSpec = useCallback((target: SpecTarget) => openWorkspaceSpec(target, "project"), [openWorkspaceSpec]);
 
 	const openSpecFromArchitecture = useCallback((node: Record<string, unknown>) => {
@@ -198,13 +251,13 @@ export default function App() {
 			pendingSpecSourceRef.current = "auto";
 			setForceFullGraph(true);
 			setCurrentFile(entry.file);
-			setView("code");
+			navigateView("code");
 			setCodeWorkspace({ source: "project", lens: "relations" });
 			return;
 		}
 		const targetSource: "project" | "engine" = graph.elements.nodes.some((item) => String(item.data.id) === target.id) ? "project" : "engine";
 		openWorkspaceSpec(target, targetSource);
-	}, [currentFile, graph, graphCatalog, graphFile.loadedGraphMode, openWorkspaceSpec, setCurrentFile]);
+	}, [currentFile, graph, graphCatalog, graphFile.loadedGraphMode, navigateView, openWorkspaceSpec, setCurrentFile]);
 
 	useEffect(() => {
 		if (!graph || !currentFile) return;
@@ -221,14 +274,14 @@ export default function App() {
 		if (pendingFocusRef.current) {
 			const id = pendingFocusRef.current;
 			pendingFocusRef.current = null;
-			setView("code");
+			navigateView("code");
 			setCodeWorkspace({ source: "project", lens: "relations" });
 			const node = graph.elements.nodes.find((item) => String(item.data.id) === id);
 			if (node && SPEC_TYPES.has(String(node.data.type ?? ""))) openWorkspaceSpec({ id }, "project");
 			else forest.locateInForest(id);
 			setForceFullGraph(false);
 		}
-	}, [currentFile, graph, forest.locateInForest, openWorkspaceSpec]);
+	}, [currentFile, graph, forest.locateInForest, navigateView, openWorkspaceSpec, routeRestoreVersion]);
 
 	const handleGraphDblTap = useCallback((data: Record<string, unknown>) => {
 		const id = String(data.id ?? "");
@@ -247,7 +300,7 @@ export default function App() {
 	}, [forest.toggleFolder, openSpec]);
 
 	const jumpToNode = useCallback((id: string) => {
-		setView("code");
+		navigateView("code");
 		setCodeWorkspace({ source: "project", lens: "relations" });
 		if (!graph || graphFile.loadedGraphMode !== "full") {
 			pendingFocusRef.current = id;
@@ -267,7 +320,7 @@ export default function App() {
 			return;
 		}
 		forest.locateInForest(id);
-	}, [currentFile, forest.locateInForest, graph, graphCatalog, graphFile.loadedGraphMode, openSpec, setCurrentFile, specNav.setSpecSelectedId]);
+	}, [currentFile, forest.locateInForest, graph, graphCatalog, graphFile.loadedGraphMode, navigateView, openSpec, setCurrentFile, specNav.setSpecSelectedId]);
 
 	const locateFunction = useCallback((fnId: string, parentId: string) => {
 		const source = engine.engineElements.nodes.some((node) => String(node.data.id) === fnId) ? "engine" : "project";
@@ -284,22 +337,24 @@ export default function App() {
 
 	const showInApi = useCallback((fnId: string) => {
 		setApiEntryRequest((previous) => ({ id: fnId, seq: (previous?.seq ?? 0) + 1 }));
-		setView("code");
+		navigateView("code");
 		setCodeWorkspace({ source: codeSource === "engine" ? "engine" : "project", lens: "api" });
 		specNav.closeSpec();
-	}, [codeSource, specNav.closeSpec]);
+	}, [codeSource, navigateView, specNav.closeSpec]);
 
 	const openEngineClass = useCallback(async (name: string, sourcePath?: string) => {
-		setView("code");
+		navigateView("code");
 		setCodeWorkspace({ source: "engine", lens: "relations" });
 		specNav.openSpec({ id: name, sourcePath });
 		await engine.parseEngineClass(name, sourcePath);
-	}, [engine.parseEngineClass, specNav.openSpec]);
+	}, [engine.parseEngineClass, navigateView, specNav.openSpec]);
 
 	useEffect(() => {
 		const search = buildAppSearch({ view, file: currentFile, codeSource, codeLens, architectureScope, spec: specNav.specTarget?.id ?? null, forestBranch, changes: changeEvidenceRoute });
-		const next = search || window.location.pathname;
-		window.history.replaceState(null, "", next);
+		const mode = historyWriteModeRef.current;
+		historyWriteModeRef.current = "replace";
+		const command = appHistoryCommand(window.location.pathname, window.location.search, search, mode);
+		if (command) window.history[command.method](null, "", command.target);
 	}, [architectureScope, changeEvidenceRoute, codeLens, codeSource, currentFile, forestBranch, specNav.specTarget, view]);
 
 	useEffect(() => {
@@ -308,7 +363,10 @@ export default function App() {
 
 	useEffect(() => {
 		const onPopState = () => {
+			historyWriteModeRef.current = "replace";
 			const link = readDeepLink();
+			// popstate 无法阻断（历史已切换），但离开编辑态工作区时至少显式告知草稿已丢（F3）。
+			const hadUnsavedDraft = hasUnsavedChanges();
 			setRouteIssue(link.issue);
 			setView(link.view);
 			setCodeWorkspace({ source: link.codeSource, lens: link.codeLens });
@@ -317,39 +375,52 @@ export default function App() {
 			setChangeEvidenceRoute(link.changes);
 			setChangeRouteDiagnostics(link.changeDiagnostics);
 			if (link.file && graphList.includes(link.file)) setCurrentFile(link.file);
+			specNav.closeSpec();
+			setSelected(null);
 			pendingSpecRef.current = link.spec ? { id: link.spec } : null;
 			pendingSpecSourceRef.current = link.codeSource === "engine" ? "engine" : "project";
 			pendingFocusRef.current = link.focus;
 			setForceFullGraph(Boolean(link.spec || link.focus));
+			setRouteRestoreVersion((version) => version + 1);
+			if (hadUnsavedDraft && (link.view !== "code" || (link.file ?? currentFile) !== currentFile)) {
+				window.alert("浏览器后退/前进离开了仍有未保存草稿的工作区，草稿已随切换丢弃。");
+			}
 		};
 		window.addEventListener("popstate", onPopState);
 		return () => window.removeEventListener("popstate", onPopState);
-	}, [graphList, setCurrentFile]);
+	}, [currentFile, graphList, setCurrentFile, specNav.closeSpec]);
 
 	useEffect(() => {
 		const onKey = (event: KeyboardEvent) => {
-			if (isTypingTarget(event.target)) return;
-			if (event.key === "0") setView("home");
-			else if (event.key === "1") setView("architecture");
-			else if (event.key === "2") { setView("code"); setCodeWorkspace({ source: "project", lens: "relations" }); }
-			else if (event.key === "3") setView("changes");
-			else if (event.key === "4") { setView("code"); setCodeWorkspace({ source: "all", lens: "api" }); }
-			else if (event.key === "/" && view === "code" && codeSource === "project" && codeLens === "relations") {
-				event.preventDefault();
-				searchInputRef.current?.focus();
-			} else if (event.key === "?") {
-				event.preventDefault();
-				setHelpSection("shortcuts");
-			}
+			const action = resolveAppShortcut({
+				key: event.key,
+				altKey: event.altKey,
+				ctrlKey: event.ctrlKey,
+				metaKey: event.metaKey,
+				shiftKey: event.shiftKey,
+				defaultPrevented: event.defaultPrevented,
+				typing: isTypingTarget(event.target),
+				blocked: hasAppShortcutBlocker(window.document),
+			});
+			if (!action) return;
+			if (action === "search" && !(view === "code" && codeSource === "project" && codeLens === "relations")) return;
+			event.preventDefault();
+			if (action === "overview") navigateView("home");
+			else if (action === "exploreArchitecture") navigateView("architecture");
+			else if (action === "exploreRelations") { navigateView("code"); setCodeWorkspace({ source: "project", lens: "relations" }); }
+			else if (action === "changes") navigateView("changes");
+			else if (action === "exploreApi") { navigateView("code"); setCodeWorkspace({ source: "all", lens: "api" }); }
+			else if (action === "search") searchInputRef.current?.focus();
+			else if (action === "help") setHelpSection("shortcuts");
 		};
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
-	}, [codeLens, codeSource, view]);
+	}, [codeLens, codeSource, navigateView, view]);
 
 	const searchTotal = forest.searchResults.length + (engine.engineCandidate ? 1 : 0);
 	const currentTitle = currentCatalogEntry?.title ?? currentFile ?? "未选择代码图";
 	const codeGraphOptions = useMemo<HierarchySelectOption[]>(() => graphCatalog
-		.filter((entry) => entry.kind !== "mindmap")
+		.filter(isBrowsableCodeGraph)
 		.map((entry) => ({
 			value: entry.file,
 			label: entry.title || entry.subsystem,
@@ -360,59 +431,68 @@ export default function App() {
 	const panelVariables = { "--detail-w": `${detailPanel.width}px`, "--spec-w": `${specPanel.width}px` } as CSSProperties;
 	const graphDetailMounted = codeLens === "relations" && codeSource !== "engine" && Boolean(selected) && !specNav.specTarget;
 	const selectCodeSource = useCallback((source: CodeSource) => {
-		setCodeWorkspace((current) => changeCodeSource(current, source));
+		// 离开 project 来源会卸载标注编辑器：状态不变时直接短路，避免无谓确认（F3）。
+		const next = changeCodeSource(codeWorkspace, source);
+		if (next.source === codeWorkspace.source && next.lens === codeWorkspace.lens) return;
+		if (!confirmDiscardUnsavedChanges()) return;
+		setCodeWorkspace(next);
 		if (specNav.specTarget) specNav.closeSpec();
-	}, [specNav.closeSpec, specNav.specTarget]);
+	}, [codeWorkspace, specNav.closeSpec, specNav.specTarget]);
 	const selectCodeLens = useCallback((lens: CodeLens) => {
-		setCodeWorkspace((current) => changeCodeLens(current, lens));
+		// relations→api 会卸载图谱工作区（含标注面板）：同样先短路再守卫（F3）。
+		const next = changeCodeLens(codeWorkspace, lens);
+		if (next.source === codeWorkspace.source && next.lens === codeWorkspace.lens) return;
+		if (!confirmDiscardUnsavedChanges()) return;
+		setCodeWorkspace(next);
 		if (specNav.specTarget) specNav.closeSpec();
-	}, [specNav.closeSpec, specNav.specTarget]);
+	}, [codeWorkspace, specNav.closeSpec, specNav.specTarget]);
 	const openProjectCode = useCallback((file?: string) => {
 		if (file) setCurrentFile(file);
 		setForestBranch(null);
 		setForceFullGraph(false);
-		setView("code");
+		navigateView("code");
 		setCodeWorkspace({ source: "project", lens: "relations" });
 		setSelected(null);
 		specNav.closeSpec();
-	}, [setCurrentFile, specNav.closeSpec]);
+	}, [navigateView, setCurrentFile, specNav.closeSpec]);
 	const openApiLens = useCallback(() => {
-		setView("code");
+		navigateView("code");
 		setCodeWorkspace({ source: "all", lens: "api" });
 		specNav.closeSpec();
-	}, [specNav.closeSpec]);
+	}, [navigateView, specNav.closeSpec]);
 
 	return <div className="app shell">
 		{routeIssue ? <div className="route-not-found" role="alert">
 			<AppIcon name="warning" size={18} />
 			<span><strong>{routeIssue.kind === "retired-view" ? "创作工具已迁出 GraphBrain" : "找不到请求的页面"}</strong><small>{routeIssue.kind === "retired-view" ? "方案、关卡设计、评审与交付由 ClaudeGameStudios 持有；GraphBrain 只查看 UE 代码事实。" : `未知视图：${routeIssue.value}`}</small></span>
-			<button type="button" onClick={() => { setRouteIssue(null); setView("home"); }}>返回首页</button>
+			<button type="button" onClick={() => guardedWorkspaceSwitch(() => { setRouteIssue(null); setView("home"); })}>返回首页</button>
 		</div> : null}
+		<a className="skip-link" href="#main-content">跳到主要内容</a>
 
 		<nav className="rail" aria-label="代码架构查看器导航">
 			<div className="rail-brand" title="GraphBrain · 代码架构查看器" aria-label="GraphBrain"><span className="rail-mark"><AppIcon name="graph" size={21} /></span><span className="rail-wordmark"><b>GRAPH</b><b>BRAIN</b></span></div>
-			<button className={`rail-btn${view === "home" ? " active" : ""}`} aria-current={view === "home" ? "page" : undefined} title="总览（0）" onClick={() => setView("home")}><span className="rail-icon"><AppIcon name="home" size={19} /></span><span className="rail-label">总览</span></button>
-			<button className={`rail-btn${view === "architecture" || view === "code" ? " active" : ""}`} aria-current={view === "architecture" || view === "code" ? "page" : undefined} title="探索（1）" onClick={() => setView("architecture")}><span className="rail-icon"><AppIcon name="graph" size={19} /></span><span className="rail-label">探索</span></button>
-			<button className={`rail-btn${view === "changes" ? " active" : ""}`} aria-current={view === "changes" ? "page" : undefined} title="变化（3）" onClick={() => setView("changes")}><span className="rail-icon"><AppIcon name="history" size={19} /></span><span className="rail-label">变化</span></button>
+			<button type="button" className={`rail-btn${view === "home" ? " active" : ""}`} aria-current={view === "home" ? "page" : undefined} title="总览（0）" onClick={() => navigateView("home")}><span className="rail-icon"><AppIcon name="home" size={19} /></span><span className="rail-label">总览</span></button>
+			<button type="button" className={`rail-btn${view === "architecture" || view === "code" ? " active" : ""}`} aria-current={view === "architecture" || view === "code" ? "page" : undefined} title="探索（1）" onClick={() => navigateView("architecture")}><span className="rail-icon"><AppIcon name="graph" size={19} /></span><span className="rail-label">探索</span></button>
+			<button type="button" className={`rail-btn${view === "changes" ? " active" : ""}`} aria-current={view === "changes" ? "page" : undefined} title="变化（3）" onClick={() => navigateView("changes")}><span className="rail-icon"><AppIcon name="history" size={19} /></span><span className="rail-label">变化</span></button>
 			<div className="rail-spacer" />
-			<button className="rail-btn rail-help" title="帮助（?）" aria-label="打开帮助" onClick={() => setHelpSection("current")}><span className="rail-icon"><AppIcon name="help" size={19} /></span><span className="rail-label">帮助</span></button>
+			<button type="button" className="rail-btn rail-help" title="帮助（?）" aria-label="打开帮助" onClick={() => setHelpSection("current")}><span className="rail-icon"><AppIcon name="help" size={19} /></span><span className="rail-label">帮助</span></button>
 		</nav>
 
 		<div className="deck" style={panelVariables}>
 			{view === "code" ? <header className={`topbar topbar-code topbar-graph topbar-code-workspace${codeLens !== "api" && specNav.specTarget ? " has-spec-nav" : graphDetailMounted ? " has-detail-panel" : ""}`} data-code-source={codeSource} data-code-lens={codeLens} data-graph-load-mode={graphFile.loadedGraphMode ?? "loading"}>
 				{codeLens !== "api" && specNav.specTarget ? <span className="spec-nav">
-					<button className="back-btn" onClick={specNav.backSpec}>← 返回{specNav.specStack.length > 1 ? ` ${specNav.specStack[specNav.specStack.length - 2].id}` : "代码图"}</button>
-					{specNav.specStack.length > 1 ? <button className="back-btn" onClick={specNav.closeSpec}>⌂ 代码图</button> : null}
+					<button type="button" className="back-btn" onClick={specNav.backSpec}>← 返回{specNav.specStack.length > 1 ? ` ${specNav.specStack[specNav.specStack.length - 2].id}` : "代码图"}</button>
+					{specNav.specStack.length > 1 ? <button type="button" className="back-btn" onClick={specNav.closeSpec}>⌂ 代码图</button> : null}
 					<span className="spec-crumbs">{specNav.specStack.map((item, index) => <span key={`${item.id}:${index}`}>{index > 0 ? " › " : ""}<b>{item.id}</b></span>)}</span>
 				</span> : null}
 
 				{!specNav.specTarget || codeLens === "api" ? <div className="code-workspace-switches">
-					<div className="code-lens-switch explore-mode-switch" role="tablist" aria-label="探索方式">
-						<button type="button" role="tab" aria-selected="false" onClick={() => setView("architecture")}>架构</button>
-						{codeLensCapabilities().map((lens) => <button type="button" role="tab" aria-selected={codeLens === lens.id} className={codeLens === lens.id ? "active" : ""} title={lens.description} key={lens.id} onClick={() => selectCodeLens(lens.id)}>{lens.label}</button>)}
+					<div className="code-lens-switch explore-mode-switch" role="tablist" aria-label="探索方式" onKeyDown={handleRovingTabKeyDown}>
+						<button type="button" role="tab" aria-selected="false" tabIndex={-1} onClick={() => guardedWorkspaceSwitch(() => setView("architecture"))}>架构</button>
+						{codeLensCapabilities().map((lens) => <button type="button" role="tab" aria-selected={codeLens === lens.id} tabIndex={rovingTabStop(codeLens === lens.id)} className={codeLens === lens.id ? "active" : ""} title={lens.description} key={lens.id} onClick={() => selectCodeLens(lens.id)}>{lens.label}</button>)}
 					</div>
-					<div className="code-source-switch" role="tablist" aria-label={`${codeLens === "relations" ? "关系图" : "API"}代码来源`}>
-						{codeSourceCapabilities(codeLens).map((source) => <button type="button" role="tab" aria-selected={codeSource === source.id} className={codeSource === source.id ? "active" : ""} title={source.description} key={source.id} onClick={() => selectCodeSource(source.id)}>{source.label}</button>)}
+					<div className="code-source-switch" role="tablist" aria-label={`${codeLens === "relations" ? "关系图" : "API"}代码来源`} onKeyDown={handleRovingTabKeyDown}>
+						{codeSourceCapabilities(codeLens).map((source) => <button type="button" role="tab" aria-selected={codeSource === source.id} tabIndex={rovingTabStop(codeSource === source.id)} className={codeSource === source.id ? "active" : ""} title={source.description} key={source.id} onClick={() => selectCodeSource(source.id)}>{source.label}</button>)}
 					</div>
 				</div> : null}
 
@@ -423,6 +503,8 @@ export default function App() {
 						options={codeGraphOptions}
 						label="选择代码图"
 						eyebrow="当前代码图"
+						searchable
+						searchPlaceholder="筛选代码图…"
 						panelMinWidth={390}
 						onChange={(file) => openDocument(file, "code")}
 					/> : <span className="topbar-source-context" title={codeSource === "engine" ? "UE 5.8 引擎源码" : currentTitle}>
@@ -454,22 +536,24 @@ export default function App() {
 					{codeLens === "relations" ? "按模块浏览引擎源码" : codeSource === "all" ? "跨项目与引擎检索" : codeSource === "engine" ? "引擎类型与函数" : "项目类型与函数"}
 				</span>}
 				</div> : null}
-				<span className="readonly-badge">只读代码事实</span>
+				{codeSource !== "engine" && currentCatalogEntry
+					? <EvidenceStatusBadge entry={currentCatalogEntry} />
+					: <span className="readonly-badge">只读{codeSource === "engine" ? "引擎源码" : "代码事实"}</span>}
 			</header> : null}
 
-			<main className={`workspace${view === "code" && codeLens !== "api" && specNav.specTarget ? " spec-overlay-open" : ""}`}>
-				{view === "home" ? <HomeView catalog={graphCatalog} loaded={listLoaded} error={catalogError} onRefresh={() => void refreshGraphCatalog()} openGraph={openProjectCode} openArchitecture={() => setView("architecture")} openApi={openApiLens} /> : null}
+			<main id="main-content" tabIndex={-1} className={`workspace${view === "code" && codeLens !== "api" && specNav.specTarget ? " spec-overlay-open" : ""}`}>
+				{view === "home" ? <HomeView catalog={graphCatalog} loaded={listLoaded} refreshing={catalogRefreshing} error={catalogError} onRefresh={() => void refreshGraphCatalog()} openGraph={openProjectCode} openArchitecture={() => navigateView("architecture")} openApi={openApiLens} /> : null}
 
-				{view === "architecture" ? <AsyncSurface label="正在打开代码架构" detail="代码架构没有成功打开。" icon="graph" variant="workspace" resetKey={`architecture:${architectureScope}`} onExit={() => setView("home")}><ArchitectureWorkspace catalog={graphCatalog} scopeId={architectureScope} onScopeChange={setArchitectureScope} onOpenRelations={() => { setView("code"); setCodeWorkspace({ source: "project", lens: "relations" }); }} onOpenApi={openApiLens} onBack={() => setView("home")} backLabel="返回总览" onOpenSpec={openSpecFromArchitecture} /></AsyncSurface> : null}
+				{view === "architecture" ? <AsyncSurface label="正在打开代码架构" detail="代码架构没有成功打开。" icon="graph" variant="workspace" resetKey={`architecture:${architectureScope}`} onExit={() => navigateView("home")}><ArchitectureWorkspace catalog={graphCatalog} scopeId={architectureScope} onScopeChange={setArchitectureScope} onOpenRelations={() => { navigateView("code"); setCodeWorkspace({ source: "project", lens: "relations" }); }} onOpenApi={openApiLens} onBack={() => navigateView("home")} backLabel="返回总览" onOpenSpec={openSpecFromArchitecture} /></AsyncSurface> : null}
 
-				{view === "changes" ? <AsyncSurface label="正在打开代码变化" detail="代码变化没有成功打开。" icon="history" variant="workspace" resetKey="changes" onExit={() => setView("home")}><ChangesView route={changeEvidenceRoute} diagnostics={changeRouteDiagnostics} onRouteChange={updateChangeEvidenceRoute} onRouteResolution={applyChangeRouteResolution} onDismissDiagnostics={() => setChangeRouteDiagnostics([])} onExplore={() => setView("architecture")} onOpenNode={jumpToNode} /></AsyncSurface> : null}
+				{view === "changes" ? <AsyncSurface label="正在打开代码变化" detail="代码变化没有成功打开。" icon="history" variant="workspace" resetKey="changes" onExit={() => navigateView("home")}><ChangesView route={changeEvidenceRoute} diagnostics={changeRouteDiagnostics} onRouteChange={updateChangeEvidenceRoute} onRouteResolution={applyChangeRouteResolution} onDismissDiagnostics={() => setChangeRouteDiagnostics([])} onExplore={() => navigateView("architecture")} onOpenNode={jumpToNode} /></AsyncSurface> : null}
 
 				{catalogError && (view === "architecture" || view === "code") ? <div className="error-banner">{catalogError}</div> : null}
 				{!catalogError && view === "code" && listLoaded && graphList.length === 0 ? <div className="empty-state"><div className="empty-icon" aria-hidden="true">🕸</div><h2>还没有代码事实图</h2><p>运行 UE 源码提取器后，GraphBrain 会在这里显示只读架构。</p></div> : null}
 				{graphLoading && view === "code" ? <AsyncLoading label="正在读取代码图" detail="整理源码节点与关系" icon="graph" variant="workspace" /> : null}
 				{graphLoadError && !graphLoading && view === "code" ? <div className="workspace-load-error" role="alert"><AppIcon name="graph" /><div><strong>代码图没有加载成功</strong><p>{graphLoadError}</p></div><button type="button" onClick={reloadGraph}>重试</button></div> : null}
 
-				{view === "code" && codeLens === "api" && listLoaded && !graphLoading && graph ? <AsyncSurface label="正在打开 API 视图" loadingDetail="准备项目与引擎代码资料" detail="API 视图没有成功打开。" icon="api" variant="workspace" resetKey={`api:${subsystem}`} onExit={() => setView("home")}><ApiReferenceView elements={graph.elements} domain={DOMAIN} subsystem={subsystem} favorites={favorites} favIds={favIds} favError={favError} onToggleFavorite={toggleFavorite} onLocate={locateFunction} entryRequest={apiEntryRequest} onJumpToNode={jumpToNode} sourceRoot={sourceRoot} source={codeSource} onSourceChange={(source) => setCodeWorkspace({ source, lens: "api" })} engineCatalog={engineCatalog} engineParser={{ elements: engine.engineElements, parsedClassNames: engine.parsedClassNames, parsingClassNames: engine.parsingClassNames, parseClass: engine.parseEngineClass }} /></AsyncSurface> : null}
+				{view === "code" && codeLens === "api" && listLoaded && !graphLoading && graph ? <AsyncSurface label="正在打开 API 视图" loadingDetail="准备项目与引擎代码资料" detail="API 视图没有成功打开。" icon="api" variant="workspace" resetKey={`api:${subsystem}`} onExit={() => setView("home")}><ApiReferenceView elements={graph.elements} domain={DOMAIN} subsystem={subsystem} favorites={favorites} favIds={favIds} favError={favError} onToggleFavorite={toggleFavorite} onLocate={locateFunction} entryRequest={apiEntryRequest} onJumpToNode={jumpToNode} sourceRoot={sourceRoot} source={codeSource} onSourceChange={(source) => { if (source === codeSource) return; if (!confirmDiscardUnsavedChanges()) return; setCodeWorkspace({ source, lens: "api" }); }} engineCatalog={engineCatalog} engineParser={{ elements: engine.engineElements, parsedClassNames: engine.parsedClassNames, parsingClassNames: engine.parsingClassNames, parseClass: engine.parseEngineClass }} /></AsyncSurface> : null}
 
 				{view === "code" && codeLens !== "api" && graph && !graphLoading ? <AsyncSurface label="正在打开代码关系图" loadingDetail="加载图谱工作区" detail="代码关系图没有成功打开。" icon="graph" variant="workspace" resetKey={`graph:${currentFile ?? "none"}`} onExit={() => setView("home")}><GraphWorkspaceView
 					data={{
@@ -487,7 +571,7 @@ export default function App() {
 						specTarget: specNav.specTarget, hoverId: specNav.hoverId, specSelectedId: specNav.specSelectedId, fnPage: specNav.fnPage, specZonePages: specNav.specZonePages, focusRequest: specNav.focusRequest,
 						onFnPage: (page) => { specNav.setFnPage(page); specNav.setHoverId(null); }, onZonePage: (zone, page) => { specNav.setSpecZonePages((previous) => ({ ...previous, [zone]: page })); specNav.setHoverId(null); },
 						onHover: specNav.setHoverId, onSelectSpecNode: specNav.setSpecSelectedId, onOpenSpec: (target) => openWorkspaceSpec(target, codeSource === "engine" ? "engine" : "project"), onCloseSpec: specNav.closeSpec, onRequestFocus: specNav.requestFocus,
-						favIds, onToggleFav: toggleFavorite, onLocateFn: locateFunction, onShowInApi: showInApi, mermaidFor, onOpenMermaid: setMermaidOpen, onJumpToNode: jumpToNode,
+						favIds, onToggleFav: toggleWorkspaceFavorite, onLocateFn: locateFunction, onShowInApi: showInApi, onJumpToNode: jumpToNode,
 					}}
 					canvas={{ selected, onSelect: setSelected, onGraphDblTap: handleGraphDblTap }}
 					engine={{ busy: engine.engineFetch.state === "loading", elements: engine.engineElements, catalogState: engineCatalog, sourceRoot, onOpenClass: openEngineClass }}
@@ -497,7 +581,6 @@ export default function App() {
 			</main>
 		</div>
 
-		{mermaidOpen ? <AsyncSurface label="正在打开序列图" detail="序列图没有成功打开。" icon="graph" variant="overlay" resetKey={`mermaid:${mermaidOpen.file}`} onExit={() => setMermaidOpen(null)}><MermaidModal file={mermaidOpen.file} title={mermaidOpen.title} onClose={() => setMermaidOpen(null)} /></AsyncSurface> : null}
 		{classChooser ? <div className="class-chooser-mask" onClick={() => setClassChooser(null)}><div ref={classChooserDialogRef} className="class-chooser" role="dialog" aria-modal="true" aria-label="选择要查看的类" onClick={(event) => event.stopPropagation()}><h3>该文件包含多个 C++ 类型</h3>{classChooser.map((name) => <button key={name} onClick={() => { setClassChooser(null); openSpec({ id: name }); }}>{name}</button>)}</div></div> : null}
 		{helpSection ? <AsyncSurface label="正在打开帮助" detail="帮助中心没有成功打开。" icon="library" variant="overlay" resetKey={`help:${helpSection}:${view}:${codeLens}`} onExit={() => setHelpSection(null)}><HelpCenter initialSection={helpSection} view={view === "code" ? codeLens === "api" ? "api" : "graph" : view} onClose={() => setHelpSection(null)} /></AsyncSurface> : null}
 		<ToastHost />

@@ -24,8 +24,10 @@ test("mutation guard allows local CLI and hook calls without Origin", () => {
 
 test("mutation guard allows same-origin writes with the local marker header", () => {
 	const local = { "x-graphbrain-local": "1" };
-	const req = fakeReq("POST", { origin: "http://127.0.0.1:3030", host: "127.0.0.1:3030", ...local });
-	assert.equal(isTrustedMutation(req), true);
+	for (const authority of ["127.0.0.1:3030", "127.0.0.1:4178", "localhost:51234", "[::1]:4178"]) {
+		const req = fakeReq("POST", { origin: `http://${authority}`, host: authority, ...local });
+		assert.equal(isTrustedMutation(req), true, authority);
+	}
 });
 
 test("mutation guard rejects browser-origin writes without the local marker header", () => {

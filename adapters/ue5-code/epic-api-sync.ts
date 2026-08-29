@@ -59,6 +59,12 @@ export interface EpicApiBatchSyncProgress {
 	current?: { scope: EngineApiScope; module: string };
 }
 
+function decodeCodePoint(code: number): string {
+	// 远端 HTML 完全可控：超出 Unicode 范围的实体（如 &#9999999999;）会让
+	// fromCodePoint 抛 RangeError 击穿整次同步。
+	return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : "\uFFFD";
+}
+
 function decodeHtml(value: string): string {
 	return value
 		.replace(/<[^>]+>/g, " ")
@@ -68,8 +74,8 @@ function decodeHtml(value: string): string {
 		.replace(/&gt;/g, ">")
 		.replace(/&quot;/g, '"')
 		.replace(/&#39;/g, "'")
-		.replace(/&#x([0-9a-f]+);/gi, (_m, hex: string) => String.fromCodePoint(parseInt(hex, 16)))
-		.replace(/&#(\d+);/g, (_m, dec: string) => String.fromCodePoint(parseInt(dec, 10)))
+		.replace(/&#x([0-9a-f]+);/gi, (_m, hex: string) => decodeCodePoint(parseInt(hex, 16)))
+		.replace(/&#(\d+);/g, (_m, dec: string) => decodeCodePoint(parseInt(dec, 10)))
 		.replace(/\s+/g, " ")
 		.trim();
 }
@@ -96,10 +102,14 @@ async function fetchHtml(url: string, attempts = 4): Promise<string> {
 		}
 		if (response.ok) return response.text();
 		lastError = new Error(`Epic API 请求失败 ${response.status}: ${url}`);
+		// 释放未消费的响应体：批量同步中残留的 429/5xx 体会让 socket 无法复用。
+		await response.body?.cancel().catch(() => undefined);
 		// 非 429 的 4xx 重试不会改变结果，立即失败；429/5xx 按 Retry-After 或退避重试
 		if (response.status !== 429 && response.status < 500) throw lastError;
-		const retryAfter = Number(response.headers.get("retry-after"));
-		if (Number.isFinite(retryAfter) && retryAfter > 0) await sleep(Math.min(retryAfter * 1000, 30_000));
+		if (attempt + 1 < attempts) {
+			const retryAfter = Number(response.headers.get("retry-after"));
+			if (Number.isFinite(retryAfter) && retryAfter > 0) await sleep(Math.min(retryAfter * 1000, 30_000));
+		}
 	}
 	throw lastError ?? new Error(`Epic API 请求失败: ${url}`);
 }
@@ -148,7 +158,11 @@ function writeJson(path: string, value: unknown) {
 }
 
 export function epicModuleCachePath(scope: string, module: string, cacheDir = DEFAULT_EPIC_API_CACHE): string {
-	return join(cacheDir, "modules", `${scope}_${module}.json`);
+	// module 名来自 URL 解码与 CLI 参数：净化后拼路径，杜绝 %2F 之类分隔符把缓存
+	// 写到 modules/ 之外（与 engine-class-service 的类名净化同一策略）。
+	const safeScope = scope.replace(/[^A-Za-z0-9_.-]/g, "_");
+	const safeModule = module.replace(/[^A-Za-z0-9_.-]/g, "_");
+	return join(cacheDir, "modules", `${safeScope}_${safeModule}.json`);
 }
 
 export async function syncEpicApiRoot(cacheDir = DEFAULT_EPIC_API_CACHE): Promise<EpicApiRootCache> {
@@ -299,7 +313,11 @@ export function isModuleCacheMissingOrShell(scope: string, module: string, cache
 
 export function loadEpicApiRoot(cacheDir = DEFAULT_EPIC_API_CACHE): EpicApiRootCache | null {
 	try {
-		return JSON.parse(readFileSync(join(cacheDir, "ue5.8-root.json"), "utf8") as string) as EpicApiRootCache;
+		const value = JSON.parse(readFileSync(join(cacheDir, "ue5.8-root.json"), "utf8")) as Partial<EpicApiRootCache>;
+		// 形状校验：合法 JSON 但结构错误（{} / []）的缓存会在消费方炸出 TypeError，
+		// 把每个目录请求都变成 500；按缺失处理走重建路径。
+		if (typeof value.version !== "string" || !Array.isArray(value.modules)) return null;
+		return value as EpicApiRootCache;
 	} catch {
 		return null;
 	}
@@ -311,10 +329,34 @@ export function loadEpicApiModule(
 	cacheDir = DEFAULT_EPIC_API_CACHE,
 ): EpicApiModuleCache | null {
 	try {
-		return JSON.parse(readFileSync(epicModuleCachePath(scope, module, cacheDir), "utf8") as string) as EpicApiModuleCache;
+		const value = JSON.parse(readFileSync(epicModuleCachePath(scope, module, cacheDir), "utf8")) as Partial<EpicApiModuleCache>;
+		if (typeof value.version !== "string" || typeof value.scope !== "string" || typeof value.module !== "string"
+			|| !Array.isArray(value.symbols) || !value.metadata || typeof value.metadata !== "object") return null;
+		return value as EpicApiModuleCache;
 	} catch {
 		return null;
 	}
+}
+
+/** Exact-name lookup over the versioned local Epic cache; no network and no fuzzy ID mapping. */
+export function resolveCachedEpicApiSymbols(
+	names: readonly string[],
+	cacheDir = DEFAULT_EPIC_API_CACHE,
+): Map<string, { version: string; scope: EngineApiScope; module: string; kind: string; url: string }> {
+	const wanted = new Set(names);
+	const found = new Map<string, { version: string; scope: EngineApiScope; module: string; kind: string; url: string }>();
+	const root = loadEpicApiRoot(cacheDir);
+	if (!root) return found;
+	for (const summary of root.modules) {
+		if (found.size === wanted.size) break;
+		const module = loadEpicApiModule(summary.scope, summary.module, cacheDir);
+		if (!module || module.version !== root.version) continue;
+		for (const symbol of module.symbols) {
+			if (!wanted.has(symbol.name) || found.has(symbol.name)) continue;
+			found.set(symbol.name, { version: root.version, scope: module.scope, module: module.module, kind: symbol.kind, url: symbol.url });
+		}
+	}
+	return found;
 }
 
 async function main() {
@@ -323,8 +365,12 @@ async function main() {
 		const i = args.indexOf(name);
 		return i >= 0 ? args[i + 1] : undefined;
 	};
-	const scope = value("--scope") as EngineApiScope | undefined;
-	const modules = args.filter((_, i) => args[i - 1] === "--module");
+	const scopeArg = value("--scope");
+	if (scopeArg !== undefined && !["Developer", "Editor", "Runtime", "Plugins"].includes(scopeArg)) {
+		throw new Error(`--scope 必须是 Developer/Editor/Runtime/Plugins 之一，收到: ${scopeArg}`);
+	}
+	const scope = scopeArg as EngineApiScope | undefined;
+	const modules = args.filter((_, i) => args[i - 1] === "--module" && args[i] !== undefined);
 	const root = await syncEpicApiRoot();
 	console.log(`Epic UE ${root.version} API 根目录：${root.modules.length} 个模块`);
 	if (scope && modules.length > 0) {

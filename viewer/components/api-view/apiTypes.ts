@@ -9,7 +9,7 @@ export type {
 	EngineCatalogClass,
 	EngineCatalogModule,
 } from "../../src/engineCatalogModel";
-export { ALL_ENGINE_CATALOG as ALL_CATALOG_FILTER } from "../../src/engineCatalogModel";
+export { ALL_ENGINE_CATALOG as ALL_CATALOG_FILTER, normalizeEngineCatalogClasses } from "../../src/engineCatalogModel";
 
 export interface ApiInfo {
 	signature?: string;

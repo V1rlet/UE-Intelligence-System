@@ -175,7 +175,11 @@ async function stopChild(child: ChildProcess): Promise<void> {
 		new Promise<void>((resolveExit) => child.once("exit", () => resolveExit())),
 		new Promise<void>((resolveDelay) => setTimeout(resolveDelay, 3_000)),
 	]);
-	if (child.exitCode === null && child.signalCode === null) child.kill();
+	if (child.exitCode === null && child.signalCode === null) {
+		// 兜底必须是升级信号：child.kill() 默认仍发 SIGTERM，刚被忽略的进程会再次
+		// 忽略它，候选服务就此孤儿化并占用验收端口（Windows 上映射 TerminateProcess 无此差异）。
+		child.kill("SIGKILL");
+	}
 }
 
 async function validateCandidate(releaseId: string): Promise<void> {
@@ -296,7 +300,9 @@ function configureNssm(snapshot: NssmSnapshot, releaseId: string): void {
 	nssm(["set", SERVICE_NAME, "DisplayName", "Graph Brain Viewer (localhost:3030)"]);
 	nssm(["set", SERVICE_NAME, "Description", "GraphBrain manifest-selected production viewer + data API"]);
 	nssm(["set", SERVICE_NAME, "Start", "SERVICE_AUTO_START"]);
-	nssm(["set", SERVICE_NAME, "AppEnvironmentExtra", "GRAPH_BRAIN_NO_WATCHER=1", `GB_PROJECT_ROOT=${ROOT}`]);
+	// A2（修 F-B）：生产形态缺省启动 lore-watcher——不再向服务注入 GRAPH_BRAIN_NO_WATCHER。
+	// 该变量只保留给 prepare 的隔离验收环境与人工排障使用。
+	nssm(["set", SERVICE_NAME, "AppEnvironmentExtra", `GB_PROJECT_ROOT=${ROOT}`]);
 	nssm(["set", SERVICE_NAME, "AppStdout", join(logs, "stdout.log")]);
 	nssm(["set", SERVICE_NAME, "AppStderr", join(logs, "stderr.log")]);
 	nssm(["set", SERVICE_NAME, "AppStdoutCreationDisposition", "2"]);

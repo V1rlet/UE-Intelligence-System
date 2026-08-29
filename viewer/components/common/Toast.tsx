@@ -7,7 +7,7 @@
 // G2 (2026-08-07): 退出动画（滑出+淡出）+ 生命进度条（悬停暂停）+ 队列上限
 //   （超过 MAX_VISIBLE 丢弃最早的一条，防止高频错误刷屏堆叠）。
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { EXIT_MS } from "../../src/motion";
 
 export type ToastKind = "info" | "success" | "error";
@@ -54,17 +54,34 @@ function ToastCard({ item }: { item: ToastItem }) {
 	// 退出周期状态：时间到后先播滑出动画，动画结束再真正移除
 	const [leaving, setLeaving] = useState(false);
 	const [paused, setPaused] = useState(false);
+	const remainingMs = useRef(item.duration);
+	const exitTimer = useRef<number | null>(null);
+	const leaveStarted = useRef(false);
+	const beginLeave = useCallback(() => {
+		if (leaveStarted.current) return;
+		leaveStarted.current = true;
+		setLeaving(true);
+		exitTimer.current = window.setTimeout(() => dismissToast(item.id), EXIT_MS);
+	}, [item.id]);
+
+	useEffect(() => () => {
+		if (exitTimer.current !== null) window.clearTimeout(exitTimer.current);
+	}, []);
 
 	useEffect(() => {
-		if (leaving) return;
-		if (paused) return;
-		const t = setTimeout(() => {
-			setLeaving(true);
-			// 动画结束后移除（与 .toast.gb-exiting 的时长一致）
-			setTimeout(() => dismissToast(item.id), EXIT_MS);
-		}, item.duration);
-		return () => clearTimeout(t);
-	}, [item.id, item.duration, paused, leaving]);
+		if (leaving || paused) return;
+		const startedAt = performance.now();
+		let elapsedRecorded = false;
+		const timer = window.setTimeout(() => {
+			elapsedRecorded = true;
+			remainingMs.current = 0;
+			beginLeave();
+		}, remainingMs.current);
+		return () => {
+			window.clearTimeout(timer);
+			if (!elapsedRecorded) remainingMs.current = Math.max(0, remainingMs.current - (performance.now() - startedAt));
+		};
+	}, [beginLeave, leaving, paused]);
 
 	return (
 		<div
@@ -75,7 +92,7 @@ function ToastCard({ item }: { item: ToastItem }) {
 		>
 			<span className="toast-icon" aria-hidden="true">{KIND_ICON[item.kind]}</span>
 			<span className="toast-msg">{item.message}</span>
-			<button className="toast-close" aria-label="关闭通知" onClick={() => dismissToast(item.id)}>
+			<button type="button" className="toast-close" aria-label="关闭通知" onClick={beginLeave}>
 				✕
 			</button>
 			{/* G2 生命进度条：宽度 100%→0，与停留时长同步；悬停暂停 */}

@@ -36,7 +36,7 @@ export type CachedEngineClass = { header: string; hash: string; cls: ParsedClass
  *  v11 枚举值成员解析（UENUM 反射枚举补全值列表，type 承载显式初始值，UMETA 剥离）；
  *  v12 辅助区归属规则——同头文件兄弟声明只挂主类（UCLASS/UINTERFACE 族），值类型与
  *  纯 C++ 提升类型不再携带（消除 F/E 类型 Spec 的"上一层残留"）。 */
-export const PARSE_CACHE_VERSION = 12;
+export const PARSE_CACHE_VERSION = 13;
 
 export interface ParseCache {
 	version: typeof PARSE_CACHE_VERSION;

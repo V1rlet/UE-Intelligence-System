@@ -4,7 +4,6 @@ import NodeDetail from "../detail/NodeDetail";
 import AnnotationPanel from "../annotation-panel/AnnotationPanel";
 import ApiDetailCard from "../api-view/ApiDetailCard";
 import AppIcon from "../common/AppIcon";
-import type { MermaidEntry } from "../mermaid/MermaidModal";
 import type { GraphElements } from "./GraphView";
 import { FN_PAGE_SIZE, type SpecTarget } from "./specModel";
 
@@ -22,8 +21,6 @@ interface Props {
 	onToggleFav: (id: string) => void;
 	onJumpFn: (fnId: string, parentId: string) => void;
 	onShowInApi: (fnId: string) => void;
-	mermaidEntries: MermaidEntry[];
-	onOpenMermaid: (entry: MermaidEntry) => void;
 	onJumpToNode: (nodeId: string) => void;
 	onClose: () => void;
 }
@@ -42,8 +39,6 @@ export default function ReadonlySpecPanel({
 	onToggleFav,
 	onJumpFn,
 	onShowInApi,
-	mermaidEntries,
-	onOpenMermaid,
 	onJumpToNode,
 	onClose,
 }: Props) {
@@ -84,7 +79,6 @@ export default function ReadonlySpecPanel({
 			</section>
 
 			{selected?.type === "ufunction" ? <ApiDetailCard elements={elements} fnId={String(selected.id)} favIds={favIds} onToggleFav={onToggleFav} onJumpFn={onJumpFn} onShowInApi={onShowInApi} /> : null}
-			{mermaidEntries.map((entry) => <button key={entry.file} className="mermaid-open" onClick={() => onOpenMermaid(entry)}>📊 {entry.title}</button>)}
 			<AnnotationPanel nodeId={selectedId ?? target.id} domain={domain} subsystem={subsystem} onJumpToNode={onJumpToNode} />
 		</div>
 	</section>;

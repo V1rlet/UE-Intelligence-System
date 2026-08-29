@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { buildFileForestProjection } from "../core/query/graph-projection.js";
 import { GRAPH_PROJECTION_FORMAT_VERSION, GRAPH_PROJECTION_KIND } from "../core/schema/graph-projection.js";
-import { loadGraphDocument } from "../viewer/src/loadGraphProjection.js";
+import { graphLoadModeSatisfied, loadGraphDocument } from "../viewer/src/loadGraphProjection.js";
 
 function canonicalFixture() {
 	return {
@@ -36,6 +36,14 @@ test("GraphProjection v1 selects canonical forest facts without becoming a secon
 		revision: 7,
 		generated_at: "2026-08-09T00:00:00.000Z",
 	});
+});
+
+test("graph load capability has one owner and prevents downgrade reload spinners", () => {
+	assert.equal(graphLoadModeSatisfied("full", "projection"), true);
+	assert.equal(graphLoadModeSatisfied("projection", "projection"), true);
+	assert.equal(graphLoadModeSatisfied("full", "full"), true);
+	assert.equal(graphLoadModeSatisfied("projection", "full"), false);
+	assert.equal(graphLoadModeSatisfied(null, "projection"), false);
 });
 
 test("projection loader centralizes old-server fallback onto the canonical full graph", async () => {

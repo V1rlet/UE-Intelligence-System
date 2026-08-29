@@ -32,7 +32,11 @@ export function isSourceInput(path: string): boolean {
 }
 
 function canonicalPath(path: string): string {
-	return resolve(path).replaceAll("\\", "/");
+	const resolved = resolve(path).replaceAll("\\", "/");
+	// Windows 盘符大小写不代表不同位置：折叠后 G:/x 与 g:/x 不再成为两个根、
+	// 指纹也不会对同一文件重复计数。
+	const drive = resolved.match(/^([A-Za-z]):(.*)$/);
+	return drive ? `${drive[1].toUpperCase()}:${drive[2]}` : resolved;
 }
 
 export function discoverSourceInputs(sourceRoots: string[]): SourceInventory {

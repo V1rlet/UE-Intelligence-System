@@ -59,6 +59,21 @@ test("change report treats JSON object key order as non-semantic and rejects amb
 	);
 });
 
+test("change report rejects dangling edge endpoints instead of inventing phantom impact rows", () => {
+	const baseline = graph([{ id: "A" }], [], "a".repeat(64));
+	const withGhostEdge = graph([{ id: "A" }], [{ id: "A-Ghost", source: "A", target: "Ghost" }], "b".repeat(64));
+	// Ghost 不存在于任何一图的节点表：此前会给它产出 affected 行并把模块记为 (unassigned)。
+	assert.throws(
+		() => buildChangeReport(baseline, withGhostEdge, { baselineFile: "old.cyto.json", currentFile: "ghost.cyto.json" }),
+		/当前快照 存在端点未解析的关系: A-Ghost → Ghost/,
+	);
+	const ghostBaseline = graph([{ id: "A" }], [{ id: "A-Ghost", source: "A", target: "Ghost" }], "c".repeat(64));
+	assert.throws(
+		() => buildChangeReport(ghostBaseline, baseline, { baselineFile: "ghost-old.cyto.json", currentFile: "new.cyto.json" }),
+		/基线 存在端点未解析的关系: A-Ghost → Ghost/,
+	);
+});
+
 test("change report catalog publishes only supported versioned reports", () => {
 	const directory = mkdtempSync(join(tmpdir(), "graphbrain-changes-"));
 	try {

@@ -14,6 +14,7 @@ import { dirname, join, resolve } from "node:path";
 import type { GraphFile } from "../adapter-interface.js";
 import { diffGraphs, summarizeDiff } from "../diff-lib.js";
 import { buildChangeReport, checkChangeReportConsistency, hasChangeSummaryFacts, type ChangeReport } from "../../core/query/change-report.js";
+import { migratePublishedGraphToEvidenceV3, readEngineAssociation } from "../../core/evidence/migration.js";
 import { checkChangeReportSchema, checkGraphReferences, checkGraphSchema, type GraphShape } from "../../core/schema/graph-checks.js";
 import {
 	DataPublicationConflictError,
@@ -24,6 +25,7 @@ import {
 	sha256,
 	type PublicationDirectories,
 } from "../../core/store/data-publication.js";
+import { loadEvidencePublicationState, publishEvidenceSnapshotPair } from "../../core/store/evidence-publication.js";
 import { extractClassGraphWithCache } from "./extract-classes-lib.js";
 import { defaultCachePath, loadParseCache, saveParseCache } from "./parse-cache.js";
 
@@ -36,18 +38,30 @@ let withEngine = true;
 let incremental = false;
 let cacheArg: string | null = null;
 let changesOutDir = "data/changes";
-for (let i = 0; i < argv.length; i++) {
-	if (argv[i] === "--out") outDir = argv[++i];
-	else if (argv[i] === "--subsystem") subsystem = argv[++i];
-	else if (argv[i] === "--uproject") uprojectArg = argv[++i];
+const usage = "用法: npx tsx adapters/ue5-code/extract-classes.ts <SourceDir...> [--out data/graphs] [--subsystem project] [--uproject <path>] [--no-engine] [--incremental] [--cache <path>] [--changes-out data/changes]";
+// 取带值参数：值缺失（flag 是最后一个参数）时给 usage 错误，而不是把 undefined
+// 一路带进文件路径再以费解的 TypeError 失败。
+let i = 0;
+const flagValue = (name: string): string => {
+	const value = argv[++i];
+	if (value === undefined) {
+		console.error(`${name} 缺少值\n${usage}`);
+		process.exit(2);
+	}
+	return value;
+};
+for (; i < argv.length; i++) {
+	if (argv[i] === "--out") outDir = flagValue("--out");
+	else if (argv[i] === "--subsystem") subsystem = flagValue("--subsystem");
+	else if (argv[i] === "--uproject") uprojectArg = flagValue("--uproject");
 	else if (argv[i] === "--no-engine") withEngine = false;
 	else if (argv[i] === "--incremental") incremental = true;
-	else if (argv[i] === "--cache") cacheArg = argv[++i];
-	else if (argv[i] === "--changes-out") changesOutDir = argv[++i];
+	else if (argv[i] === "--cache") cacheArg = flagValue("--cache");
+	else if (argv[i] === "--changes-out") changesOutDir = flagValue("--changes-out");
 	else roots.push(argv[i]);
 }
 if (roots.length === 0) {
-	console.error("用法: npx tsx adapters/ue5-code/extract-classes.ts <SourceDir...> [--out data/graphs] [--subsystem project] [--uproject <path>] [--no-engine] [--incremental] [--cache <path>] [--changes-out data/changes]");
+	console.error(usage);
 	process.exit(2);
 }
 
@@ -81,7 +95,7 @@ try {
 	console.error((e as Error).message);
 	process.exit(1);
 }
-const { graph, cache } = result;
+const { graph, cache, stats } = result;
 let changeReport: ChangeReport | null = null;
 const graphErrors = [...checkGraphSchema(graph), ...checkGraphReferences(graph as unknown as GraphShape)];
 if (graphErrors.length > 0) {
@@ -126,8 +140,13 @@ if (changeReport !== null) {
 
 // Cache is a rebuildable acceleration layer. Persist it atomically before the
 // publication pointer moves; a cache failure therefore cannot expose a partial
-// graph/report generation.
-saveParseCache(cachePath, cache);
+// graph/report generation. 写缓存失败（Windows 上缓存文件被并发占用等）只降级为
+// 告警——下次运行安全重建，不该废弃一次可能长达数分钟的提取成果。
+try {
+	saveParseCache(cachePath, cache);
+} catch (error) {
+	console.warn(`解析缓存写入失败（下次运行将全量重建）: ${(error as Error).message}`);
+}
 let published;
 try {
 	published = publishDataGeneration({
@@ -147,8 +166,32 @@ try {
 	throw error;
 }
 const outPath = join(graphsDirectory, published.generation.graph.file);
+if (subsystem === "project") {
+	const dataDir = dirname(graphsDirectory);
+	const evidenceState = loadEvidencePublicationState(dataDir);
+	const pair = migratePublishedGraphToEvidenceV3({
+		graph,
+		generation: published.generation,
+		cache,
+		engineAssociation: readEngineAssociation(uprojectArg),
+	});
+	const evidence = publishEvidenceSnapshotPair({
+		dataDir,
+		pair,
+		expectedRevision: evidenceState.revision,
+		compatibilityV2GenerationId: published.generation.id,
+	});
+	console.log(`Evidence v3 已发布: ${evidence.generation.id}（revision ${evidence.state.revision}，v2 兼容回滚已保留）`);
+}
 if (published.generation.change_report) {
 	console.log(`变化报告已发布: ${join(changesDirectory, published.generation.change_report.file)}`);
 }
 console.log(`\n已发布 ${outPath}: ${graph.elements.nodes.length} 个节点, ${graph.elements.edges.length} 条边（publication revision ${published.state.revision}）`);
 console.log(`解析缓存已更新: ${cachePath}`);
+console.log(`[graphbrain-extract-metrics] ${JSON.stringify({
+	cache_hit: incremental ? stats.projectCached + stats.engineCached > 0 : false,
+	project_cached: stats.projectCached,
+	project_parsed: stats.projectParsed,
+	engine_cached: stats.engineCached,
+	engine_parsed: stats.engineParsed,
+})}`);

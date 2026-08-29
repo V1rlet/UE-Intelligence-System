@@ -13,6 +13,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { resolveGraphBrainProjectRoot } from "../../core/source/project-root.js";
+import { BoundedCache } from "./bounded-cache.js";
 import { EngineResolver, engineRootFromUproject, findUproject } from "./engine-resolver.js";
 import { seedChainOf, seedDescriptionOf } from "./engine-seed.js";
 import { type AnyEdge, type AnyNode, findModuleName, ForestBuilder } from "./forest.js";
@@ -161,9 +162,11 @@ export function resolveEngineRoot(sourceRoot?: string): string | null {
 	return existsSync(join(fallback, "Engine", "Source", "Runtime")) ? fallback : null;
 }
 
-// 每引擎根一个 Resolver（头文件索引只建一次）；增量按类名缓存
+// 每引擎根一个 Resolver（头文件索引只建一次）；增量按类名缓存。
+// 增量缓存必须有界：常驻服务里用户浏览的引擎类数量无上限，每条增量都携带
+// 完整节点/边集合，无界 Map 就是服务端内存泄漏（浏览器端 soak 门禁测不到）。
 const resolvers = new Map<string, EngineResolver>();
-const incrementCache = new Map<string, ElementsIncrement>();
+const incrementCache = new BoundedCache<string, ElementsIncrement>(256);
 
 function resolverFor(engineRoot: string): EngineResolver {
 	let r = resolvers.get(engineRoot);

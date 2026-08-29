@@ -581,3 +581,49 @@ public:
 	assert.equal(props.length, 3, `三个属性都应完整解析，实际 ${props.length}: ${props.map((p) => p.name).join(", ")}`);
 	assert.deepEqual(props.map((p) => p.name), ["Label", "Name", "Count"]);
 });
+
+test("F4：无宏函数的 declStart 用精确坐标，同签名文本出现在更早的字符串里不抢 doc", () => {
+	const dir = mkdtempSync(join(tmpdir(), "gb-header-f4-"));
+	const header = `UCLASS()
+class UZzF4 : public UObject
+{
+	GENERATED_BODY()
+public:
+	void Log()
+	{
+		const TCHAR* Probe = TEXT("void PrepareThing()");
+		(void)Probe;
+	}
+	/** 真正的 Prepare 说明。 */
+	void PrepareThing();
+};
+`;
+	writeFileSync(join(dir, "ZzF4.h"), header, "utf8");
+	const classes = parseHeader(join(dir, "ZzF4.h"), dir);
+	const cls = classes.find((item) => item.name === "UZzF4");
+	assert.ok(cls, "UZzF4 应被解析");
+	const prepare = cls!.functions.find((f) => f.name === "PrepareThing");
+	assert.ok(prepare, "PrepareThing 应被提取");
+	// 旧实现用 body.indexOf(needle) 回查：首个匹配落在 Log 的字符串字面量里，
+	// doc 查找位置随之错位，"真正的 Prepare 说明" 挂不上。
+	assert.equal(prepare!.description, "真正的 Prepare 说明。");
+});
+
+test("F4：plain C++ 路径的 declStart 同样按精确坐标挂 doc（inline 体后同签名声明）", () => {
+	const dir = mkdtempSync(join(tmpdir(), "gb-header-f4b-"));
+	const header = `struct FZzF4Plain
+{
+	void Dispatch() { Internal(); }
+	void Internal();
+	/** 内部步骤。 */
+	void InternalStep();
+};
+`;
+	writeFileSync(join(dir, "ZzF4Plain.h"), header, "utf8");
+	const classes = parseHeader(join(dir, "ZzF4Plain.h"), dir, { includePlainCpp: true });
+	const item = classes.find((c) => c.name === "FZzF4Plain");
+	assert.ok(item, "FZzF4Plain 应被解析");
+	const step = item!.functions.find((f) => f.name === "InternalStep");
+	assert.ok(step, "InternalStep 应被提取");
+	assert.equal(step!.description, "内部步骤。");
+});

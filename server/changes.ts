@@ -8,15 +8,19 @@ import {
 	type ChangeReportCatalogEntry,
 } from "../core/query/change-report-catalog.js";
 import { checkChangeReportSchema } from "../core/schema/graph-checks.js";
-import { isPublishedArtifactVisible, visiblePublishedFiles } from "../core/store/data-publication.js";
+import { currentPublishedGeneration, isPublishedArtifactVisible, loadDataPublicationState, visiblePublishedFiles } from "../core/store/data-publication.js";
 import { type ApiHandler, isExistingPathWithin, isPathWithin, methodNotAllowed, sendJson } from "./http";
 
-function parseChangeReport(path: string): ChangeReport {
-	const report = JSON.parse(readFileSync(path, "utf8").replace(/^\uFEFF/, "")) as ChangeReport;
+export function parseChangeReportText(text: string): ChangeReport {
+	const report = JSON.parse(text) as ChangeReport;
 	if (report.domain !== "ue5_code" || report.format_version !== 1) throw new Error("unsupported change report");
 	const errors = [...checkChangeReportSchema(report), ...checkChangeReportConsistency(report)];
 	if (errors.length > 0) throw new Error(`invalid change report: ${errors.join("; ")}`);
 	return report;
+}
+
+export function parseChangeReport(path: string): ChangeReport {
+	return parseChangeReportText(readFileSync(path, "utf8").replace(/^\uFEFF/, ""));
 }
 
 export function changeReportEntries(directory: string): ChangeReportCatalogEntry[] {
@@ -46,6 +50,17 @@ export function changeReportCatalog(directory: string): ChangeReportCatalog {
 	return buildChangeReportCatalog(changeReportEntries(directory));
 }
 
+export function changeReportPublicationBinding(dataDir: string, report: Pick<ChangeReport, "current" | "subsystem">) {
+	const state = loadDataPublicationState(join(dataDir, "publications"));
+	const generation = currentPublishedGeneration(join(dataDir, "publications"), report.subsystem);
+	return {
+		format_version: "graphbrain-publication-binding/1" as const,
+		publication_revision: state.revision,
+		active_snapshot_id: generation?.id ?? null,
+		current_snapshot_is_active_publication: generation?.graph.file === report.current.file,
+	};
+}
+
 export const handleChangeReports: ApiHandler = ({ req, res, url, dataDir }) => {
 	if (url !== "/api/change-reports" && !url.startsWith("/api/change-reports/")) return false;
 	if (req.method !== "GET") {
@@ -54,22 +69,37 @@ export const handleChangeReports: ApiHandler = ({ req, res, url, dataDir }) => {
 	}
 	const directory = join(dataDir, "changes");
 	if (url === "/api/change-reports") {
-		sendJson(res, 200, changeReportCatalog(directory));
+		const catalog = changeReportCatalog(directory);
+		sendJson(res, 200, {
+			...catalog,
+			reports: catalog.reports.map((report) => ({
+				...report,
+				publication_binding: changeReportPublicationBinding(dataDir, report),
+			})),
+		});
 		return true;
 	}
 	const file = url.slice("/api/change-reports/".length);
 	if (!file.endsWith(".change.json") || basename(file) !== file) {
-		sendJson(res, 404, { error: "变化报告不存在" });
+		sendJson(res, 404, { error: "变化报告不存在", code: "CHANGE_REPORT_NOT_FOUND" });
 		return true;
 	}
 	const target = resolve(directory, file);
+	let targetIsFile = false;
+	try {
+		targetIsFile = existsSync(target) && statSync(target).isFile();
+	} catch {
+		// exists 与 stat 之间存在删除窗口；报告文件消失按不存在处理。
+		targetIsFile = false;
+	}
 	if (!isPublishedArtifactVisible(file, join(dataDir, "publications"), "change_report")
-		|| !isPathWithin(directory, target) || !existsSync(target) || !statSync(target).isFile() || !isExistingPathWithin(directory, target)) {
-		sendJson(res, 404, { error: "变化报告不存在" });
+		|| !isPathWithin(directory, target) || !targetIsFile || !isExistingPathWithin(directory, target)) {
+		sendJson(res, 404, { error: "变化报告不存在", code: "CHANGE_REPORT_NOT_FOUND" });
 		return true;
 	}
 	try {
-		sendJson(res, 200, parseChangeReport(target));
+		const report = parseChangeReport(target);
+		sendJson(res, 200, { ...report, publication_binding: changeReportPublicationBinding(dataDir, report) });
 	} catch {
 		sendJson(res, 422, { error: "变化报告无效；请运行 npm run validate 查看诊断" });
 	}

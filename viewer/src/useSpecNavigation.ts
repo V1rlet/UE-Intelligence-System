@@ -48,7 +48,7 @@ export interface SpecNavigationState {
 	openSpec: (t: SpecTarget) => void;
 	/** 返回上一页（弹栈 + 全重置） */
 	backSpec: () => void;
-	/** 关闭 Spec 页回主图（清栈 + 清悬停） */
+	/** 关闭 Spec 页回主图（清除全部只属于详情页的临时状态） */
 	closeSpec: () => void;
 }
 
@@ -92,6 +92,10 @@ export function useSpecNavigation({ onOpenSpec }: UseSpecNavigationOptions): Spe
 	const closeSpec = useCallback(() => {
 		setSpecStack([]);
 		setHoverId(null);
+		setSpecSelectedId(null);
+		setFnPage(0);
+		setSpecZonePages({});
+		setFocusRequest(null);
 	}, []);
 
 	return {

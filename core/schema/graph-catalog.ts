@@ -1,4 +1,4 @@
-import type { CoverageStatus, ProvenanceStatus } from "./graph-version.js";
+import type { CoverageDiagnostic, CoverageStatus, ProvenanceStatus, SourceFingerprint } from "./graph-version.js";
 
 export type GraphFreshness = "current" | "stale" | "unverified";
 export type GraphFreshnessReason =
@@ -61,6 +61,10 @@ export interface GraphCatalogEntry {
 	coverage_consumed_files: number | null;
 	coverage_skipped_files: number | null;
 	coverage_failed_files: number | null;
+	/** Bounded at the catalog normalization boundary. */
+	coverage_diagnostics?: CoverageDiagnostic[];
+	coverage_diagnostics_truncated?: number;
+	source_fingerprint?: SourceFingerprint | null;
 	freshness: GraphFreshness;
 	freshness_reason: GraphFreshnessReason;
 	source_file_count: number | null;
@@ -71,5 +75,7 @@ export interface GraphCatalogEntry {
 	/** Optional for old catalog servers; absence means the client must use the full graph. */
 	capabilities?: {
 		file_forest_projection?: 1;
+		/** B1：coverage=complete（提取器消费了全部发现的源文件，含 standalone TU）。 */
+		standalone_translation_units?: 1;
 	};
 }

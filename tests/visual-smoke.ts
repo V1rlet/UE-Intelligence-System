@@ -1,12 +1,11 @@
 // Real-browser visual smoke for the read-only code architecture viewer.
 import { execFileSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { BASE, captureScreenshot, findChrome, launchBrowser, resolveCodeFixture, waitForSelector, waitUntil } from "./browser-smoke-lib.js";
+import { resolveSmokeOutputDirectory } from "./smoke-artifacts.js";
 
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const OUT_DIR = join(ROOT, "logs", "smoke");
+const OUT_DIR = resolveSmokeOutputDirectory("visual");
 const chrome = findChrome();
 
 interface PageCheck {
@@ -55,7 +54,7 @@ async function mobileScreenshot(url: string, path: string, readySelector: string
 		await session.cdp.send("Emulation.setDeviceMetricsOverride", { width: 430, height: 900, deviceScaleFactor: 1, mobile: true });
 		await waitForSelector(session.cdp, readySelector);
 		if (readySelector === ".home-code-viewer") {
-			await waitUntil(async () => await session.cdp.evaluate<number>(`document.querySelectorAll('.home-catalog-entry').length`) > 1 ? true : null, "移动端代码目录");
+			await waitUntil(async () => await session.cdp.evaluate<number>(`document.querySelectorAll('.home-catalog-entry').length`) >= 1 ? true : null, "移动端代码目录");
 		} else if (readySelector === ".changes-view") {
 			await waitForSelector(session.cdp, ".changes-summary");
 			const overflow = await session.cdp.evaluate<{ amount: number; offenders: Array<{ className: string; right: number; width: number }> }>(`(() => ({
@@ -64,8 +63,7 @@ async function mobileScreenshot(url: string, path: string, readySelector: string
 			}))()`);
 			if (overflow.amount > 1) throw new Error(`移动端变化页横向溢出：${JSON.stringify(overflow)}`);
 		} else {
-			await waitForSelector(session.cdp, ".graph-controls[data-zoom-pct]");
-			await waitUntil(async () => await session.cdp.evaluate<number>(`Number(document.querySelector('.graph-controls')?.dataset.zoomPct)`) <= 75 ? true : null, "移动端架构全览适配");
+			await waitForSelector(session.cdp, ".architecture-overview");
 			const toolbar = await session.cdp.evaluate<{ overflow: number; overlaps: number }>(`(() => {
 				const items = Array.from(document.querySelector('.architecture-commandbar')?.children ?? []).filter((node) => getComputedStyle(node).display !== 'none').map((node) => node.getBoundingClientRect());
 				return {
@@ -132,10 +130,10 @@ const pages: PageCheck[] = [
 		name: "home",
 		path: "/",
 		markers: [
-			{ label: "只读代码查看器首页", test: (value) => value.includes("home home-code-viewer") && value.includes("代码架构查看器") },
+			{ label: "只读代码查看器首页", test: (value) => value.includes("home home-code-viewer") && value.includes("从边界进入代码事实") },
 			{ label: "代码目录来自版本化事实缩略图", test: (value) => value.includes("home-code-catalog") && value.includes("catalog-preview-v1") },
 			{ label: "主项目卡内收敛可信度证据", test: (value) => value.includes("home-project-evidence") && !value.includes("home-trust-banner") },
-			{ label: "代码目录支持本地筛选", test: (value) => value.includes("home-catalog-search") && value.includes("筛选代码架构图") },
+			{ label: "单一事实源不展示冗余筛选", test: (value) => value.includes("home-single-source") && !value.includes("home-catalog-search") },
 			{ label: "无创作工具 UI", test: noRetiredUi },
 		],
 	},
@@ -143,7 +141,8 @@ const pages: PageCheck[] = [
 		name: "architecture",
 		path: "/?view=explore&mode=architecture&scope=root",
 		markers: [
-			{ label: "单一探索工具栏", test: (value) => value.includes("architecture-workspace mindmap-code") && value.includes("architecture-commandbar") && value.includes("architecture-explore-switch") && value.includes("architecture-scope-trigger") && value.includes("architecture-stage") && !value.includes("topbar-explore") },
+			{ label: "单一探索工具栏", test: (value) => value.includes("architecture-current-projection") && value.includes("architecture-commandbar") && value.includes("architecture-explore-switch") && value.includes("architecture-scope-trigger") && value.includes("data-projection-format=\"catalog-preview-v1\"") && !value.includes("topbar-explore") },
+			{ label: "架构根视图是事实范围总览", test: (value) => value.includes("architecture-overview") && value.includes("architecture-scope-card") && value.includes("旧策展参考图不参与运行时") && !value.includes("<canvas") },
 			{ label: "工具面板默认不常驻", test: (value) => !value.includes('class="architecture-scope-tree"') && !value.includes('class="mindmap-relation-legend"') && !value.includes('class="architecture-selection-card') },
 			{ label: "无创作工具 UI", test: noRetiredUi },
 		],
@@ -152,7 +151,7 @@ const pages: PageCheck[] = [
 		name: "architecture-engine",
 		path: "/?view=explore&mode=architecture&scope=engine",
 		markers: [
-			{ label: "引擎职责范围深链", test: (value) => value.includes("data-active-scope=\"engine\"") && value.includes("引擎层") && value.includes("architecture-scope-trigger") },
+			{ label: "引擎事实分组深链", test: (value) => value.includes("data-active-scope=\"engine\"") && value.includes("引擎层") && value.includes("catalog-preview-v1") },
 			{ label: "复杂范围仍为只读架构", test: noRetiredUi },
 		],
 	},
@@ -196,7 +195,7 @@ const pages: PageCheck[] = [
 		path: "/?view=changes",
 		markers: [
 			{ label: "版本化代码变化", test: (value) => value.includes("changes-view") && value.includes("VERSIONED EVIDENCE") && value.includes("一跳影响") },
-			{ label: "基线可信度显式呈现", test: (value) => value.includes("无可验证指纹") && value.includes("与活动图指纹一致") },
+			{ label: "基线可信度显式呈现", test: (value) => value.includes("来源指纹可追溯") && value.includes("与活动图指纹一致") },
 			{ label: "节点与关系不再混算", test: (value) => value.includes("changes-fact-toolbar") && value.includes("节点 ·") && value.includes("默认聚焦类型与函数") },
 			{ label: "类型切片与证据下钻", test: (value) => value.includes("changes-type-facets") && value.includes("change-row-card") && value.includes("看一跳") },
 			{ label: "无计划和实现状态", test: noRetiredUi },
@@ -215,8 +214,8 @@ const pages: PageCheck[] = [
 		path: "/",
 		windowSize: "430,900",
 		markers: [
-			{ label: "窄屏仍为代码查看器", test: (value) => value.includes("home home-code-viewer") && value.includes("代码架构查看器") },
-			{ label: "窄屏保留目录筛选", test: (value) => value.includes("home-catalog-search") },
+			{ label: "窄屏仍为代码查看器", test: (value) => value.includes("home home-code-viewer") && value.includes("从边界进入代码事实") },
+			{ label: "窄屏保留单一事实源状态", test: (value) => value.includes("home-current-evidence") && value.includes("home-single-source") },
 			{ label: "窄屏无创作工具 UI", test: noRetiredUi },
 		],
 	},
@@ -226,7 +225,7 @@ const pages: PageCheck[] = [
 		windowSize: "430,900",
 		markers: [
 			{ label: "窄屏范围入口按需展开", test: (value) => value.includes("architecture-scope-trigger") && value.includes("当前范围") && !value.includes('class="architecture-scope-tree"') },
-			{ label: "窄屏保留聚焦画布", test: (value) => value.includes("mindmap-canvas") && value.includes("<canvas") },
+			{ label: "窄屏先显示可读范围卡片", test: (value) => value.includes("mindmap-canvas is-overview") && value.includes("architecture-scope-card") && !value.includes("<canvas") },
 			{ label: "窄屏无创作工具 UI", test: noRetiredUi },
 		],
 	},

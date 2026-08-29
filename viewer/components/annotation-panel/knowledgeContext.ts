@@ -1,4 +1,6 @@
-export type KnowledgeTypeId = "gotcha" | "best_practice" | "design_decision" | "performance" | "reference";
+import type { AnnotationType } from "../../../core/reading-context/store";
+
+export type KnowledgeTypeId = AnnotationType;
 
 export interface KnowledgeTypePresentation {
 	id: KnowledgeTypeId;

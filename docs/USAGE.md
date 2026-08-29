@@ -42,10 +42,22 @@ npm run extract:ue5-classes -- G:/UnrealProject/Sabotage/Source --subsystem proj
 npm run build:change-report -- --baseline data/archive/<基线图> --current data/graphs/<当前图> --data-dir data
 npm run data:status
 npm run data:rollback -- --subsystem project
-npm run build:references
-npm run build:mindmap
+npm run evidence:refresh
 npm run sync:ue-api
 ```
+
+`npm run evidence:status` 仅读取活动 publication；`npm run evidence:check` 是自动消费者的 fail-closed 门禁。`evidence:snapshot` 负责版本化 v2/v3 迁移与回滚，不应由 Viewer 组件直接改写。
+
+## 验证分层
+
+```powershell
+npm run check:fast
+npm run check:data
+npm run check:release
+npm run check:lifecycle
+```
+
+`check:fast` 先运行 `engineering-standard-gate` 与精确路径 `layer-gate`，再执行严格类型、单元/契约测试和 Schema 校验。规则正文位于 `docs/engineering-standard-v1.md`；唯一限时例外入口是 `config/engineering-standard-exceptions.json`。release 门禁必须真实运行浏览器 smoke；跳过不等于通过。本机使用摘要只保存固定键的聚合计数、耗时与 cache hit/miss，不保存查询、源码、URL 或用户标识。
 
 提交钩子只执行增量源码事实更新、派生变化比较和标注陈旧度扫描，不生成计划、设计报告、设计包或任务包。图和变化报告使用内容寻址文件，同日执行也不会覆盖基线；只有 version 1 发布清单切换后，服务端才会暴露新 generation。`data:rollback` 只切换清单顺序，不改写或删除不可变产物。旧 `--out` 变化报告参数暂时保留为薄兼容适配器，新的稳定入口是 `--data-dir`。
 

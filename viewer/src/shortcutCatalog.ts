@@ -10,6 +10,9 @@ export const SHORTCUT_KEYS = {
 		help: "?",
 	},
 	graph: {
+		open: ["Enter"],
+		exit: ["Escape"],
+		menu: ["ContextMenu", "Shift+F10"],
 		fit: ["f", "F", "Home"],
 		zoomIn: ["+", "="],
 		zoomOut: ["-", "_"],
@@ -42,6 +45,7 @@ export function shortcutHelpGroups(view: string): ShortcutHelpGroup[] {
 		items: [
 			{ keys: ["单击"], description: "查看代码事实及直接关系" },
 			{ keys: ["双击 / Enter"], description: "进入文件、类型或下一层架构" },
+			{ keys: ["Shift", "F10"], description: "打开画布操作菜单" },
 			{ keys: ["/"], description: "聚焦代码图搜索" },
 			{ keys: ["F / Home"], description: "适配当前图" },
 			{ keys: ["+ / −"], description: "放大或缩小" },

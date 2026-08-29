@@ -57,16 +57,17 @@ export default function ApiCatalogPane({
 		<nav className="api-nav" style={{ width }}>
 			<div className="api-nav-caption">
 				<span>{source === "all" ? "全部代码 · API" : source === "engine" ? "引擎源码 · API" : "项目代码 · API"}</span>
-				<button type="button" className="api-nav-home" onClick={onHome} title="返回 API 搜索首页">⌕</button>
+				<button type="button" className="api-nav-home" onClick={onHome} title="返回 API 搜索首页" aria-label="返回 API 搜索首页">⌕</button>
 			</div>
 			<div className="api-nav-search-wrap">
-				<span>⌕</span>
+				<span aria-hidden="true">⌕</span>
 				<input
 					value={navQuery}
 					onChange={(e) => onNavSearch(e.target.value)}
 					aria-label={source === "engine" ? "搜索引擎类" : "搜索模块或类"}
 					placeholder={source === "engine" ? "搜索引擎类…" : "搜索模块或类…"}
 				/>
+				{navQuery ? <button type="button" className="api-nav-search-clear" aria-label="清除模块或类搜索" onClick={() => onNavSearch("")}>×</button> : null}
 			</div>
 			{navQuery.trim() ? (
 				<label className="api-search-scope">
@@ -108,7 +109,14 @@ export default function ApiCatalogPane({
 										>
 											{cls} <span className="api-count">{count}</span>
 										</button>
-										<button type="button" className={`api-nav-star${isClassFavorite("project", cls) ? " active" : ""}`} title={isClassFavorite("project", cls) ? "从快速入口移除" : "加入快速入口"} onClick={() => onToggleClassFavorite({ name: cls, source: "project", module: mod })}>{isClassFavorite("project", cls) ? "★" : "☆"}</button>
+										<button
+											type="button"
+											className={`api-nav-star${isClassFavorite("project", cls) ? " active" : ""}`}
+											title={isClassFavorite("project", cls) ? "从快速入口移除" : "加入快速入口"}
+											aria-label={`${isClassFavorite("project", cls) ? "从快速入口移除" : "加入快速入口"}：${cls}`}
+											aria-pressed={isClassFavorite("project", cls)}
+											onClick={() => onToggleClassFavorite({ name: cls, source: "project", module: mod })}
+										>{isClassFavorite("project", cls) ? "★" : "☆"}</button>
 									</div>
 								))
 								: null}
@@ -127,8 +135,8 @@ export default function ApiCatalogPane({
 			<details className="api-catalog-maintenance">
 				<summary>目录维护与官方资料同步</summary>
 				<div className="api-catalog-controls">
-					<button disabled={catalogSyncBusy || !catalog} onClick={() => onSyncCatalog(false)} title="同步当前源码树所选范围">{catalogSyncBusy ? `同步 ${catalogSyncStatus?.completed ?? 0}/${catalogSyncStatus?.requested ?? "…"}` : "同步当前范围"}</button>
-					<button disabled={catalogSyncBusy || !catalog} onClick={() => onSyncCatalog(true)}>补同步缺失</button>
+					<button type="button" disabled={catalogSyncBusy || !catalog} onClick={() => onSyncCatalog(false)} title="同步当前源码树所选范围">{catalogSyncBusy ? `同步 ${catalogSyncStatus?.completed ?? 0}/${catalogSyncStatus?.requested ?? "…"}` : "同步当前范围"}</button>
+					<button type="button" disabled={catalogSyncBusy || !catalog} onClick={() => onSyncCatalog(true)}>补同步缺失</button>
 				</div>
 			</details>
 			{catalogSyncStatus ? (
@@ -162,6 +170,7 @@ export default function ApiCatalogPane({
 							) : null}
 							<div className={`api-catalog-class${source === "engine" && classFilter === entry.name ? " active" : ""}${entry.available_in_source ? "" : " official-only"}`}>
 							<button
+								type="button"
 								disabled={parsing}
 								onClick={() => onSelectCatalogClass(entry)}
 								title={`${entry.name} — ${parsing ? "本地解析中…" : parsed ? "本地已缓存" : entry.parseable ? "本地可解析" : entry.available_in_source ? "源码声明" : "官方文档"}${entry.available_in_source ? (entry.remarks ? ` · ${entry.remarks}` : entry.source_path ? ` · ${entry.source_path}` : "") : " · 本机源码未定位，仍可查看官方目录内容"}`}
@@ -170,8 +179,16 @@ export default function ApiCatalogPane({
 								<span className="api-catalog-name"><SearchHighlight text={entry.name} query={navQuery} /></span>
 								<i className={`api-parse-dot${parsing ? " parsing" : parsed ? " parsed" : entry.parseable ? " parseable" : entry.available_in_source ? " source" : " official"}`} />
 							</button>
-							<button type="button" className={`api-catalog-star${isClassFavorite("engine", entry.name) ? " active" : ""}`} title={isClassFavorite("engine", entry.name) ? "从快速入口移除" : "加入快速入口"} onClick={() => onToggleClassFavorite({ name: entry.name, source: "engine", module: entry.module, sourcePath: entry.source_path })}>{isClassFavorite("engine", entry.name) ? "★" : "☆"}</button>
-							<a href={entry.docs_url} target="_blank" rel="noreferrer" title="Epic UE 5.8 官方 API">↗</a>
+							<button
+								type="button"
+								className={`api-catalog-star${isClassFavorite("engine", entry.name) ? " active" : ""}`}
+								title={isClassFavorite("engine", entry.name) ? "从快速入口移除" : "加入快速入口"}
+								aria-label={`${isClassFavorite("engine", entry.name) ? "从快速入口移除" : "加入快速入口"}：${entry.name}`}
+								aria-pressed={isClassFavorite("engine", entry.name)}
+								onClick={() => onToggleClassFavorite({ name: entry.name, source: "engine", module: entry.module, sourcePath: entry.source_path })}
+							>{isClassFavorite("engine", entry.name) ? "★" : "☆"}</button>
+							{/* docs_url 已在目录边界做过 http(s) 归一化；空值时不渲染外链（空 href 会指向当前页）。 */}
+							{entry.docs_url ? <a href={entry.docs_url} target="_blank" rel="noreferrer" title="Epic UE 5.8 官方 API" aria-label={`在新窗口打开 ${entry.name} 的 Epic UE 5.8 官方 API`}>↗</a> : null}
 							</div>
 						</div>
 					);

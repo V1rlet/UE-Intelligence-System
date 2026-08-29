@@ -8,10 +8,11 @@
       "vcs": "lore",
       "domain": "ue5_code",
       "subsystem": "project",
-      "trigger_extensions": [".h", ".cpp"],
+      "trigger_extensions": [".h", ".cpp", ".Build.cs"],
       "extract": {
         "roots": ["G:/UnrealProject/Sabotage/Source"],
-        "out": "data/graphs"
+        "out": "data/graphs",
+        "uproject": "G:/UnrealProject/Sabotage/Sabotage.uproject"
       },
       "scan_annotations": true
     }

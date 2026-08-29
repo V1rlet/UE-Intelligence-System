@@ -11,7 +11,9 @@ function canonicalJsonValue(value: unknown): unknown {
 	if (Array.isArray(value)) return value.map(canonicalJsonValue);
 	if (!value || typeof value !== "object") return value;
 	return Object.fromEntries(Object.entries(value as Record<string, unknown>)
-		.sort(([left], [right]) => left.localeCompare(right))
+		// 码元全序而非 localeCompare：locale 排序对不同键可能返回 0，旧图（JSON 解析
+		// 顺序）与新图（构造顺序）会因此得到不同规范形，产生假阳性 modified。
+		.sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))
 		.map(([key, item]) => [key, canonicalJsonValue(item)]));
 }
 

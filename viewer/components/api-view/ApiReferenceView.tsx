@@ -7,6 +7,7 @@ import { apiFetch, apiFetchJson } from "../../src/apiFetch";
 import { LatestRequestGate } from "../../src/latestRequest";
 import { usePanelWidth } from "../../src/usePanelWidth";
 import { toast } from "../common/Toast";
+import AppIcon from "../common/AppIcon";
 import { isStaticFunction, specFunctionPageIndex } from "../common/functionPartition";
 import type { GraphElements } from "../graph-view/GraphView";
 import type { EngineCatalogState } from "../../src/useEngineCatalog";
@@ -25,6 +26,7 @@ import SearchHighlight from "./SearchHighlight";
 import type { Favorite, FavoriteInput } from "./useFavorites";
 import {
 	ALL_CATALOG_FILTER,
+	normalizeEngineCatalogClasses,
 	type ApiClassFavorite,
 	type ApiFunctionFavoriteRef,
 	type ApiInfo,
@@ -44,7 +46,7 @@ interface Props {
 	favorites: Favorite[];
 	favIds: Set<string>;
 	favError: string | null;
-	onToggleFavorite: (id: string, details?: Partial<FavoriteInput>) => Promise<void>;
+	onToggleFavorite: (id: string, details: FavoriteInput) => Promise<void>;
 	onLocate?: (fnId: string, parentId: string) => void;
 	entryRequest?: { id: string; seq: number } | null;
 	onJumpToNode?: (nodeId: string) => void;
@@ -101,6 +103,11 @@ export default function ApiReferenceView({
 	const [catalogSyncStatus, setCatalogSyncStatus] = useState<CatalogSyncStatus | null>(null);
 	const [catalogError, setCatalogError] = useState<string | null>(null);
 	const catalogSyncRequest = useRef(new LatestRequestGate());
+	const classSelectionSequence = useRef(0);
+	const chooseClassFilter = useCallback((value: string | null) => {
+		classSelectionSequence.current += 1;
+		setClassFilter(value);
+	}, []);
 	const selectedCatalogClass = engineCatalog.selectedClass;
 	const [catalogSyncSeq, setCatalogSyncSeq] = useState(0);
 	const catalogRequestKey = [catalogScope, catalogModule, catalogSearchCurrent ? "current" : "global", navQuery.trim(), sourceRoot ?? "", catalogSyncSeq].join("\u0000");
@@ -121,7 +128,10 @@ export default function ApiReferenceView({
 	const navPanel = usePanelWidth("apinav", { width: 310, min: 240, max: 480, side: "left" });
 	const detailPanel = usePanelWidth("apidetail", { width: 410, min: 320, max: 600, side: "right" });
 
-	useEffect(() => () => catalogSyncRequest.current.cancel(), []);
+	useEffect(() => () => {
+		catalogSyncRequest.current.cancel();
+		classSelectionSequence.current += 1;
+	}, []);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -142,7 +152,7 @@ export default function ApiReferenceView({
 					{ notify: false, context: "模块 API 类" },
 				);
 				if (!cancelled) {
-					setCatalogClasses(body.results ?? []);
+					setCatalogClasses(normalizeEngineCatalogClasses(body.results ?? []));
 					setCatalogTotal(Number(body.total ?? 0));
 					setCatalogResultKey(requestKey);
 				}
@@ -266,6 +276,14 @@ export default function ApiReferenceView({
 			popularity: (favIds.has(f.id) ? 55 : 0) + (f.api?.blueprint_exposable ? 12 : 0) + (f.api?.cpp_only ? 0 : 4),
 		})), query).map((match) => match.entry);
 	}, [activeTags, classFilter, engineCategory, engineMetaFilter, favIds, favMode, globalFunctionSearch, query, searchFns, source]);
+	const hasFunctionFilters = Boolean(query.trim() || favMode || activeTags.size > 0 || engineCategory || engineMetaFilter);
+	const resetFunctionFilters = () => {
+		setQuery("");
+		setFavMode(false);
+		setActiveTags(new Set());
+		setEngineCategory(null);
+		setEngineMetaFilter(null);
+	};
 
 	// ── 树形导航 ──
 	const navTree = useMemo(() => {
@@ -380,13 +398,17 @@ export default function ApiReferenceView({
 
 	// ── 引擎类解析 ──
 	const parseEngineClass = async (className: string, sourcePath?: string) => {
+		const selection = ++classSelectionSequence.current;
 		setCatalogError(null);
 		try {
 			const parsed = await engineParser.parseClass(className, sourcePath);
+			if (selection !== classSelectionSequence.current) return;
 			if (!parsed) throw new Error("本机引擎源码解析失败");
 			setClassFilter(className);
 		} catch (e) {
-			setCatalogError(`解析 ${className} 失败：${(e as Error).message}`);
+			if (selection === classSelectionSequence.current) {
+				setCatalogError(`解析 ${className} 失败：${(e as Error).message}`);
+			}
 		}
 	};
 
@@ -396,7 +418,7 @@ export default function ApiReferenceView({
 		setEngineMetaFilter(null);
 		setSelectedId(null);
 		engineCatalog.selectClass(entry);
-		setClassFilter(entry.name);
+		chooseClassFilter(entry.name);
 		if (entry.parseable && !catalogParsed.has(entry.name)) void parseEngineClass(entry.name, entry.source_path);
 	};
 
@@ -465,19 +487,23 @@ export default function ApiReferenceView({
 	};
 
 	// ── 图谱侧反向跳入 ──
+	// 按请求序号（seq）消费一次：依赖里保留 fns 以支持"目标函数尚未加载时稍后命中"
+	//（如引擎类异步解析合入），但已应用的请求绝不因 fns 身份变化（每次引擎解析合入
+	// 都会产生新数组）而重放——重放会把用户随后的搜索/筛选/选中打回旧目标。
+	const appliedEntrySeqRef = useRef(-1);
 	useEffect(() => {
-		if (!entryRequest) return;
+		if (!entryRequest || entryRequest.seq === appliedEntrySeqRef.current) return;
 		const f = fns.find((x) => x.id === entryRequest.id);
-		if (f) {
-			setLanding(false);
-			setSource(f.layer === "engine" ? "engine" : "project");
-			setSelectedId(f.id);
-			setQuery("");
-			setActiveTags(new Set());
-			setClassFilter(f.parent);
-			setFavMode(false);
-		}
-	}, [entryRequest, fns]);
+		if (!f) return;
+		appliedEntrySeqRef.current = entryRequest.seq;
+		setLanding(false);
+		setSource(f.layer === "engine" ? "engine" : "project");
+		setSelectedId(f.id);
+		setQuery("");
+		setActiveTags(new Set());
+		chooseClassFilter(f.parent);
+		setFavMode(false);
+	}, [chooseClassFilter, entryRequest, fns]);
 
 	const toggleTag = (t: string) =>
 		setActiveTags((prev) => {
@@ -517,7 +543,7 @@ export default function ApiReferenceView({
 	const scopedFavoriteFunctions = favoriteFunctions.filter((fn) => source === "all" || fn.layer === source);
 	const applySourceFilter = (nextSource: Source) => {
 		setSource(nextSource);
-		setClassFilter(null);
+		chooseClassFilter(null);
 		setSelectedId(null);
 		setEngineCategory(null);
 		setEngineMetaFilter(null);
@@ -530,13 +556,13 @@ export default function ApiReferenceView({
 		setEngineMetaFilter(null);
 		setSource(favorite.source);
 		if (favorite.source === "engine") void parseEngineClass(favorite.name, favorite.sourcePath);
-		else setClassFilter(favorite.name);
+		else chooseClassFilter(favorite.name);
 	};
 
 	const openFunctionFavorite = (fn: FnEntry) => {
 		setLanding(false);
 		setSource(fn.layer === "engine" ? "engine" : fn.layer === "project" ? "project" : "all");
-		setClassFilter(fn.parent);
+		chooseClassFilter(fn.parent);
 		setSelectedId(fn.id);
 		setQuery("");
 	};
@@ -549,7 +575,7 @@ export default function ApiReferenceView({
 		setCatalogSearchCurrent(false);
 		setNavQuery(value);
 		setQuery(value);
-		setClassFilter(null);
+		chooseClassFilter(null);
 		setSelectedId(null);
 	};
 
@@ -580,7 +606,7 @@ export default function ApiReferenceView({
 			onJumpToNode?.(target.id);
 			return;
 		}
-		setClassFilter(target.id);
+		chooseClassFilter(target.id);
 		setSelectedId(null);
 	};
 	const focusSharedSpecNode = (id: string) => {
@@ -590,7 +616,7 @@ export default function ApiReferenceView({
 	const openSharedSpecFunction = (fnId: string, parentId: string) => {
 		const fn = [...projectFns, ...engineFns].find((entry) => entry.id === fnId);
 		if (fn) setSource(fn.layer === "engine" ? "engine" : "project");
-		setClassFilter(parentId);
+		chooseClassFilter(parentId);
 		focusSharedSpecNode(fnId);
 	};
 	const jumpWithinSharedSpec = (nodeId: string) => {
@@ -608,7 +634,7 @@ export default function ApiReferenceView({
 	const toggleSharedSpecFavorite = (fnId: string) => {
 		const fn = [...projectFns, ...engineFns].find((entry) => entry.id === fnId);
 		if (fn) toggleFunctionFavorite(fn);
-		else onToggleFavorite(fnId);
+		else toast(`无法更新 ${fnId} 的快速入口：缺少函数事实`, "error");
 	};
 
 	const renderFunctionCard = (f: FnEntry) => {
@@ -638,8 +664,11 @@ export default function ApiReferenceView({
 						{isStaticFunction(f) ? "STATIC" : f.api?.blueprint_exposable ? "BP" : f.api?.cpp_only ? "C++" : "API"}
 					</span>
 					<button
+						type="button"
 						className={`api-star${isFav ? " faved" : ""}`}
 						title={isFav ? "从快速入口移除" : "加入快速入口"}
+						aria-label={`${isFav ? "从快速入口移除" : "加入快速入口"}：${f.label}`}
+						aria-pressed={isFav}
 						onClick={(event) => { event.stopPropagation(); toggleFunctionFavorite(f); }}
 					>
 						{isFav ? "★" : "☆"}
@@ -688,7 +717,7 @@ export default function ApiReferenceView({
 						<p>搜索类、函数、说明或参数；进入类后按继承、成员和函数分区阅读。</p>
 					</header>
 					<form className="api-landing-search" onSubmit={(event) => { event.preventDefault(); submitLandingSearch(); }}>
-						<span>⌕</span>
+						<AppIcon name="search" size={20} />
 						<input autoFocus value={landingQuery} onChange={(event) => setLandingQuery(event.target.value)} placeholder="搜索 API，例如 ACharacter、Networking、GetWorld…" aria-label="搜索全部 API" />
 						<button type="submit">搜索</button>
 					</form>
@@ -701,13 +730,13 @@ export default function ApiReferenceView({
 								{scopedClassFavorites.map((favorite) => (
 									<div className="api-common-card" key={`${favorite.source}:${favorite.name}`}>
 										<button type="button" className="api-common-main" onClick={() => openClassFavorite(favorite)}><span>{favorite.source === "engine" ? "UE 引擎类" : "项目类"}</span><strong>{favorite.name}</strong><small>{favorite.module ?? "查看类详情"}</small></button>
-										<button type="button" className="api-common-remove" onClick={() => toggleClassFavorite(favorite)} title="从快速入口移除">×</button>
+										<button type="button" className="api-common-remove" onClick={() => toggleClassFavorite(favorite)} title="从快速入口移除" aria-label={`从快速入口移除 ${favorite.name}`}><AppIcon name="trash" size={14} /></button>
 									</div>
 								))}
 								{scopedFavoriteFunctions.map((fn) => (
 									<div className="api-common-card" key={fn.id}>
 										<button type="button" className="api-common-main" onClick={() => openFunctionFavorite(fn)}><span>{fn.layer === "engine" ? "UE" : fn.layer === "project" ? "PROJECT" : "SOURCE UNKNOWN"} · FUNCTION</span><strong>{fn.label}</strong><small>{fn.parent}</small></button>
-										<button type="button" className="api-common-remove" onClick={() => toggleFunctionFavorite(fn)} title="从快速入口移除">×</button>
+										<button type="button" className="api-common-remove" onClick={() => toggleFunctionFavorite(fn)} title="从快速入口移除" aria-label={`从快速入口移除 ${fn.label}`}><AppIcon name="trash" size={14} /></button>
 									</div>
 								))}
 							</div>
@@ -753,7 +782,7 @@ export default function ApiReferenceView({
 						setEngineCategory(null);
 						setEngineMetaFilter(null);
 						setSelectedId(null);
-						setClassFilter(cls);
+						chooseClassFilter(cls);
 					}}
 					isClassFavorite={isClassFavorite}
 					onToggleClassFavorite={toggleClassFavorite}
@@ -782,13 +811,13 @@ export default function ApiReferenceView({
 					{contextClass ? (
 						<header className="api-context">
 							<nav className="api-spec-breadcrumb" aria-label="类详情路径">
-								<button type="button" onClick={() => { setClassFilter(null); setSelectedId(null); }}>API 查询</button>
+								<button type="button" onClick={() => { chooseClassFilter(null); setSelectedId(null); }}>API 查询</button>
 								{specTrail.map((entry, index) => (
 									<span key={`${entry.source}:${entry.id}`}>
 										<i>/</i>
 										{index === specTrail.length - 1
 											? <b>{entry.id}</b>
-											: <button type="button" onClick={() => { setSpecTrail((trail) => trail.slice(0, index + 1)); setSource(entry.source); setClassFilter(entry.id); setSelectedId(null); }}>{entry.id}</button>}
+											: <button type="button" onClick={() => { setSpecTrail((trail) => trail.slice(0, index + 1)); setSource(entry.source); chooseClassFilter(entry.id); setSelectedId(null); }}>{entry.id}</button>}
 									</span>
 								))}
 							</nav>
@@ -806,7 +835,12 @@ export default function ApiReferenceView({
 									</div>
 								</div>
 								<div className="api-context-actions">
-									<button type="button" className={`api-context-favorite${isClassFavorite(contextIsEngine ? "engine" : "project", contextClass) ? " active" : ""}`} onClick={() => toggleClassFavorite({ name: contextClass, source: contextIsEngine ? "engine" : "project", module: contextSample?.module ?? contextCatalogClass?.module, sourcePath: contextSample?.source_path ?? contextCatalogClass?.source_path })}>{isClassFavorite(contextIsEngine ? "engine" : "project", contextClass) ? "★ 快速入口" : "☆ 加入快速入口"}</button>
+									<button
+										type="button"
+										className={`api-context-favorite${isClassFavorite(contextIsEngine ? "engine" : "project", contextClass) ? " active" : ""}`}
+										aria-pressed={isClassFavorite(contextIsEngine ? "engine" : "project", contextClass)}
+										onClick={() => toggleClassFavorite({ name: contextClass, source: contextIsEngine ? "engine" : "project", module: contextSample?.module ?? contextCatalogClass?.module, sourcePath: contextSample?.source_path ?? contextCatalogClass?.source_path })}
+									>{isClassFavorite(contextIsEngine ? "engine" : "project", contextClass) ? "★ 快速入口" : "☆ 加入快速入口"}</button>
 									<span className="api-context-state">{contextIsEngine ? (contextEngineParsed ? "本地已缓存" : contextCatalogClass?.available_in_source ? "本地待解析" : "官方目录") : "项目类型"}</span>
 								</div>
 							</div>
@@ -829,43 +863,50 @@ export default function ApiReferenceView({
 						</section>
 					) : null}
 					<div className="api-toolbar">
-						<input
-							type="text"
-							className="api-search"
-							placeholder={source === "engine" ? "搜索引擎函数名 / 描述 / 参数…" : "搜索函数名 / 描述 / 参数 / 标签…"}
-							value={query}
-							onChange={(e) => {
-								setQuery(e.target.value);
-								if (e.target.value.trim() && searchRange === "global") {
-									setClassFilter(null);
-									setSelectedId(null);
-								}
-							}}
-							onKeyDown={(e) => e.key === "Escape" && setQuery("")}
-						/>
+						<div className="api-function-search">
+							<AppIcon name="search" size={15} />
+							<input
+								type="search"
+								className="api-search"
+								aria-label="搜索 API 函数"
+								placeholder={source === "engine" ? "搜索引擎函数名 / 描述 / 参数…" : "搜索函数名 / 描述 / 参数 / 标签…"}
+								value={query}
+								onChange={(e) => {
+									setQuery(e.target.value);
+									if (e.target.value.trim() && searchRange === "global") {
+										chooseClassFilter(null);
+										setSelectedId(null);
+									}
+								}}
+								onKeyDown={(e) => e.key === "Escape" && setQuery("")}
+							/>
+							{query ? <button type="button" aria-label="清除函数搜索" onClick={() => setQuery("")}>×</button> : null}
+						</div>
 						{query.trim() ? (
 							<span className="api-function-search-range" role="group" aria-label="函数搜索范围">
 								<button
 									type="button"
 									className={searchRange === "global" ? "active" : ""}
-									onClick={() => { setSearchRange("global"); setClassFilter(null); setSelectedId(null); }}
+									aria-pressed={searchRange === "global"}
+									onClick={() => { setSearchRange("global"); chooseClassFilter(null); setSelectedId(null); }}
 								>
 									全局
 								</button>
 								<button
 									type="button"
 									className={searchRange === "current" ? "active" : ""}
+									aria-pressed={searchRange === "current"}
 									onClick={() => setSearchRange("current")}
 								>
 									当前分类
 								</button>
 							</span>
 						) : null}
-						<span className="api-mode">
-							<button className={!favMode ? "active" : ""} onClick={() => setFavMode(false)}>
+						<span className="api-mode" role="group" aria-label="函数显示范围">
+							<button type="button" aria-pressed={!favMode} className={!favMode ? "active" : ""} onClick={() => setFavMode(false)}>
 								全部函数 <span className="api-count">{fns.length}</span>
 							</button>
-							<button className={favMode ? "active" : ""} onClick={() => setFavMode(true)}>
+							<button type="button" aria-pressed={favMode} className={favMode ? "active" : ""} onClick={() => setFavMode(true)}>
 								快速入口函数 <span className="api-count">{[...favIds].filter((id) => fns.some((f) => f.id === id)).length}</span>
 							</button>
 						</span>
@@ -874,11 +915,13 @@ export default function ApiReferenceView({
 					{/* 标签栏 / 分类栏 */}
 					{!contextClass ? (source === "engine" ? (
 						<div className="api-tagbar">
-							<button className={`api-tag${engineMetaFilter === null ? " active" : ""}`} onClick={() => setEngineMetaFilter(null)}>全部</button>
+							<button type="button" aria-pressed={engineMetaFilter === null} className={`api-tag${engineMetaFilter === null ? " active" : ""}`} onClick={() => setEngineMetaFilter(null)}>全部</button>
 							{(["BlueprintCallable", "C++ Only", "WorldContext", "Latent"] as EngineMetaFilter[]).map((flag) => (
 								<button
+									type="button"
 									key={flag}
 									className={`api-tag${engineMetaFilter === flag ? " active" : ""}`}
+									aria-pressed={engineMetaFilter === flag}
 									onClick={() => setEngineMetaFilter(engineMetaFilter === flag ? null : flag)}
 								>{flag === "C++ Only" ? "仅限 C++" : flag}</button>
 							))}
@@ -887,26 +930,33 @@ export default function ApiReferenceView({
 						<div className="api-tagbar">
 							{allTags.map((t) => (
 								<button
+									type="button"
 									key={t}
 									className={`api-tag${activeTags.has(t) ? " active" : ""}`}
+									aria-pressed={activeTags.has(t)}
 									onClick={() => toggleTag(t)}
 								>{t}</button>
 							))}
 							{activeTags.size > 0 ? (
-								<button className="api-tag-clear" onClick={() => setActiveTags(new Set())}>清空</button>
+								<button type="button" className="api-tag-clear" onClick={() => setActiveTags(new Set())}>清空</button>
 							) : null}
 						</div>
 					) : null) : null}
 					{favError ? <p className="ann-error">{favError}</p> : null}
+					<div className="api-result-summary" role="status" aria-live="polite">
+						<span>{query.trim() ? `“${query.trim()}”` : contextClass ?? (source === "all" ? "项目与引擎" : source === "engine" ? "引擎 API" : "项目 API")}</span>
+						<strong>{visible.length.toLocaleString()} 个函数</strong>
+						{hasFunctionFilters ? <button type="button" onClick={resetFunctionFilters}>重置筛选</button> : null}
+					</div>
 
 					{/* 分类 + 函数列表 */}
 					<div className="api-results-shell">
 						{!contextClass && source === "engine" && engineCategories.length > 0 ? (
 							<aside className="api-category-nav">
 								<div className="api-category-title">分类</div>
-								<button className={engineCategory === null ? "active" : ""} onClick={() => setEngineCategory(null)}>全部</button>
+								<button type="button" aria-pressed={engineCategory === null} className={engineCategory === null ? "active" : ""} onClick={() => setEngineCategory(null)}>全部</button>
 								{engineCategories.map((cat) => (
-									<button key={cat} className={engineCategory === cat ? "active" : ""} onClick={() => setEngineCategory(engineCategory === cat ? null : cat)}>{cat}</button>
+									<button type="button" aria-pressed={engineCategory === cat} key={cat} className={engineCategory === cat ? "active" : ""} onClick={() => setEngineCategory(engineCategory === cat ? null : cat)}>{cat}</button>
 								))}
 							</aside>
 						) : null}
@@ -943,7 +993,7 @@ export default function ApiReferenceView({
 								) : null}
 								{grouped.map(([cls, list]) => (
 									<section key={cls} className="api-class-group">
-										<button type="button" className="api-class-head api-class-node-entry" onClick={() => { setClassFilter(cls); setSelectedId(null); }}>
+										<button type="button" className="api-class-head api-class-node-entry" onClick={() => { chooseClassFilter(cls); setSelectedId(null); }}>
 											<span className="api-class-node-glyph">C</span><strong>{cls}</strong><small>{list[0]?.module ?? "API 类"}</small><span className="api-count">{list.length} 函数</span><b>查看类详情 →</b>
 										</button>
 										<div className="api-fn-cards">{list.map(renderFunctionCard)}</div>
@@ -979,10 +1029,8 @@ export default function ApiReferenceView({
 								onToggleFav={toggleSharedSpecFavorite}
 								onJumpFn={openSharedSpecFunction}
 								onShowInApi={focusSharedSpecNode}
-								mermaidEntries={[]}
-								onOpenMermaid={() => undefined}
 								onJumpToNode={jumpWithinSharedSpec}
-								onClose={() => { setClassFilter(null); setSelectedId(null); }}
+									onClose={() => { chooseClassFilter(null); setSelectedId(null); }}
 							/>
 						</div>
 					</>

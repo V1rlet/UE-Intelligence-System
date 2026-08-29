@@ -32,6 +32,11 @@
 .changes-route-diagnostics > button:hover { background: color-mix(in srgb, var(--gb-amber-75) 9%, transparent); color: var(--text-primary); }
 .changes-state { max-width: 1480px; min-height: 180px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--text-muted); }
 .changes-state.error { color: var(--text-red); }
+.changes-state.error > span { display: grid; gap: 3px; max-width: min(620px, 70vw); }
+.changes-state.error strong { color: var(--text-primary); font-size: 14px; }
+.changes-state.error small { overflow-wrap: anywhere; color: var(--text-muted); font-size: var(--changes-entry-meta-size); }
+.changes-state.error button { min-height: 36px; margin-left: 8px; padding: 0 12px; border: 1px solid color-mix(in srgb, var(--gb-red-65) 32%, var(--border-default)); border-radius: 7px; background: var(--bg-raised); color: var(--text-secondary); }
+.changes-state.error button:hover { border-color: var(--gb-red-65); color: var(--text-primary); }
 .changes-state.empty { flex-direction: column; text-align: center; }
 .changes-state.empty strong { color: var(--text-primary); font-size: 16px; }
 .changes-state.empty p { margin: 0; }

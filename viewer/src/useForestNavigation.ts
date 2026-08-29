@@ -118,13 +118,18 @@ export function useForestNavigation({ graph, displayGraph, graphKey, branch = nu
 			}
 		}
 		const fileCounts = new Map<string, number>();
+		const visiting = new Set<string>();
 		const countFiles = (id: string): number => {
 			const cached = fileCounts.get(id);
 			if (cached !== undefined) return cached;
+			// contains 关系来自外部图数据：出现环时按 0 计而不是无限递归挂起标签页。
+			if (visiting.has(id)) return 0;
+			visiting.add(id);
 			let n = 0;
 			for (const c of childrenOf.get(id) ?? []) {
 				n += typeOf.get(c) === "file" ? 1 : countFiles(c);
 			}
+			visiting.delete(id);
 			fileCounts.set(id, n);
 			return n;
 		};
@@ -162,8 +167,10 @@ export function useForestNavigation({ graph, displayGraph, graphKey, branch = nu
 		}
 		setCollapsed(() => {
 			const next = new Set(rootCollapsed);
+			const seen = new Set<string>();
 			let current: string | undefined = branch;
-			while (current) {
+			while (current && !seen.has(current)) {
+				seen.add(current);
 				next.delete(current);
 				current = forestIndex.parentOf.get(current);
 			}
@@ -182,10 +189,10 @@ export function useForestNavigation({ graph, displayGraph, graphKey, branch = nu
 		// 折叠文件夹的整棵子树隐藏（数据不动，纯视图过滤——展开即恢复，无数据丢失）
 		const hidden = new Set<string>();
 		const hide = (id: string) => {
-			for (const c of forestIndex.childrenOf.get(id) ?? []) {
-				hidden.add(c);
-				hide(c);
-			}
+			// 已隐藏即返回：既是去重，也是 contains 环的终止条件。
+			if (hidden.has(id)) return;
+			hidden.add(id);
+			for (const c of forestIndex.childrenOf.get(id) ?? []) hide(c);
 		};
 		for (const id of activeCollapsed) hide(id);
 
@@ -267,8 +274,10 @@ export function useForestNavigation({ graph, displayGraph, graphKey, branch = nu
 		setCollapsed((prev) => {
 			let changed = false;
 			const next = new Set(prev);
+			const seen = new Set<string>();
 			let cur = parentOf(id);
-			while (cur) {
+			while (cur && !seen.has(cur)) {
+				seen.add(cur);
 				if (next.delete(cur)) changed = true;
 				cur = parentOf(cur);
 			}

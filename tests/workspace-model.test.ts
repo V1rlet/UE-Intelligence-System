@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { boundedFocusZoom, boundedLocateZoom, clampManualZoom, clampOverviewZoom, fitZoomForBounds, renderedVisibleFraction, shouldRecenterTappedNode, VIEWPORT_POLICY } from "../viewer/components/graph-view/viewportPolicy.js";
-import { CODE_WORKSPACE_MODEL, isExistingSpec, selectExistingSpec } from "../viewer/src/workspaceModel.js";
+import { CODE_WORKSPACE_MODEL, isBrowsableCodeGraph, isExistingSpec, selectExistingSpec } from "../viewer/src/workspaceModel.js";
 import type { GraphCatalogEntry } from "../viewer/src/graphCatalog.js";
 
 function entry(file: string, kind = "graph", subsystem = "project"): GraphCatalogEntry {
@@ -25,6 +25,15 @@ test("class detail selection excludes mindmaps and references", () => {
 	const catalog = [entry("reference.cyto.json", "reference", "framework"), entry("mindmap.cyto.json", "mindmap", "architecture-mindmap"), entry("project.cyto.json")];
 	assert.equal(isExistingSpec(catalog[0]), false);
 	assert.equal(selectExistingSpec(catalog, catalog[0].file)?.file, "project.cyto.json");
+});
+
+test("the browsable code graph capability keeps references but excludes mindmaps and foreign domains", () => {
+	const reference = entry("reference.cyto.json", "reference", "framework");
+	const mindmap = entry("mindmap.cyto.json", "mindmap", "architecture-mindmap");
+	const foreign = { ...entry("foreign.cyto.json"), domain: "other" };
+	assert.equal(isBrowsableCodeGraph(reference), true);
+	assert.equal(isBrowsableCodeGraph(mindmap), false);
+	assert.equal(isBrowsableCodeGraph(foreign), false);
 });
 
 test("focus policy limits excessive zoom", () => {

@@ -1,5 +1,7 @@
 # 架构与边界
 
+工程实现受 `docs/engineering-standard-v1.md`（format version 1）约束。`scripts/engineering-standard-gate.ts` 负责类型逃生舱和集中例外，`scripts/layer-gate.ts` 负责 `core → adapters` 精确运行时边界；二者都是 `check:fast` 的前置门禁。
+
 ## 运行结构
 
 ```text

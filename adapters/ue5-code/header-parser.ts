@@ -23,17 +23,19 @@ export function stripCommentsPreserveLength(src: string): { stripped: string; do
 	const out = src.split("");
 	const docs: DocBlock[] = [];
 	let i = 0;
-	let inString = false;
+	// 同时跟踪 " 与 ' ：char c = '"'; 中的引号若不识别，会让后续整段被当作字符串，
+	// 注释剥离全面失步（被注释掉的声明复活、文档丢失），且完全静默。
+	let quote: '"' | "'" | null = null;
 	while (i < src.length) {
 		const c = src[i];
 		const d = src[i + 1];
-		if (inString) {
+		if (quote) {
 			if (c === "\\") { i += 2; continue; }
-			if (c === '"') inString = false;
+			if (c === quote) quote = null;
 			i++;
 			continue;
 		}
-		if (c === '"') { inString = true; i++; continue; }
+		if (c === '"' || c === "'") { quote = c; i++; continue; }
 		if (c === "/" && d === "/") {
 			while (i < src.length && src[i] !== "\n") { out[i] = " "; i++; }
 			continue;
@@ -109,10 +111,20 @@ export function matchBracket(text: string, openIndex: number): number {
 	const open = text[openIndex];
 	const close = open === "{" ? "}" : ")";
 	let depth = 0;
+	// 跳过字符串/字符字面量：TEXT("{") 里的花括号会让配对提前或推迟结束，
+	// 类体被静默截断或吞并后续声明（调用方全部基于 stripped 文本，注释已剥离）。
+	let quote: '"' | "'" | null = null;
 	const limit = Math.min(text.length, openIndex + MAX_BRACKET_SCAN);
 	for (let i = openIndex; i < limit; i++) {
-		if (text[i] === open) depth++;
-		else if (text[i] === close && --depth === 0) return i;
+		const ch = text[i];
+		if (quote) {
+			if (ch === "\\") { i++; continue; }
+			if (ch === quote) quote = null;
+			continue;
+		}
+		if (ch === '"' || ch === "'") { quote = ch; continue; }
+		if (ch === open) depth++;
+		else if (ch === close && --depth === 0) return i;
 	}
 	return -1;
 }
@@ -416,6 +428,9 @@ function extractCppDeclarations(
 		.map(({ start: _start, bodyOpen: _bodyOpen, bodyClose: _bodyClose, ...declaration }) => declaration);
 }
 
+/** 把顶层 {...} 块折叠成 ";" + 等长空格：既保留语句分隔符语义，又与原文
+ *  偏移一一对应——flat 上的 match.index 就是原文坐标，调用方不得再用
+ *  indexOf 回查（首个匹配可能落在更早的字符串字面量里，F4）。 */
 function flattenInlineBodies(body: string): string {
 	let out = "";
 	let i = 0;
@@ -423,11 +438,11 @@ function flattenInlineBodies(body: string): string {
 		if (body[i] === "{") {
 			const close = matchBracket(body, i);
 			if (close === -1) break;
-			out += ";";
+			out += ";" + " ".repeat(close - i);
 			i = close + 1;
 		} else {
 			out += body[i];
-			i++;
+			i += 1;
 		}
 	}
 	return out;
@@ -436,6 +451,8 @@ function flattenInlineBodies(body: string): string {
 export interface ParseHeaderOptions {
 	/** 将文件级非反射 class / struct / enum 也生成为可打开的完整 Spec 类型。 */
 	includePlainCpp?: boolean;
+	/** 调用方已读取的文件内容（用于与哈希共用同一次读取，杜绝读-哈希/读-解析竞态）。 */
+	content?: string;
 }
 
 function plainCppKind(declaration: ParsedCppDeclaration): ParsedClass["kind"] {
@@ -520,7 +537,9 @@ export function parseHeader(filePath: string, sourceRoot: string, options: Parse
 	if (!existsSync(filePath)) return [];
 	const size = statSync(filePath).size;
 	if (size > MAX_HEADER_BYTES) return [];
-	const raw = readFileSync(filePath, "utf-8").replace(/^﻿/, "");
+	const raw = options.content !== undefined
+		? options.content.replace(/^﻿/, "")
+		: readFileSync(filePath, "utf-8").replace(/^﻿/, "");
 	const { stripped, docs } = stripCommentsPreserveLength(raw);
 	const sourcePath = relative(sourceRoot, filePath).replaceAll("\\", "/");
 	const results: ParsedClass[] = [];
@@ -647,10 +666,7 @@ export function parseHeader(filePath: string, sourceRoot: string, options: Parse
 		while ((fd = FUNC_DECL_RE.exec(flatBody)) !== null) {
 			const fname = fd[2];
 			if (SKIP_FUNC_NAMES.has(fname) || consumedNames.has(fname) || fname === name || fname.startsWith("~")) continue;
-			const needle = fd[0].slice(0, -1).trimEnd();
-			const origIdx = body.indexOf(needle);
-			const declStart = origIdx === -1 ? 0 : bodyOpen + 1 + origIdx;
-			cls.functions.push(buildFunction(fd, false, "", declStart));
+			cls.functions.push(buildFunction(fd, false, "", bodyOpen + 1 + fd.index));
 			consumedNames.add(fname);
 		}
 
@@ -798,6 +814,9 @@ export function parseCppMemberUsage(cppPath: string, cls: ParsedClass): Map<stri
 	const usage = new Map<string, Set<string>>();
 	if (!existsSync(cppPath) || cls.properties.length === 0) return usage;
 	const { stripped } = stripCommentsPreserveLength(readFileSync(cppPath, "utf-8").replace(/^﻿/, ""));
+	// 属性正则按文件编译一次：在函数定义循环内重复 new RegExp 是 O(函数×属性) 次
+	// 编译，大 .cpp（数百函数 × 数十属性）上纯浪费。
+	const propertyPatterns = cls.properties.map((property) => [property.name, new RegExp(String.raw`\b${property.name}\b`)] as const);
 
 	const defRe = new RegExp(String.raw`\b${cls.name}\s*::\s*(\w+)\s*\(`, "g");
 	let m: RegExpExecArray | null;
@@ -813,10 +832,10 @@ export function parseCppMemberUsage(cppPath: string, cls: ParsedClass): Map<stri
 		const body = stripped.slice(i + 1, bodyClose);
 		defRe.lastIndex = bodyClose + 1;
 
-		for (const p of cls.properties) {
-			if (new RegExp(String.raw`\b${p.name}\b`).test(body)) {
+		for (const [name, pattern] of propertyPatterns) {
+			if (pattern.test(body)) {
 				const set = usage.get(fnName) ?? new Set<string>();
-				set.add(p.name);
+				set.add(name);
 				usage.set(fnName, set);
 			}
 		}

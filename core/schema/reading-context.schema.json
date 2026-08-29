@@ -6,7 +6,7 @@
   "type": "object",
   "required": ["format_version", "domain", "revision", "updated_at", "annotations", "favorites"],
   "properties": {
-    "format_version": { "const": 1 },
+    "format_version": { "const": 2 },
     "domain": { "const": "ue5_code" },
     "revision": { "type": "integer", "minimum": 0 },
     "updated_at": { "type": "string", "format": "date-time" },
@@ -31,7 +31,18 @@
                 "created_at": { "type": "string", "format": "date-time" },
                 "updated_at": { "type": "string", "format": "date-time" },
                 "source_hash": { "type": "string" },
-                "stale": { "type": "boolean" }
+                "stale": { "type": "boolean" },
+                "anchor": {
+                  "type": "object",
+                  "description": "D-P3 行级锚：标注绑定的源文件行区间；fingerprint 为该区间原始字节的 sha256。失效半径=该行区间。",
+                  "required": ["start_line", "end_line", "fingerprint"],
+                  "properties": {
+                    "start_line": { "type": "integer", "minimum": 1 },
+                    "end_line": { "type": "integer", "minimum": 1 },
+                    "fingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+                  },
+                  "additionalProperties": false
+                }
               },
               "additionalProperties": false
             }

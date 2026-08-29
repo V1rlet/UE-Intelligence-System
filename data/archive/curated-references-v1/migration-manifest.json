@@ -1,0 +1,92 @@
+{
+  "format_version": "graphbrain.curated-reference-archive/1",
+  "archived_at": "2026-08-13T08:06:58.637Z",
+  "status": "archived",
+  "entries": [
+    {
+      "file": "ue5_code_architecture-mindmap_2026-07-19.cyto.json",
+      "subsystem": "architecture-mindmap",
+      "original_path": "data/graphs/ue5_code_architecture-mindmap_2026-07-19.cyto.json",
+      "archive_path": "data/archive/curated-references-v1/graphs/ue5_code_architecture-mindmap_2026-07-19.cyto.json",
+      "bytes": 155662,
+      "sha256": "3dc2f3c28b7a372eec4b16d526b7be5dbed5264b2455ea316bebf2057ce1c703",
+      "annotation_targets": 0
+    },
+    {
+      "file": "ue5_code_classes_2026-07-02.cyto.json",
+      "subsystem": "classes",
+      "original_path": "data/graphs/ue5_code_classes_2026-07-02.cyto.json",
+      "archive_path": "data/archive/curated-references-v1/graphs/ue5_code_classes_2026-07-02.cyto.json",
+      "bytes": 24178,
+      "sha256": "07fce392cf515f31874e82c988c2bf09f58589a04aec7673e589a4ef8175ef07",
+      "annotation_targets": 0
+    },
+    {
+      "file": "ue5_code_framework-reference_2026-07-11.cyto.json",
+      "subsystem": "framework-reference",
+      "original_path": "data/graphs/ue5_code_framework-reference_2026-07-11.cyto.json",
+      "archive_path": "data/archive/curated-references-v1/graphs/ue5_code_framework-reference_2026-07-11.cyto.json",
+      "bytes": 23279,
+      "sha256": "8f6cba5a46b03d28ba2a0ec255758198631ef10012363a2e8361a2ca8664ec07",
+      "annotation_targets": 9
+    },
+    {
+      "file": "ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+      "subsystem": "gameplay-framework-reference",
+      "original_path": "data/graphs/ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+      "archive_path": "data/archive/curated-references-v1/graphs/ue5_code_gameplay-framework-reference_2026-07-12.cyto.json",
+      "bytes": 23639,
+      "sha256": "f7e2fdd93c3f97a424b520018185ebdddd9d3bace11b730be12ada2b3454ee1f",
+      "annotation_targets": 3
+    },
+    {
+      "file": "ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+      "subsystem": "lifecycle-dependencies-reference",
+      "original_path": "data/graphs/ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+      "archive_path": "data/archive/curated-references-v1/graphs/ue5_code_lifecycle-dependencies-reference_2026-07-12.cyto.json",
+      "bytes": 21928,
+      "sha256": "3e153c2cf6e92a48594f1348c7e12ad8badb3c1e29ba4725534e2722dd4ee039",
+      "annotation_targets": 0
+    },
+    {
+      "file": "ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+      "subsystem": "lyra-architecture-reference",
+      "original_path": "data/graphs/ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+      "archive_path": "data/archive/curated-references-v1/graphs/ue5_code_lyra-architecture-reference_2026-07-12.cyto.json",
+      "bytes": 35975,
+      "sha256": "ab9ad37740db1538c89eae1a9ab56d90306fdb88426ccd653946f170d200dcd0",
+      "annotation_targets": 3
+    },
+    {
+      "file": "ue5_code_network-scope-reference_2026-07-12.cyto.json",
+      "subsystem": "network-scope-reference",
+      "original_path": "data/graphs/ue5_code_network-scope-reference_2026-07-12.cyto.json",
+      "archive_path": "data/archive/curated-references-v1/graphs/ue5_code_network-scope-reference_2026-07-12.cyto.json",
+      "bytes": 16949,
+      "sha256": "1b5021af72781b443782d153681829ae9801dd097f3d3ac18994b735c75c78e8",
+      "annotation_targets": 0
+    }
+  ],
+  "consumer_audit": {
+    "external_consumers": [],
+    "active_generators_retired": [
+      "build:references",
+      "build:mindmap"
+    ],
+    "deep_link_adapter": "GET /data/graphs/<archived-file> and GET /api/graph-projection return HTTP 410 with CURATED_REFERENCE_ARCHIVED"
+  },
+  "reading_context": {
+    "before_revision": 2,
+    "after_revision": 3,
+    "archived_document": "data/archive/curated-references-v1/reading-context-before-retirement-revision-2.json",
+    "annotation_entries": 15,
+    "annotations": 18,
+    "favorites": 18,
+    "favorites_verified_engine_ids": 18,
+    "favorites_verified_project_snapshot": 9,
+    "favorites_verified_engine_cache": 3,
+    "favorites_verified_official_catalog": 6,
+    "review_document": "data/archive/curated-references-v1/annotation-review.md"
+  },
+  "rollback": "npm run archive:curated-references -- --restore --expected-reading-revision <revision>; refuses after reading-context edits unless --allow-lossy"
+}

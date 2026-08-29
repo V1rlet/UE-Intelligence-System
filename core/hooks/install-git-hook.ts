@@ -85,9 +85,10 @@ const configLine = configArg ? ` --config "${resolve(ROOT, configArg).replaceAll
 const script = `#!/bin/sh
 ${MARKER} — 由 GraphBrain core/hooks/install-git-hook.ts 生成，勿手改（重装即覆盖）
 # 提交触及 ${project.trigger_extensions.join("/")} 时后台触发图谱增量更新 + 标注陈旧扫描。
-# 失败静默（runner 恒 exit 0，日志见 ${gbRoot}/logs/hook.log），绝不阻塞提交。
+# 失败静默（后台执行、退出码被忽略，日志见 ${gbRoot}/logs/hook.log），绝不阻塞提交。
 GB_ROOT="${gbRoot}"
-FILES="$(git diff-tree --no-commit-id --name-only -r HEAD 2>/dev/null)"
+# -m --first-parent：merge 提交默认 diff-tree 无输出，会漏掉合入分支触及的文件。
+FILES="$(git diff-tree --no-commit-id --name-only -r -m --first-parent HEAD 2>/dev/null)"
 printf '%s\\n' "$FILES" | grep -qiE '\\.(${extPattern})$' || exit 0
 TMP="$GB_ROOT/logs/hook-files.$$.txt"
 printf '%s\\n' "$FILES" > "$TMP" 2>/dev/null || exit 0

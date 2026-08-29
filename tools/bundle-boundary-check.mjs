@@ -19,9 +19,10 @@ const indexHtml = readFileSync(resolve(DIST, "index.html"), "utf8");
 const architectureName = onlyAsset(/^ArchitectureWorkspace-.*\.js$/, "Architecture Workspace");
 const architectureCssName = onlyAsset(/^ArchitectureWorkspace-.*\.css$/, "Architecture Workspace CSS");
 const graphWorkspaceName = onlyAsset(/^GraphWorkspaceView-.*\.js$/, "Graph Workspace");
+const graphViewName = onlyAsset(/^GraphView-.*\.js$/, "Graph View");
 
 const retiredAssets = assets.filter((name) =>
-	/WorldAtlas|world-atlas|DesignDelivery|design-delivery|QuestProgram|quest-program|level-design|narrative|ue5-planned|task-package|workflow|review-workspace|GraphTimeline|player-metrics|three(?:\.|-)/i.test(name),
+	/WorldAtlas|world-atlas|DesignDelivery|design-delivery|QuestProgram|quest-program|level-design|narrative|ue5-planned|task-package|workflow|review-workspace|GraphTimeline|player-metrics|mermaid|EmbedApp|three(?:\.|-)/i.test(name),
 );
 assert.deepEqual(retiredAssets, [], `retired authoring assets leaked into production: ${retiredAssets.join(", ")}`);
 
@@ -49,8 +50,15 @@ for (const asset of initialPreloads) {
 	);
 }
 
-assert.equal(assets.some((name) => /^GraphView-.*\.js$/.test(name)), true, "GraphView must remain deferred");
-assert.equal(assets.some((name) => /cytoscape/i.test(name)), true, "Cytoscape must remain deferred");
+const graphViewContent = readFileSync(resolve(ASSETS, graphViewName), "utf8");
+const cytoscapeAssets = assets.filter((name) => name.endsWith(".js")
+	&& /cytoscape/i.test(readFileSync(resolve(ASSETS, name), "utf8")));
+assert.ok(cytoscapeAssets.length > 0, "built output must contain the Cytoscape runtime");
+assert.ok(cytoscapeAssets.some((name) => graphViewContent.includes(`./${name}`)),
+	"GraphView must reference a deferred Cytoscape runtime chunk");
+for (const asset of cytoscapeAssets) {
+	assert.equal(initialPreloads.includes(asset), false, `Cytoscape runtime must remain deferred: ${asset}`);
+}
 
 function htmlAssets(pattern) {
 	return [...indexHtml.matchAll(pattern)].map((match) => match[1]);
@@ -73,7 +81,7 @@ const initialStyles = htmlAssets(/<link[^>]+rel="stylesheet"[^>]+href="\/assets\
 const initialJs = bundleSize([...entryScripts, ...initialPreloads]);
 const initialCss = bundleSize(initialStyles);
 
-// These budgets describe the overview shell, not deferred graph/Mermaid workspaces.
+// These budgets describe the overview shell, not deferred graph workspaces.
 // Keep enough headroom for ordinary maintenance while making regressions fail loudly.
 assert.ok(initialJs.raw <= 320 * 1024, `initial JS raw budget exceeded: ${kib(initialJs.raw)} KiB > 320 KiB`);
 assert.ok(initialJs.gzip <= 100 * 1024, `initial JS gzip budget exceeded: ${kib(initialJs.gzip)} KiB > 100 KiB`);
