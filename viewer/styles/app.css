@@ -1037,7 +1037,47 @@ button {
 	margin-top: var(--sp-1);
 }
 .api-nav-mod-head { color: var(--text-tertiary); font-weight: 600; margin-top: 10px; }
-.api-nav-class { padding-left: 22px; word-break: break-all; }
+/* 项目导航类行：左对齐 + 主题表面。原先是近黑底、居中文字的黑条堆，与整体风格脱节。 */
+.api-nav-favorite-row { display: flex; align-items: center; gap: 2px; margin: 2px 0; }
+.api-nav-favorite-row .api-nav-class {
+	flex: 1;
+	min-width: 0;
+	min-height: 32px;
+	text-align: left;
+	padding: 5px 8px 5px 24px;
+	border: 1px solid transparent;
+	border-radius: 7px;
+	background: color-mix(in srgb, var(--bg-surface) 55%, transparent);
+	color: var(--text-secondary);
+	font-size: 13px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.api-nav-favorite-row .api-nav-class:hover {
+	border-color: color-mix(in srgb, var(--gb-cyan-75) 24%, transparent);
+	background: color-mix(in srgb, var(--gb-cyan-75) 8%, transparent);
+	color: var(--text-primary);
+}
+.api-nav-favorite-row .api-nav-class.active {
+	border-color: color-mix(in srgb, var(--gb-cyan-75) 40%, transparent);
+	background: color-mix(in srgb, var(--gb-cyan-75) 11%, transparent);
+	color: var(--cyan);
+	font-weight: 600;
+}
+.api-nav-class .api-count { margin-left: auto; font: 11px var(--font-mono); }
+.api-nav-favorite-row .api-nav-star {
+	flex: none;
+	width: 26px;
+	min-height: 26px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--text-muted);
+	font-size: 13px;
+}
+.api-nav-favorite-row .api-nav-star:hover,
+.api-nav-favorite-row .api-nav-star.active { color: var(--gb-amber-75); }
 .api-count { color: var(--text-muted); font-size: 11px; margin-left: 4px; }
 
 /* ── 中间列表 ── */
@@ -2043,15 +2083,13 @@ kbd {
 .detail-panel h2 { font-size: 13.5px; }
 kbd { border-radius: 2px; font-size: 10.5px; }
 
-/* ── 勘测画布：经纬网格 + 中心提亮 + 四角刻度框 ─────────────────────── */
+/* ── 勘测画布：点阵 + 中心提亮 + 四角刻度框 ─────────────────────────── */
+/* 线状经纬网格在大间距下会读成"随机亮条纹"（尤其 240px 粗线），改为点阵质感。 */
 .graph-wrap {
 	background:
-		linear-gradient(color-mix(in srgb, var(--gb-violet-65) 3.8%, transparent) 1px, transparent 1px),
-		linear-gradient(90deg, color-mix(in srgb, var(--gb-violet-65) 3.8%, transparent) 1px, transparent 1px),
-		linear-gradient(color-mix(in srgb, var(--gb-violet-65) 2%, transparent) 1px, transparent 1px),
-		linear-gradient(90deg, color-mix(in srgb, var(--gb-violet-65) 2%, transparent) 1px, transparent 1px),
+		radial-gradient(color-mix(in srgb, var(--gb-violet-65) 13%, transparent) 1px, transparent 1.4px),
 		radial-gradient(1100px 640px at 50% 44%, var(--gb-violet-20), var(--bg-base));
-	background-size: 240px 240px, 240px 240px, 48px 48px, 48px 48px, 100% 100%;
+	background-size: 24px 24px, 100% 100%;
 }
 .graph-wrap::before,
 .graph-wrap::after {
@@ -2526,7 +2564,6 @@ kbd { border-radius: 2px; font-size: 10.5px; }
 	padding: 8px 6px 5px;
 	border-bottom: 1px solid color-mix(in srgb, var(--gb-violet-55) 18%, transparent);
 }
-.api-nav-class { margin: 2px 0; border-left: 2px solid transparent; }
 
 .api-main { padding: 0 12px 12px; overflow: hidden; background: var(--gb-violet-20); }
 .api-context {

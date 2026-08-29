@@ -148,6 +148,9 @@
 
 .engine-spec-body {
 	display: grid;
+	/* 左侧模块树固定呼吸宽度，右侧符号舞台吃满剩余空间；
+	 * 无列模板时树会被内容宽度挤成逼仄的一窄条。 */
+	grid-template-columns: minmax(252px, 316px) minmax(0, 1fr);
 	min-width: 0;
 	overflow: hidden;
 	background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
@@ -377,7 +380,8 @@
 	align-items: center;
 	gap: var(--sp-2);
 	min-width: 0;
-	padding: 7px 9px;
+	min-height: 34px;
+	padding: 7px 11px;
 	color: var(--text-secondary);
 	text-align: left;
 	background: transparent;
@@ -782,7 +786,7 @@
 }
 
 @media (max-width: 620px) {
-	.engine-spec-body { overflow: visible; }
+	.engine-spec-body { overflow: visible; grid-template-columns: 1fr; }
 	.engine-module-tree { max-height: 410px; border-right: 0; border-bottom: 1px solid var(--border-subtle); }
 	.engine-symbol-stage { min-height: 440px; }
 	.engine-symbol-grid { grid-template-columns: 1fr; padding-inline: var(--sp-4); }
