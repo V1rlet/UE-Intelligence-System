@@ -33,7 +33,9 @@
 
 .mindmap-canvas {
 	position: absolute;
-	z-index: 1;
+	/* 不设 z-index：一旦创建堆叠上下文，画布内的 graph-popover（z-40）会被整体
+	 * 封印在本层，压不过兄弟的选择卡（z-15），图层面板会完全不可见。
+	 * DOM 顺序已保证画布位于命令栏/面板/选择卡之下。 */
 	inset: 0;
 	display: flex;
 	min-width: 0;

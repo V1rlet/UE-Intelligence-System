@@ -81,8 +81,19 @@ function docBefore(docs: DocBlock[], stripped: string, declStart: number): strin
 //  通用小工具
 // ████████████████████████████████████████████████████████████████████████████
 
-/** 单个括号/花括号配对的扫描窗口：超过即视为未闭合（防止畸形输入 O(n²) 拖垮解析）。 */
-const MAX_BRACKET_SCAN = 64 * 1024;
+/**
+ * 单头文件解析上限：超过即跳过该文件（畸形/超大输入不拖垮解析与事件循环）。
+ * 这一道才是 DoS 定界边界：进入解析的文本总量恒 ≤ 4MB。
+ */
+const MAX_HEADER_BYTES = 4 * 1024 * 1024;
+
+/**
+ * 单个括号/花括号配对的扫描上限。配对扫描是从 openIndex 起的单遍线性遍历，
+ * 总代价以文件大小定界；真正的病态输入已被 MAX_HEADER_BYTES 拒收。
+ * 曾经的 64KB 窗口会把 AActor / UWorld 这类类体 >64KB 的合法头文件判成
+ * "未闭合"而整体静默丢弃（引擎核心类全部无法解析），因此上限对齐文件级边界。
+ */
+const MAX_BRACKET_SCAN = MAX_HEADER_BYTES;
 
 /** 从 from 起找"顶层"分号：跳过字符串字面量（含转义）与括号/花括号深度。 */
 function indexOfTopLevelSemicolon(text: string, from: number): number {
@@ -529,9 +540,6 @@ function parsePlainCppFunctions(
 	}
 	return functions;
 }
-
-/** 单头文件解析上限：超过即跳过该文件（畸形/超大输入不拖垮解析与事件循环）。 */
-const MAX_HEADER_BYTES = 4 * 1024 * 1024;
 
 export function parseHeader(filePath: string, sourceRoot: string, options: ParseHeaderOptions = {}): ParsedClass[] {
 	if (!existsSync(filePath)) return [];

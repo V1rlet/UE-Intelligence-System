@@ -985,6 +985,8 @@ export default function ApiReferenceView({
 											? contextCatalogClass.available_in_source
 												? "正在从本机头文件整理类结构资料。"
 												: "该类型来自 Epic 官方目录，本机源码未定位；可查看 Remarks 或官方文档。"
+											: catalogError
+											? "该类结构解析失败——原因见左侧错误详情；处理后点击类名重试。"
 											: "点击左侧引擎类，从本机头文件离线解析；结果会持久缓存，之后打开可直接读取。"
 											: favMode && favIds.size === 0
 											? "快速入口中还没有函数——在条目上点 ☆ 添加。"
