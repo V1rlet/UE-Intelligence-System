@@ -85,6 +85,8 @@ interface Props {
 	domain?: string;
 	onSelect: (data: Record<string, unknown> | null) => void;
 	onNodeDblTap?: (data: Record<string, unknown>) => void;
+	/** 森林文件夹折叠/展开（折叠文件夹单击展开、右键切换；双击竞态多，不再承担主路径）。 */
+	onFolderToggle?: (id: string) => void;
 	/** 分层职责树使用自上而下的确定性布局；普通图继续使用 fCoSE。 */
 	layoutMode?: "default" | "hierarchy";
 	/** 架构脑图使用紧凑节点，不套用类 Spec 卡片。 */
@@ -302,7 +304,7 @@ function toSpecCardElements(elements: GraphElements): GraphElements {
 	return { nodes, edges };
 }
 
-export default function GraphView({ elements, domain, onSelect, onNodeDblTap, layoutMode = "default", compactNodes = false, focusRequest, viewportKey, layoutRevision, heatmap, heatmapColor, cycleNodeIds }: Props) {
+export default function GraphView({ elements, domain, onSelect, onNodeDblTap, onFolderToggle, layoutMode = "default", compactNodes = false, focusRequest, viewportKey, layoutRevision, heatmap, heatmapColor, cycleNodeIds }: Props) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const layersButtonRef = useRef<HTMLButtonElement>(null);
 	const cyRef = useRef<Core | null>(null);
@@ -329,6 +331,8 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 	onSelectRef.current = onSelect;
 	const onDblTapRef = useRef(onNodeDblTap);
 	onDblTapRef.current = onNodeDblTap;
+	const onFolderToggleRef = useRef(onFolderToggle);
+	onFolderToggleRef.current = onFolderToggle;
 	const applyFocusRef = useRef<(id: string, centerSelf?: boolean) => void>(() => {});
 	// P3U4：Focus 跳数（1–3）与聚焦态。跳数经 ref 供 cy 闭包读取（改跳数不重建图）
 	// F6：跳数持久化
@@ -415,6 +419,10 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 			maxZoom: VIEWPORT_POLICY.hardMaxZoom,
 		});
 		cyRef.current = cy;
+		// dev 调试句柄：浏览器控制台可检查 cy 实例（生产构建不暴露）。
+		if (import.meta.env.DEV) {
+			(window as { __gbCy?: unknown }).__gbCy = cy;
+		}
 		viewportModeRef.current = "overview";
 		setCtxMenu(null);
 
@@ -438,7 +446,7 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 		const layoutOpts = hasPositions
 			? { name: "preset", fit: false }
 			: isForest
-			? { name: "breadthfirst", directed: true, spacingFactor: 1.4, fit: false }
+			? { name: "breadthfirst", directed: true, spacingFactor: 1.05, fit: false }
 			: isHierarchy
 			? {
 					name: "breadthfirst",
@@ -610,6 +618,13 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 		});
 		cy.on("tap", "node", (evt) => {
 			focusKeyboardSurface();
+			const data = evt.target.data();
+			// 折叠文件夹单击即展开：双击在"选中→检视器→画布缩窄→节点移位"下不可靠，
+			// 展开是森林导航的主路径，必须放在最稳的交互上（详见 resizeObserver 处注释）。
+			if (onFolderToggleRef.current && String(data.type) === "folder" && data.collapsed) {
+				onFolderToggleRef.current(String(data.id));
+				return;
+			}
 			focusNode(evt.target);
 		});
 		cy.on("tap", "edge", (evt) => {
@@ -632,9 +647,15 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 			}
 		});
 
-		// 右键空白处只提供只读画布操作。
+		// 右键空白处提供只读画布操作；右键文件夹提供折叠/展开（可靠的切换路径）。
 		cy.on("cxttap", (evt) => {
-			if (evt.target !== cy) return;
+			if (evt.target !== cy) {
+				const target = evt.target;
+				if (target.isNode?.() && String(target.data("type")) === "folder" && onFolderToggleRef.current) {
+					onFolderToggleRef.current(String(target.data("id")));
+				}
+				return;
+			}
 			const oe = evt.originalEvent as MouseEvent;
 			focusKeyboardSurface();
 			openCanvasMenu(oe.clientX, oe.clientY);
@@ -703,6 +724,7 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 		}
 
 		let resizeFrame = 0;
+		let refitTimer = 0;
 		let previousSize = { width: cy.width(), height: cy.height() };
 		const resizeObserver = new ResizeObserver(() => {
 			cancelAnimationFrame(resizeFrame);
@@ -710,8 +732,14 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 				const nextSize = { width: cy.width(), height: cy.height() };
 				if (Math.abs(nextSize.width - previousSize.width) < 1 && Math.abs(nextSize.height - previousSize.height) < 1) return;
 				if (viewportModeRef.current === "overview") {
-					setOverviewViewport(cy, cy.elements(), hasPositions || isForest ? 60 : 50);
-					setZoomPct(Math.round(cy.zoom() * 100));
+					// overview 的重适配延迟 600ms：面板开合（如点选节点弹出检视器）会立刻缩窄
+					// 画布并触发重适配，节点在双击两击之间移位 → 第二击落空，森林文件夹的
+					// 双击展开永远无法形成。延迟让 dbltap 先完成，多次 resize 也自然合并。
+					clearTimeout(refitTimer);
+					refitTimer = window.setTimeout(() => {
+						setOverviewViewport(cy, cy.elements(), hasPositions || isForest ? 60 : 50);
+						setZoomPct(Math.round(cy.zoom() * 100));
+					}, 600);
 				} else if (viewportModeRef.current === "focus" && focusedIdRef.current) {
 					const focusedNode = cy.getElementById(focusedIdRef.current);
 					if (focusedNode.nonempty()) cy.center(focusedNode);
@@ -738,6 +766,7 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, la
 			cancelAnimationFrame(interactiveFrame);
 			cancelAnimationFrame(interactivePaintFrame);
 			cancelAnimationFrame(resizeFrame);
+			clearTimeout(refitTimer);
 			resizeObserver.disconnect();
 			cy.off("pan zoom", markManualViewport);
 			if (vpKey) {

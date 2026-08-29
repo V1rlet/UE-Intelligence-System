@@ -60,6 +60,7 @@ export interface GraphWorkspaceCanvas {
 	selected: Record<string, unknown> | null;
 	onSelect: (data: Record<string, unknown> | null) => void;
 	onGraphDblTap: (data: Record<string, unknown>) => void;
+	onFolderToggle?: (id: string) => void;
 }
 
 export interface GraphWorkspaceViewProps {
@@ -89,7 +90,7 @@ export default function GraphWorkspaceView({ data, spec, canvas, engine, panels,
 		onFnPage, onZonePage, onHover, onSelectSpecNode, onOpenSpec, onCloseSpec,
 		favIds, onToggleFav, onLocateFn, onShowInApi, onJumpToNode,
 	} = spec;
-	const { selected, onSelect, onGraphDblTap } = canvas;
+	const { selected, onSelect, onGraphDblTap, onFolderToggle } = canvas;
 	const showEngineLayer = !specTarget && codeSource === "engine";
 	const specElements = codeSource === "engine" ? engine.elements : graph.elements;
 
@@ -142,7 +143,7 @@ export default function GraphWorkspaceView({ data, spec, canvas, engine, panels,
 		<div className="graph-col">
 			{forest ? <div className="forest-semantic-bar" role="status" aria-label="关系图分层浏览状态" data-visible-nodes={forest.visibleNodes} data-total-nodes={forest.totalNodes}>
 				<span><small>分层浏览</small><b>{forest.visibleNodes} / {forest.totalNodes}</b></span>
-				<em>双击文件夹逐层展开</em>
+				<em>单击折叠文件夹展开 · 右键可折叠/展开</em>
 				<button type="button" onClick={forest.onCollapseToRoots}>回到根层</button>
 			</div> : null}
 			<AsyncSurface label="正在绘制代码图" loadingDetail="整理源码节点与关系" detail="代码图没有成功显示。" icon="graph" variant="workspace" resetKey={`graph:${currentFile ?? ""}`} onExit={onExit}>
@@ -151,6 +152,7 @@ export default function GraphWorkspaceView({ data, spec, canvas, engine, panels,
 					domain={domain}
 					onSelect={onSelect}
 					onNodeDblTap={onGraphDblTap}
+					onFolderToggle={onFolderToggle}
 					focusRequest={forestFocus}
 					viewportKey={isProjectGraph ? undefined : currentFile ?? undefined}
 					layoutRevision={forest?.viewKey}

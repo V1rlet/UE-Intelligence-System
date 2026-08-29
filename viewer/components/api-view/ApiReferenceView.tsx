@@ -125,7 +125,7 @@ export default function ApiReferenceView({
 			layer: favorite.source,
 			...(favorite.source_path ? { source_path: favorite.source_path } : {}),
 		})), [favorites]);
-	const navPanel = usePanelWidth("apinav", { width: 310, min: 240, max: 480, side: "left" });
+	const navPanel = usePanelWidth("apinav", { width: 400, min: 300, max: 560, side: "left" });
 	const detailPanel = usePanelWidth("apidetail", { width: 410, min: 320, max: 600, side: "right" });
 
 	useEffect(() => () => {

@@ -382,7 +382,8 @@ textarea {
 	grid-template-columns: 22px minmax(0, 1fr) auto;
 	grid-template-rows: 1fr;
 	column-gap: 8px;
-	padding: 8px 63px 8px 10px;
+	/* 右侧只给悬浮操作按钮留 34px：原先 63px 的预留位把长类名挤到截断 */
+	padding: 8px 34px 8px 10px;
 	font-size: 15px;
 }
 .api-catalog-class .api-kind {

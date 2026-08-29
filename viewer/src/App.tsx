@@ -573,7 +573,7 @@ export default function App() {
 						onHover: specNav.setHoverId, onSelectSpecNode: specNav.setSpecSelectedId, onOpenSpec: (target) => openWorkspaceSpec(target, codeSource === "engine" ? "engine" : "project"), onCloseSpec: specNav.closeSpec, onRequestFocus: specNav.requestFocus,
 						favIds, onToggleFav: toggleWorkspaceFavorite, onLocateFn: locateFunction, onShowInApi: showInApi, onJumpToNode: jumpToNode,
 					}}
-					canvas={{ selected, onSelect: setSelected, onGraphDblTap: handleGraphDblTap }}
+					canvas={{ selected, onSelect: setSelected, onGraphDblTap: handleGraphDblTap, onFolderToggle: forest.toggleFolder }}
 					engine={{ busy: engine.engineFetch.state === "loading", elements: engine.engineElements, catalogState: engineCatalog, sourceRoot, onOpenClass: openEngineClass }}
 					panels={{ specPanel, detailPanel }}
 					onExit={() => setView("home")}

@@ -186,7 +186,9 @@ export function useForestNavigation({ graph, displayGraph, graphKey, branch = nu
 
 	const forestElements = useMemo<GraphElements | null>(() => {
 		if (!displayGraph || !isProjectGraph) return null;
-		// 折叠文件夹的整棵子树隐藏（数据不动，纯视图过滤——展开即恢复，无数据丢失）
+		// 折叠文件夹的子树隐藏，文件夹自身保留为「▸ 名称（N 文件）」占位节点——
+		// 它是单击展开的交互锚点；把折叠文件夹一并藏掉会让占位标签成为死代码，
+		// 且折叠根文件夹时整个根凭空消失。（contains 环由 hide 的去重终止。）
 		const hidden = new Set<string>();
 		const hide = (id: string) => {
 			// 已隐藏即返回：既是去重，也是 contains 环的终止条件。
@@ -194,7 +196,7 @@ export function useForestNavigation({ graph, displayGraph, graphKey, branch = nu
 			hidden.add(id);
 			for (const c of forestIndex.childrenOf.get(id) ?? []) hide(c);
 		};
-		for (const id of activeCollapsed) hide(id);
+		for (const id of activeCollapsed) for (const c of forestIndex.childrenOf.get(id) ?? []) hide(c);
 
 		const nodes = displayGraph.elements.nodes
 			.filter((n) => {

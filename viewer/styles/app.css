@@ -581,6 +581,10 @@ button {
 .forest-semantic-bar span { display: grid; grid-template-columns: auto auto; align-items: baseline; gap: 3px 8px; }
 .forest-semantic-bar small { grid-column: 1 / -1; color: var(--gb-cyan-75); font: 9px var(--font-mono); letter-spacing: .1em; }
 .forest-semantic-bar b { color: var(--text-primary); font: 12px var(--font-mono); }
+/* 代码工作区内聚焦横幅（.graph-toggles）原本 top:12px 被浮动顶栏压住；
+ * 纵向排序：顶栏 → 聚焦横幅 → 分层浏览条。 */
+.graph-col .graph-toggles { top: 89px; }
+.graph-col .forest-semantic-bar { top: 131px; }
 .forest-semantic-bar em { color: var(--text-tertiary); font-size: 11px; font-style: normal; }
 .forest-semantic-bar button {
 	min-height: 30px;
@@ -2739,6 +2743,9 @@ kbd { border-radius: 2px; font-size: 10.5px; }
 .api-main.api-spec-mode .api-result-summary {
 	display: none;
 }
+/* 共享规范布局下顶栏（模式切换 + 源码域选择）是浮动层，内容区让出其高度，
+ * 否则面包屑与"从本机 UE 头文件解析"提示被压在工具栏底下。 */
+.api-main.api-spec-mode { padding-top: 74px; }
 .api-shared-spec-list {
 	position: relative;
 	padding: 0;
