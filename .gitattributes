@@ -2,3 +2,4 @@
 # 分支切换时 core.autocrlf 会把 LF 重写为 CRLF,导致哈希校验失败、catalog 隐藏当前图。
 # 统一约定:数据文件 blob 与工作区均为 LF,禁止换行符转换。
 data/** text=auto eol=lf
+docs/archify-samples/** text=auto eol=lf
