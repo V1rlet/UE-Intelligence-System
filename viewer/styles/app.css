@@ -94,6 +94,15 @@ button, select, input, textarea {
 }
 button { cursor: pointer; }
 button:disabled { cursor: default; opacity: 0.4; }
+/* 半成品防线：任何未被组件样式覆盖的按钮呈现主题化基线，而不是浏览器默认白底黑框 */
+button {
+	padding: 4px 10px;
+	border: 1px solid var(--border-subtle);
+	border-radius: 7px;
+	background: color-mix(in srgb, var(--gb-neutral-15) 72%, transparent);
+	color: var(--text-secondary);
+	font: inherit;
+}
 
 .app { display: flex; flex-direction: column; height: 100%; }
 
@@ -2463,6 +2472,17 @@ kbd { border-radius: 2px; font-size: 10.5px; }
 }
 .route-not-found span { display: grid; flex: 1; }
 .route-not-found small { color: var(--text-tertiary); }
+.route-not-found > button {
+	flex: none;
+	min-height: 30px;
+	padding: 0 12px;
+	border: 1px solid color-mix(in srgb, var(--gb-amber-75) 30%, transparent);
+	border-radius: 6px;
+	background: transparent;
+	color: var(--gb-amber-75);
+	font-size: 12.5px;
+}
+.route-not-found > button:hover { background: color-mix(in srgb, var(--gb-amber-75) 9%, transparent); color: var(--text-primary); }
 .workspace-load-error,
 .graph-empty-state {
 	display: flex;

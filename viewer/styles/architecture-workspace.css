@@ -69,6 +69,16 @@
 	pointer-events: none;
 }
 .architecture-current-source strong { color: var(--gb-cyan-85); white-space: nowrap; }
+/* 提示横幅只承担“进入范围”的第一眼导读，7s 后自动退场，不再长期压在图谱节点上 */
+.architecture-current-source { animation: architecture-source-retire 7s ease 1.2s forwards; }
+@keyframes architecture-source-retire {
+	0% { opacity: 1; }
+	78% { opacity: 1; }
+	100% { opacity: 0; visibility: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.architecture-current-source { animation-duration: 0.01s; animation-delay: 6s; }
+}
 
 .architecture-overview {
 	display: grid;
@@ -456,6 +466,17 @@
 .mindmap-selection { display: flex; flex: 0 1 310px; min-width: 170px; flex-direction: column; gap: 3px; }
 .mindmap-selection b { color: var(--text-primary); font-size: 14px; white-space: nowrap; }
 .mindmap-selection > span { overflow: hidden; color: var(--text-tertiary); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.mindmap-selection > button {
+	align-self: flex-start;
+	margin-top: 4px;
+	padding: 5px 11px;
+	border: 1px solid color-mix(in srgb, var(--gb-cyan-75) 35%, transparent);
+	border-radius: 8px;
+	background: color-mix(in srgb, var(--gb-cyan-75) 9%, transparent);
+	color: var(--cyan);
+	font-size: 12px;
+}
+.mindmap-selection > button:hover { background: color-mix(in srgb, var(--gb-cyan-75) 15%, transparent); border-color: color-mix(in srgb, var(--gb-cyan-75) 55%, transparent); }
 .mindmap-ports { display: flex; flex: 1; min-width: 0; gap: 5px; overflow-x: auto; scrollbar-width: thin; }
 .mm-port { flex: 0 0 auto; padding: 4px 7px; border: 1px solid color-mix(in srgb, var(--gb-cyan-75) 22%, transparent); border-radius: 999px; color: var(--gb-cyan-85); font: 10.5px var(--font-mono); white-space: nowrap; }
 .mm-port.in { border-color: color-mix(in srgb, var(--gb-amber-75) 25%, transparent); color: var(--gb-amber-80b); }

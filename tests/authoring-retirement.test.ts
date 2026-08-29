@@ -59,7 +59,12 @@ test("active graphs and annotations have one ue5_code owner", () => {
 		assert.equal(graph.meta?.domain, "ue5_code", file);
 		assert.equal(graph.meta?.format_version, UE5_CODE_GRAPH_FORMAT, file);
 	}
-	const annotationFiles = readdirSync(join(ROOT, "data", "annotations")).filter((name) => name.endsWith("_annotations.json"));
+	// 空占位目录不受 git 跟踪，可能在任何工作树缺失；不变量是“没有遗留标注文件处于活动位”，
+	// 目录不存在时该命题空洞为真。
+	const annotationsDir = join(ROOT, "data", "annotations");
+	const annotationFiles = existsSync(annotationsDir)
+		? readdirSync(annotationsDir).filter((name) => name.endsWith("_annotations.json"))
+		: [];
 	assert.deepEqual(annotationFiles, [], "legacy annotation arrays must not remain active beside reading-context");
 	const context = readJson<{ format_version?: number; domain?: string; revision?: number; annotations?: Array<{ subsystem?: string }> }>("data/reading-context/ue5_code.json");
 	// D-P3：reading-context 已迁移至 v2（行级锚）；磁盘活动文档必须是当前版本。

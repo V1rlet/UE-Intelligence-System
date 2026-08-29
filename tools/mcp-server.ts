@@ -39,7 +39,6 @@ import { readEvidenceStatus } from "../server/evidence.js";
 // 语义一致：指向包含 core/ 与 data/ 的 GraphBrain 工作树）。
 const ROOT = resolve(process.env.GRAPH_BRAIN_ROOT ?? join(dirname(fileURLToPath(import.meta.url)), ".."));
 const DATA_DIR = join(ROOT, "data");
-const ANNOTATIONS_DIR = join(ROOT, "data", "annotations");
 const MCP_FORMAT = "graphbrain-mcp/1" as const;
 
 interface GateRejection {
@@ -257,7 +256,7 @@ server.registerTool("gb_annotations_get", {
 	},
 }, async ({ subsystem, node_id }) => {
 	try {
-		const document = loadReadingContext("ue5_code", ANNOTATIONS_DIR);
+		const document = loadReadingContext("ue5_code");
 		let entries = document.annotations;
 		if (subsystem !== undefined) entries = entries.filter((entry) => entry.subsystem === subsystem);
 		if (node_id !== undefined) entries = entries.filter((entry) => entry.node_id === node_id);

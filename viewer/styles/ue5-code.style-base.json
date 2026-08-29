@@ -181,17 +181,17 @@
 			"line-color": "#547e89",
 			"target-arrow-color": "#6bc6d2",
 			"target-arrow-shape": "triangle",
-			"width": 2.2,
+			"width": 2.4,
 			"label": "data(label)",
-			"font-size": 9,
-			"color": "#9eb7bd",
+			"font-size": 10.5,
+			"color": "#b7cdd6",
 			"text-background-color": "#111721",
-			"text-background-opacity": 0.92,
-			"text-background-padding": 3,
+			"text-background-opacity": 0.96,
+			"text-background-padding": 5,
 			"text-rotation": "none",
 			"text-wrap": "wrap",
 			"text-max-width": 140,
-			"text-margin-y": -9
+			"text-margin-y": -10
 		}
 	},
 	{
