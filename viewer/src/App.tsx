@@ -461,6 +461,14 @@ export default function App() {
 		specNav.closeSpec();
 	}, [navigateView, specNav.closeSpec]);
 
+	// 深链兜底：URL 未带 file 且本地无上次记录时，代码工作区会因渲染门槛
+	// （graph 非空才挂载）保持整页空白。目录就绪后自动选中默认项目图。
+	useEffect(() => {
+		if (view !== "code" || !listLoaded || currentFile || graphList.length === 0) return;
+		const preferred = graphCatalog.find((entry) => entry.domain === DOMAIN && entry.subsystem === "project") ?? graphCatalog[0];
+		if (preferred) setCurrentFile(preferred.file);
+	}, [view, listLoaded, currentFile, graphList.length, graphCatalog, setCurrentFile]);
+
 	return <div className="app shell">
 		{routeIssue ? <div className="route-not-found" role="alert">
 			<AppIcon name="warning" size={18} />

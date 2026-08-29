@@ -245,6 +245,12 @@ try {
 	if (graphChrome.loadMode !== "projection" || graphChrome.layoutCapability !== "forest" || graphChrome.visibleNodes <= 0 || graphChrome.visibleNodes >= graphChrome.totalNodes || graphChrome.zoom < 52) {
 		throw new Error(`关系图没有进入可读的语义投影：${JSON.stringify(graphChrome)}`);
 	}
+	// 森林折叠/展开回归（第一轮大修的故障面的可观测契约）：
+	// 折叠文件夹必须保留为可见占位（▸ 名称（N 文件）），初始披露不再是"2 个孤根"——
+	// 若回归回"折叠即藏身/根层只剩裸根"，此处 visibleNodes 会跌回根数。
+	if (graphChrome.visibleNodes < 5) {
+		throw new Error(`关系图初始披露没有呈现折叠占位结构（疑似回归为裸根视图）：${JSON.stringify({ visibleNodes: graphChrome.visibleNodes, totalNodes: graphChrome.totalNodes })}`);
+	}
 	const canvasKeyboard = await cdp.evaluate<{ role: string | null; tabIndex: number; shortcuts: string | null }>(`(() => {
 		const canvas = document.querySelector('.graph-canvas');
 		return { role: canvas?.getAttribute('role') ?? null, tabIndex: canvas?.tabIndex ?? -1, shortcuts: canvas?.getAttribute('aria-keyshortcuts') ?? null };

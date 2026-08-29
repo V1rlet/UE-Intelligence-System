@@ -419,10 +419,13 @@ export default function GraphView({ elements, domain, onSelect, onNodeDblTap, on
 			maxZoom: VIEWPORT_POLICY.hardMaxZoom,
 		});
 		cyRef.current = cy;
-		// dev 调试句柄：浏览器控制台可检查 cy 实例（生产构建不暴露）。
-		if (import.meta.env.DEV) {
-			(window as { __gbCy?: unknown }).__gbCy = cy;
-		}
+		// 测试/调试句柄：挂在画布容器元素上（有界面，非 window 全局），smoke 与
+		// dev 控制台都经它检查 cy 实例（生产构建同样可用——smoke 跑的是产物）。
+		// __toggleFolder 供 smoke 驱动折叠/展开：cytoscape 的 tap 由输入控制器合成，
+		// 合成 DOM/pointer 事件不经过委托绑定，无法从外部注入。
+		const smokeHandle = keyboardSurface as HTMLDivElement & { __gbCy?: unknown; __toggleFolder?: (id: string) => void };
+		smokeHandle.__gbCy = cy;
+		smokeHandle.__toggleFolder = (id: string) => onFolderToggleRef.current?.(id);
 		viewportModeRef.current = "overview";
 		setCtxMenu(null);
 

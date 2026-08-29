@@ -2565,7 +2565,8 @@ kbd { border-radius: 2px; font-size: 10.5px; }
 	border-bottom: 1px solid color-mix(in srgb, var(--gb-violet-55) 18%, transparent);
 }
 
-.api-main { padding: 0 12px 12px; overflow: hidden; background: var(--gb-violet-20); }
+/* 浮动顶栏(模式切换+源码域)常驻 ~74px：内容区统一让位，避免首屏标题被压。 */
+.api-main { padding: 74px 12px 12px; overflow: hidden; background: var(--gb-violet-20); }
 .api-context {
 	flex-shrink: 0;
 	padding: 9px 4px 10px;
