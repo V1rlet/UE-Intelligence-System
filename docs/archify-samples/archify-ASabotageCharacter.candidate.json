@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "ASabotageCharacter Neighborhood (GraphBrain Evidence)",
+    "quality_profile": "showcase"
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 3
+  },
+  "components": [
+    {
+      "id": "c0",
+      "type": "backend",
+      "label": "ASabotageCharacter",
+      "row": 1,
+      "col": 1,
+      "sublabel": "Sabotage / project"
+    },
+    {
+      "id": "c1",
+      "type": "backend",
+      "label": "ACharacter",
+      "row": 0,
+      "col": 1,
+      "sublabel": "Engine / engine"
+    },
+    {
+      "id": "c2",
+      "type": "backend",
+      "label": "UCameraComponent",
+      "row": 1,
+      "col": 0,
+      "sublabel": "Engine / engine"
+    },
+    {
+      "id": "c3",
+      "type": "backend",
+      "label": "UInputAction",
+      "row": 1,
+      "col": 2,
+      "sublabel": "EnhancedInput / engine"
+    },
+    {
+      "id": "c4",
+      "type": "backend",
+      "label": "USpringArmComponent",
+      "row": 2,
+      "col": 1,
+      "sublabel": "Engine / engine"
+    }
+  ],
+  "connections": [
+    {
+      "from": "c0",
+      "to": "c2"
+    },
+    {
+      "from": "c0",
+      "to": "c3"
+    },
+    {
+      "from": "c0",
+      "to": "c4"
+    },
+    {
+      "from": "c0",
+      "to": "c1"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Evidence (GraphBrain)",
+      "items": [
+        "snapshot evidence-generation",
+        "freshness current / publication rev 5",
+        "classification direct / method direct / confidence 1",
+        "source Sabotage/SabotageCharacter.h"
+      ]
+    }
+  ]
+}
